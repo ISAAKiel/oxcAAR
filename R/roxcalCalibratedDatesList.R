@@ -19,8 +19,6 @@ plot.roxcalCalibratedDatesList <- function(x, ...){
   }
 }
 
-
-
 plotRoxcalCalibratedDatesListSystemGraphics<-function(x, ...){
   op <- par(no.readonly = TRUE)
   indices <- 1:length(x)
