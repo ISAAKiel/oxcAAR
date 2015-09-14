@@ -1,0 +1,26 @@
+plotRoxcalCalibratedDatesListGGPlot2<-function(x, ...){
+  to_plot<-do.call(rbind,lapply(x,function(x){data.frame(dates=x$raw_probabilities$dates,probability=x$raw_probabilities$probabilities,name=x$name)}))
+  m <- ggplot(to_plot,aes(x=dates,y=probability))
+  graph <- m + geom_area() + facet_grid(name~.) + theme(panel.background = element_blank(),strip.background=element_blank(),strip.text.y=element_text(angle=0))
+  show(graph)
+}
+
+
+plotRoxcalDateGGPlot2<-function(x, ...){
+  to_plot <- data.frame(dates=x$raw_probabilities$dates, probability = x$raw_probabilities$probabilities)
+  #max_prob <- max(x$raw_probabilities$probabilities)
+  m <- ggplot(to_plot,aes(x=dates,y=probability))
+  graph <- m + geom_area() + ggtitle(x$name)
+  g <- ggplotGrob(graph)
+
+  sigma_text<-paste(formatFullSigmaRange(x$sigma_ranges$one_sigma,"one sigma"),
+                    formatFullSigmaRange(x$sigma_ranges$two_sigma,"two sigma"),
+                    formatFullSigmaRange(x$sigma_ranges$three_sigma,"three sigma"),
+                    sep="\n")
+  g2 <- gtable_add_grob(g, textGrob(sigma_text, x=1, hjust=1,gp=gpar(fontsize=9, lineheight=0.95)),
+                        t=1, l=4, b=2, r=4, name="sigma-ranges")
+  g3 <- gtable_add_grob(g2, textGrob(x$cal_curve, x=0, hjust=0,gp=gpar(fontsize=10)),
+                        t=5, l=2, b=5, r=4, name="cal-curve")
+  grid.draw(g3)
+  #gtable_show_layout(g2)
+}
