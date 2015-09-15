@@ -1,0 +1,33 @@
+---
+title: roxcal README
+author: Martin Hinz
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# roxcal
+
+roxcal is a collection of functions that can be used
+to execute [Oxcal](https://c14.arch.ox.ac.uk) from within R.
+
+# Installation
+
+`roxcal` is currently not on [CRAN](http://cran.r-project.org/), but you can use
+[devtools](http://cran.r-project.org/web/packages/devtools/index.html) to
+install the development version. To do so:
+
+    if(!require('devtools')) install.packages('devtools')
+    library(devtools)
+    install_github('MartinHinz/roxcal')
+    
