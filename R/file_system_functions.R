@@ -9,6 +9,6 @@
 #' @export
 
 readOxcalOutput <- function(output_file) {
-  result <- scan(output_file, character(0), sep = "\n")
+  result <- scan(output_file, character(0), sep = "\n",quiet=T)
   result
 }

@@ -11,7 +11,6 @@ executeOxcalScript <- function(oxcal_script) {
     oxcal_path <- getOxcalExecutablePath()
     option_file <- tempfile()
     output_file <- paste(option_file, ".js", sep = "")
-    print(output_file)
     cat(oxcal_script, file = option_file)
     system(paste(oxcal_path, option_file))
     result <- output_file
