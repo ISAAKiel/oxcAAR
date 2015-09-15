@@ -11,6 +11,6 @@ oxcalSimulate <- function(c_date, std, names = 1:length(c_date)) {
     oxcal_script <- R_Simulate(c_date, std, names)
     result_file <- executeOxcalScript(oxcal_script)
     result <- readOxcalOutput(result_file)
-    RVA<-parseOxcalOutput(result,only.R_Date = F)
+    RVA <- parseOxcalOutput(result,only.R_Date = F)
     RVA
 }

@@ -11,6 +11,6 @@ oxcalCalibrate <- function(bp, std, names = 1:length(bp)) {
     oxcal_script <- R_Date(names, bp, std)
     result_file <- executeOxcalScript(oxcal_script)
     result <- readOxcalOutput(result_file)
-    RVA<-parseOxcalOutput(result)
+    RVA <- parseOxcalOutput(result)
     RVA
 }

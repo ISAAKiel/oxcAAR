@@ -26,24 +26,22 @@ setOxcalExecutablePath <- function(path) {
 ## ---------- private ----------
 
 getOxcalExecutablePath <- function() {
-  oxcal_path<-getOption("roxcal.oxcal_path")
-  if (is.null(oxcal_path) || oxcal_path=="") {
+  oxcal_path <- getOption("roxcal.oxcal_path")
+  if (is.null(oxcal_path) || oxcal_path == "") {
     stop("Please set path to oxcal first (using 'setOxcalExecutablePath')!")
   }
   oxcal_path
 }
 
 formatDateAdBc <- function (value_to_print) {
-  RVA<- abs(value_to_print)
-  suffix <- if (value_to_print<0) "BC" else if (value_to_print>0) "AD" else ""
+  RVA <- abs(value_to_print)
+  suffix <- if (value_to_print < 0) "BC" else if (value_to_print > 0) "AD" else ""
   paste(RVA, suffix)
 }
 
-formatFullSigmaRange <- function (sigma_range, name)
-{
-  sigma_str<-""
-  if (length(sigma_range[,1])>0)
-  {
+formatFullSigmaRange <- function (sigma_range, name) {
+  sigma_str <- ""
+  if (length(sigma_range[,1]) > 0) {
   sigma_min <- formatDateAdBc(round(min(sigma_range[,1])))
   sigma_max <- formatDateAdBc(round(max(sigma_range[,2])))
   sigma_str <- sprintf("%11s: %s - %s",name, sigma_min,sigma_max)

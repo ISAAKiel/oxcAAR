@@ -100,8 +100,7 @@ oxcal_Sum <- function(oxcal_string, name = "Sum") {
 parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
   this_cal_curve <- extractCalCurveFromOxcalResult(result)
 
-  if (only.R_Date==T)
-  {
+  if (only.R_Date == T){
     date_internal_names <- as.vector(
       na.omit(
         stringr::str_match(result, "^(ocd\\[\\d+\\])\\.op=\"R_Date\";")[, 2]
@@ -117,11 +116,13 @@ parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
     )
   }
 
-  date_internal_names<-date_internal_names[date_internal_names!="ocd[0]"]
+  date_internal_names <- date_internal_names[date_internal_names != "ocd[0]"]
 
-  if (first==T){
-    numeric_indices<-as.numeric(gsub("ocd\\[(\\d*)\\]$", "\\1", date_internal_names))
-    select_vector<-numeric_indices==min(numeric_indices[numeric_indices!=0])
+  if (first == T){
+    numeric_indices <- as.numeric(gsub("ocd\\[(\\d*)\\]$", "\\1",
+                                     date_internal_names))
+    select_vector <- numeric_indices == min(
+      numeric_indices[numeric_indices != 0])
     date_internal_names <- date_internal_names[select_vector]
   }
 
@@ -131,9 +132,9 @@ parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
   RVA <- lapply(1:length(date_internal_names), function(i) {
     reg_string <- paste("^(", date_internal_names[i], "\\..*)", sep = "")
     date_text <- na.omit(stringr::str_match(result, reg_string))[, 1]
-    this_name<- extractNameFromOxcalResult(date_text)
-    this_bp<- extractBpFromOxcalResult(date_text)
-    this_std<- extractStdFromOxcalResult(date_text)
+    this_name <- extractNameFromOxcalResult(date_text)
+    this_bp <- extractBpFromOxcalResult(date_text)
+    this_std <- extractStdFromOxcalResult(date_text)
     this_probs <- extractProbsFromOxcalResult(date_text)
     this_sigma_ranges <- extractSigmaRangesFromOxcalResult(date_text)
 
@@ -247,7 +248,7 @@ extractProbsFromOxcalResult <- function(result_text) {
 
   dates <- seq(probs_start, by = probs_resolution, length.out = length(probs))
 
-  RVAL <- data.frame(dates = dates, probabilities = probs/probs_resolution)
+  RVAL <- data.frame(dates = dates, probabilities = probs / probs_resolution)
   RVAL
 }
 
@@ -304,7 +305,7 @@ extractSigmaRangesFromOxcalResult <- function(result_text) {
   RVAL
 }
 
-extractCalCurveFromOxcalResult<-function(date_text){
+extractCalCurveFromOxcalResult <- function(date_text){
   regexp <- "calib\\[0\\].ref=\"(.*)\";"
   RVA <- as.character(
     na.omit(
@@ -348,7 +349,7 @@ recursivelyPartialUnlist <- function(l) {
              recursivelyPartialUnlist(x) else x)
 }
 
-extractNameFromOxcalResult<-function(date_text){
+extractNameFromOxcalResult <- function(date_text){
   regexp <- "(ocd\\[\\d+\\]\\.name=\")(.*)(\";)"
   my_name <- na.omit(
     unlist(
@@ -359,11 +360,11 @@ extractNameFromOxcalResult<-function(date_text){
   my_name
 }
 
-extractBpFromOxcalResult<-function(date_text){
+extractBpFromOxcalResult <- function(date_text){
   regexp <- "(ocd\\[\\d+\\]\\.date=)(.*)(;)"
   my_date <- NA
   my_result <- stringr::str_match(date_text, regexp)
-  if (length(my_result)>0){
+  if (length(my_result) > 0){
     my_date <- as.integer(na.omit(
       unlist(
         strsplit(
@@ -374,11 +375,10 @@ extractBpFromOxcalResult<-function(date_text){
   }
   my_date
 }
-extractStdFromOxcalResult<-function(date_text){
+extractStdFromOxcalResult <- function(date_text){
   regexp <- "(ocd\\[\\d+\\]\\.error=)(.*)(;)"
   my_error <- NA
-  my_result <- stringr::str_match(date_text, regexp)
-  if (length(my_error)>0){
+  if (length(my_error) > 0){
     my_error <- as.integer(na.omit(
       unlist(
         strsplit(
