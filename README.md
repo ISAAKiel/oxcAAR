@@ -2,6 +2,10 @@
 roxcal
 ======
 
+#### Released version
+
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/roxcal)](http://cran.r-project.org/package=roxcal)
+
 `roxcal` is a collection of functions that can be used to execute [OxCal](https://c14.arch.ox.ac.uk) from within R.
 
 Please note that there is a [second `roxcal` package](https://github.com/gavinsimpson/roxcal) package on Github, created by [Gavin Simpson](https://github.com/gavinsimpson). If you just need to import OxCal result files, you may consider using his package.

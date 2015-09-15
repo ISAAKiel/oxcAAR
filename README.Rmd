@@ -18,6 +18,9 @@ knitr::opts_chunk$set(
 
 # roxcal
 
+####Released version
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/roxcal)](http://cran.r-project.org/package=roxcal)
+
 `roxcal` is a collection of functions that can be used
 to execute [OxCal](https://c14.arch.ox.ac.uk) from within R.
 
