@@ -1,7 +1,7 @@
 ---
 title: "Basic Usage"
 author: "Martin Hinz"
-date: '`r Sys.Date()`'
+date: '2015-09-15'
 output:
   rmarkdown::html_vignette:
     keep_md: true
@@ -18,32 +18,157 @@ There are other packages out that also can calibrate <sup>14</sup>C data, like e
 
 Lets assume, we want to calibrate a date 5000 BP +- 25 years. `roxcal` has the function `oxcalCalibrate` for doing so. But at first we have to load the package and tell it where to find the local path to the [Oxcal distribution](https://c14.arch.ox.ac.uk/OxCalDistribution.zip). Than you can calibrate the date using bp, std and name.
 
-```{r,fig.width=7,fig.height=4}
+
+```r
 library(roxcal)
 setOxcalExecutablePath("/home/martin/Documents/scripte/OxCal/bin/OxCalLinux")
+```
+
+```
+## [1] "Oxcal path set!"
+```
+
+```r
 my_date <- oxcalCalibrate(5000,25,"KIA-12345")
 my_date
+```
+
+```
+## 
+## 	KIA-12345
+## BP = 5000, std = 25
+## 
+##   one sigma: 3888 BC - 3712 BC
+##   two sigma: 3932 BC - 3704 BC
+## three sigma: 3944 BC - 3692 BC
+## 
+## Calibrated after:
+## 	 Atmospheric data from Reimer et al (2009);
+```
+
+```r
 plot(my_date)
 ```
 
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-1.png) 
+
 You can also calibrate multiple dates at once:
 
-```{r,fig.width=7,fig.height=4}
+
+```r
 my_uncal_dates <- data.frame(bp=c(5000,4500,4000),
                              std=c(45,35,25),
                              names=c("Date 1", "Date 2", "Date 3")
                              )
 my_cal_dates <- oxcalCalibrate(my_uncal_dates$bp, my_uncal_dates$std, my_uncal_dates$names)
 my_cal_dates
+```
+
+```
+## List of 3 calibrated dates:
+## 
+## 	Date 1
+## BP = 5000, std = 45
+## 
+##   one sigma: 3910 BC - 3706 BC
+##   two sigma: 3942 BC - 3668 BC
+## three sigma: 3954 BC - 3652 BC
+## 
+## Calibrated after:
+## 	 Atmospheric data from Reimer et al (2009); 
+## 
+## 	Date 2
+## BP = 4500, std = 35
+## 
+##   one sigma: 3334 BC - 3103 BC
+##   two sigma: 3354 BC - 3089 BC
+## three sigma: 3364 BC - 3020 BC
+## 
+## Calibrated after:
+## 	 Atmospheric data from Reimer et al (2009); 
+## 
+## 	Date 3
+## BP = 4000, std = 25
+## 
+##   one sigma: 2564 BC - 2476 BC
+##   two sigma: 2572 BC - 2470 BC
+## three sigma: 2619 BC - 2460 BC
+## 
+## Calibrated after:
+## 	 Atmospheric data from Reimer et al (2009);
+```
+
+```r
 plot(my_cal_dates)
 ```
 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+
 The resulting object from the calibration is a list of class `roxcalCalibratedDatesList`, containing elements of class `roxcalCalibratedDate`. Each of these dates is again a list of the essential informations of the calibrated date including the raw probabilities, that can be extracted for additional analysis:
 
-```{r}
+
+```r
 str(my_cal_dates, max.level = 1)
+```
+
+```
+## List of 3
+##  $ Date 1:List of 6
+##   ..- attr(*, "class")= chr "roxcalCalibratedDate"
+##  $ Date 2:List of 6
+##   ..- attr(*, "class")= chr "roxcalCalibratedDate"
+##  $ Date 3:List of 6
+##   ..- attr(*, "class")= chr "roxcalCalibratedDate"
+##  - attr(*, "class")= chr [1:2] "list" "roxcalCalibratedDatesList"
+```
+
+```r
 my_cal_dates[[1]] # equivalent to my_cal_dates[["Date 1"]] or my_cal_dates$`Date 1`
+```
+
+```
+## 
+## 	Date 1
+## BP = 5000, std = 45
+## 
+##   one sigma: 3910 BC - 3706 BC
+##   two sigma: 3942 BC - 3668 BC
+## three sigma: 3954 BC - 3652 BC
+## 
+## Calibrated after:
+## 	 Atmospheric data from Reimer et al (2009);
+```
+
+```r
 str(my_cal_dates$`Date 1`)
+```
+
+```
+## List of 6
+##  $ name             : chr "Date 1"
+##  $ bp               : int 5000
+##  $ std              : int 45
+##  $ cal_curve        : chr "Atmospheric data from Reimer et al (2009);"
+##  $ sigma_ranges     :List of 3
+##   ..$ one_sigma  :'data.frame':	2 obs. of  3 variables:
+##   .. ..$ start      : num [1:2] -3910 -3802
+##   .. ..$ end        : num [1:2] -3876 -3706
+##   .. ..$ probability: num [1:2] 15.1 53.1
+##   ..$ two_sigma  :'data.frame':	2 obs. of  3 variables:
+##   .. ..$ start      : num [1:2] -3942 -3676
+##   .. ..$ end        : num [1:2] -3693 -3668
+##   .. ..$ probability: num [1:2] 94.4 1
+##   ..$ three_sigma:'data.frame':	1 obs. of  3 variables:
+##   .. ..$ start      : num -3954
+##   .. ..$ end        : num -3652
+##   .. ..$ probability: num 99.7
+##  $ raw_probabilities:'data.frame':	109 obs. of  2 variables:
+##   ..$ dates        : num [1:109] -4054 -4050 -4044 -4040 -4034 ...
+##   ..$ probabilities: num [1:109] 0.0 0.0 0.0 8.0e-07 5.6e-06 1.3e-05 9.8e-06 5.4e-06 1.6e-06 8.0e-07 ...
+##  - attr(*, "class")= chr "roxcalCalibratedDate"
+```
+
+```r
 plot(
   my_cal_dates$`Date 1`$raw_probabilities$dates,
   my_cal_dates$`Date 1`$raw_probabilities$probabilities,
@@ -53,11 +178,14 @@ plot(
   )
 ```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+
 ## Simulation (R_Simulate)
 
 You can also use `roxcal` to simulate <sup>14</sup>C dates in the same way as OxCal R_Simulate function works. You enter a calibrated year (1000 for 1000 AD, -1000 for 1000 BC), and OxCal will simulate a BP value using a bit of randomisation. This results in the fact that each run will have a slightly different BP value.
 
-```{r,fig.width=7,fig.height=4}
+
+```r
 my_cal_date <- data.frame(bp=c(-3400),
                              std=c(25),
                              names=c("SimDate_1")
@@ -69,8 +197,26 @@ my_simulated_dates <- oxcalSimulate(my_cal_date$bp,
 # equivalent to
 my_simulated_dates <- oxcalSimulate(-3400, 25, "SimDate_1")
 my_simulated_dates
+```
+
+```
+## 
+## 	SimDate_1
+## BP = 4723, std = 25
+## 
+##   one sigma: 3626 BC - 3381 BC
+##   two sigma: 3632 BC - 3376 BC
+## three sigma: 3634 BC - 3371 BC
+## 
+## Calibrated after:
+## 	 Atmospheric data from Reimer et al (2009);
+```
+
+```r
 plot(my_simulated_dates)
 ```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
 
 
 ## Simulate Sum Calibration
@@ -78,7 +224,8 @@ plot(my_simulated_dates)
 This package was originally intended to support a series of articles dealing with the investigation of sum calibration. That is why a function is implemented to simulate sum calibration. You can use it to simulate a series of <sup>14</sup>C dates and explore the sum calibrated results. You can specify the beginning and end of the time span that should be used for the simulation (in calender years), the number of <sup>14</sup>C dates that should be simulated, their standard deviation either as vector of length n or as one number for all dates, and the type of distribution that should be used (either equally spaced in time, or random uniform).
 The result is again of class `roxcalCalibratedDate`, so you can access the raw probabilities for further analysis.
 
-```{r,fig.width=7,fig.height=4}
+
+```r
 my_sum_sim<-oxcalSumSim(
   timeframe_begin = -4000,
   timeframe_end = -3000,
@@ -87,44 +234,76 @@ my_sum_sim<-oxcalSumSim(
   date_distribution = "uniform"
   )
 str(my_sum_sim)
+```
+
+```
+## List of 6
+##  $ name             : chr " Sum "
+##  $ bp               : int(0) 
+##  $ std              : int(0) 
+##  $ cal_curve        : chr "Atmospheric data from Reimer et al (2009);"
+##  $ sigma_ranges     :List of 3
+##   ..$ one_sigma  :'data.frame':	0 obs. of  3 variables:
+##   .. ..$ start      : num(0) 
+##   .. ..$ end        : num(0) 
+##   .. ..$ probability: num(0) 
+##   ..$ two_sigma  :'data.frame':	0 obs. of  3 variables:
+##   .. ..$ start      : num(0) 
+##   .. ..$ end        : num(0) 
+##   .. ..$ probability: num(0) 
+##   ..$ three_sigma:'data.frame':	0 obs. of  3 variables:
+##   .. ..$ start      : num(0) 
+##   .. ..$ end        : num(0) 
+##   .. ..$ probability: num(0) 
+##  $ raw_probabilities:'data.frame':	296 obs. of  2 variables:
+##   ..$ dates        : num [1:296] -4340 -4334 -4330 -4324 -4320 ...
+##   ..$ probabilities: num [1:296] 0.0 0.0 0.0 0.0 2.0e-07 1.2e-06 2.2e-06 2.8e-06 2.2e-06 6.0e-07 ...
+##  - attr(*, "class")= chr "roxcalCalibratedDate"
+```
+
+```r
 plot(my_sum_sim)
 ```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
 
 ## Execute custom OxCal code
 
 You can also use the package to execute your own OxCal code from within R, and import the results back into the workspace. You can use `R_Date`, `R_Simulate` and `oxcal_Sum` to produce that OxCal code:
-```{r echo=F}
-library(knitr)
-hook_output <- knit_hooks$get("output")
-knit_hooks$set(output = function(x, options) {
-   lines <- options$output.lines
-   if (is.null(lines)) {
-     return(hook_output(x, options))  # pass to default hook
-   }
-   x <- unlist(strsplit(x, "\n"))
-   more <- "..."
-   if (length(lines)==1) {        # first n lines
-     if (length(x) > lines) {
-       # truncate the output, but add ....
-       x <- c(head(x, lines), more)
-     }
-   } else {
-     x <- c(more, x[lines], more)
-   }
-   # paste these lines together
-   x <- paste(c(x, ""), collapse = "\n")
-   hook_output(x, options)
- })
-```
-```{r}
+
+
+```r
 R_Simulate(-4000, 25, "MySimDate")
+```
+
+```
+## [1] "R_Simulate(\"MySimDate\",\n          -4000, 25);"
+```
+
+```r
 my_dates <- R_Date(c("Lab-12345","Lab-54321"), c(5000,4500), 25)
 cat(my_dates)
+```
+
+```
+## R_Date("Lab-12345", 5000, 25);
+## R_Date("Lab-54321", 4500, 25);
+```
+
+```r
 my_sum <- oxcal_Sum(my_dates)
 cat(my_sum)
 ```
+
+```
+## Sum(" Sum "){
+##  R_Date("Lab-12345", 5000, 25);
+## R_Date("Lab-54321", 4500, 25); 
+## };
+```
 or use your own script as string variable.
-```{r output.lines=8}
+
+```r
 knitr::opts_chunk$set(cache=TRUE)
 my_oxcal_code <- ' Plot()
  {
@@ -148,4 +327,16 @@ my_result_file <- executeOxcalScript(my_oxcal_code)
 my_result_text <- readOxcalOutput(my_result_file)
 my_result_data <- parseFullOxcalOutput(my_result_text)
 str(my_result_data)
+```
+
+```
+## List of 12
+##  $ ocd[0]  :List of 5
+##   ..$ likelihood:List of 5
+##   .. ..$ comment   :List of 1
+##   .. .. ..$ : list()
+##   .. ..$ comment[0]: chr "OxCal v4.1.7 Bronk Ramsey (2010); r:5"
+##   .. ..$ comment[1]: chr "Atmospheric data from Reimer et al (2009);"
+##   .. ..$ comment[2]: chr "( Phase Phase1"
+...
 ```
