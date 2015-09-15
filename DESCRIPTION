@@ -8,6 +8,8 @@ Authors@R: person("Hinz", "Martin", email = "martin.hinz@ufg.uni-kiel.de",
 Description: A set of tools that enables using Oxcal from within R.
 License: GPL-2
 LazyData: TRUE
-Imports:
+Imports: 
   stringr,
   jsonlite
+Suggests: knitr
+VignetteBuilder: knitr
