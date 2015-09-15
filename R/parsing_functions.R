@@ -120,7 +120,7 @@ parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
 
   if (first == T){
     numeric_indices <- as.numeric(gsub("ocd\\[(\\d*)\\]$", "\\1",
-                                     date_internal_names))
+                                       date_internal_names))
     select_vector <- numeric_indices == min(
       numeric_indices[numeric_indices != 0])
     date_internal_names <- date_internal_names[select_vector]
@@ -351,10 +351,12 @@ recursivelyPartialUnlist <- function(l) {
 
 extractNameFromOxcalResult <- function(date_text){
   regexp <- "(ocd\\[\\d+\\]\\.name=\")(.*)(\";)"
-  my_name <- na.omit(
-    unlist(
-      strsplit(
-        stringr::str_match(date_text, regexp)[, 3], ", ")
+  my_name <- as.vector(
+    na.omit(
+      unlist(
+        strsplit(
+          stringr::str_match(date_text, regexp)[, 3], ", ")
+      )
     )
   )
   my_name
