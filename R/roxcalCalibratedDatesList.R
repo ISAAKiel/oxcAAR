@@ -7,6 +7,18 @@
 NULL
 
 #' @export
+print.roxcalCalibratedDatesList <- function(x, ...){
+  n<-length(x)
+  if (n==1) print(x[[1]],...)
+  else{
+    cat(sprintf("List of %d calibrated dates:\n",n))
+    for (i in 1:n) {
+      print(x[[i]])
+    }
+  }
+}
+
+#' @export
 plot.roxcalCalibratedDatesList <- function(x, ...){
   if (length(x)==1) plot(x[[1]],...)
   else{
