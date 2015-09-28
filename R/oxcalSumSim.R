@@ -40,6 +40,7 @@ oxcalSumSim <- function(timeframe_begin,
     script <- oxcal_Sum(R_Simulate(cal_dates, stds))
     result_file <- executeOxcalScript(script)
     result <- readOxcalOutput(result_file)
+    cleanupOxcalFiles(result_file)
     RVAL <- parseOxcalOutput(result,first=TRUE,only.R_Date=FALSE)[[1]]
 #     RVAL <- list(date_distribution = date_distribution,
 #                  dates = result$dates,

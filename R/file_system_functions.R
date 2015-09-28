@@ -12,3 +12,7 @@ readOxcalOutput <- function(output_file) {
   result <- scan(output_file, character(0), sep = "\n",quiet=T)
   result
 }
+
+cleanupOxcalFiles <- function(output_file) {
+  unlink(gsub(".js","*",output_file), recursive = FALSE)
+}
