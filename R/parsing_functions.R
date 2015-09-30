@@ -246,9 +246,21 @@ extractProbsFromOxcalResult <- function(result_text) {
     )
   )
 
+  regexp <- "(ocd\\[\\d+\\].likelihood.probNorm=)(.*)(;)"
+  probs_norm <- as.double(
+    na.omit(
+      unlist(
+        strsplit(
+          stringr::str_match(result_text, regexp)[, 3], ", ")
+      )
+    )
+  )
+
+  if(is.na(probs_norm)) {probs_norm <- 1}
+
   dates <- seq(probs_start, by = probs_resolution, length.out = length(probs))
 
-  RVAL <- data.frame(dates = dates, probabilities = probs / probs_resolution)
+  RVAL <- data.frame(dates = dates, probabilities = probs * probs_norm)
   RVAL
 }
 
