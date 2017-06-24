@@ -1,0 +1,15 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+sudo: false
+cache: packages
+r_packages:
+  - covr
+  - Rdpack
+
+before_install:
+  - chmod +x ./download_excal.sh
+  - ./download_excal.sh
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'
