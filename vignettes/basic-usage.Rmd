@@ -18,9 +18,9 @@ There are other packages out that also can calibrate <sup>14</sup>C data, like e
 
 Lets assume, we want to calibrate a date 5000 BP +- 25 years. `roxcal` has the function `oxcalCalibrate` for doing so. But at first we have to load the package and tell it where to find the local path to the [Oxcal distribution](https://c14.arch.ox.ac.uk/OxCalDistribution.zip). Than you can calibrate the date using bp, std and name.
 
-```{r,eval=FALSE,eval=FALSE,fig.width=7,fig.height=4}
+```{r,fig.width=7,fig.height=4}
 library(roxcal)
-setOxcalExecutablePath("/home/martin/Documents/scripte/OxCal/bin/OxCalLinux")
+setOxcalExecutablePath("~/OxCal/bin/OxCalLinux")
 my_date <- oxcalCalibrate(5000,25,"KIA-12345")
 my_date
 plot(my_date)
@@ -28,7 +28,7 @@ plot(my_date)
 
 You can also calibrate multiple dates at once:
 
-```{r,eval=FALSE,fig.width=7,fig.height=4}
+```{r,fig.width=7,fig.height=4}
 my_uncal_dates <- data.frame(bp=c(5000,4500,4000),
                              std=c(45,35,25),
                              names=c("Date 1", "Date 2", "Date 3")
@@ -40,7 +40,7 @@ plot(my_cal_dates)
 
 The resulting object from the calibration is a list of class `roxcalCalibratedDatesList`, containing elements of class `roxcalCalibratedDate`. Each of these dates is again a list of the essential informations of the calibrated date including the raw probabilities, that can be extracted for additional analysis:
 
-```{r,eval=FALSE}
+```{r}
 str(my_cal_dates, max.level = 1)
 my_cal_dates[[1]] # equivalent to my_cal_dates[["Date 1"]] or my_cal_dates$`Date 1`
 str(my_cal_dates$`Date 1`)
@@ -57,7 +57,7 @@ plot(
 
 You can also use `roxcal` to simulate <sup>14</sup>C dates in the same way as OxCal R_Simulate function works. You enter a calibrated year (1000 for 1000 AD, -1000 for 1000 BC), and OxCal will simulate a BP value using a bit of randomisation. This results in the fact that each run will have a slightly different BP value.
 
-```{r,eval=FALSE,fig.width=7,fig.height=4}
+```{r,fig.width=7,fig.height=4}
 my_cal_date <- data.frame(bp=c(-3400),
                              std=c(25),
                              names=c("SimDate_1")
@@ -78,7 +78,7 @@ plot(my_simulated_dates)
 This package was originally intended to support a series of articles dealing with the investigation of sum calibration. That is why a function is implemented to simulate sum calibration. You can use it to simulate a series of <sup>14</sup>C dates and explore the sum calibrated results. You can specify the beginning and end of the time span that should be used for the simulation (in calender years), the number of <sup>14</sup>C dates that should be simulated, their standard deviation either as vector of length n or as one number for all dates, and the type of distribution that should be used (either equally spaced in time, or random uniform).
 The result is again of class `roxcalCalibratedDate`, so you can access the raw probabilities for further analysis.
 
-```{r,eval=FALSE,fig.width=7,fig.height=4}
+```{r,fig.width=7,fig.height=4}
 my_sum_sim<-oxcalSumSim(
   timeframe_begin = -4000,
   timeframe_end = -3000,
@@ -93,7 +93,7 @@ plot(my_sum_sim)
 ## Execute custom OxCal code
 
 You can also use the package to execute your own OxCal code from within R, and import the results back into the workspace. You can use `R_Date`, `R_Simulate` and `oxcal_Sum` to produce that OxCal code:
-```{r,eval=FALSE, echo=F}
+```{r, echo=F}
 library(knitr)
 hook_output <- knit_hooks$get("output")
 knit_hooks$set(output = function(x, options) {
@@ -116,7 +116,7 @@ knit_hooks$set(output = function(x, options) {
    hook_output(x, options)
  })
 ```
-```{r,eval=FALSE}
+```{r}
 R_Simulate(-4000, 25, "MySimDate")
 my_dates <- R_Date(c("Lab-12345","Lab-54321"), c(5000,4500), 25)
 cat(my_dates)
@@ -124,7 +124,7 @@ my_sum <- oxcal_Sum(my_dates)
 cat(my_sum)
 ```
 or use your own script as string variable.
-```{r,eval=FALSE, output.lines=8}
+```{r, output.lines=8}
 knitr::opts_chunk$set(cache=TRUE)
 my_oxcal_code <- ' Plot()
  {
