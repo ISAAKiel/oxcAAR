@@ -9,7 +9,7 @@ r_packages:
 
 before_install:
   - chmod +x ./download_excal.sh
-  - ./download_excal.sh
+  - ./download_oxcal.sh
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
