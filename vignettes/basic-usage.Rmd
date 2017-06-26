@@ -20,7 +20,7 @@ Lets assume, we want to calibrate a date 5000 BP +- 25 years. `roxcal` has the f
 
 ```{r,fig.width=7,fig.height=4}
 library(roxcal)
-setOxcalExecutablePath("/home/martin/Documents/scripte/OxCal/bin/OxCalLinux")
+setOxcalExecutablePath("~/OxCal/bin/OxCalLinux")
 my_date <- oxcalCalibrate(5000,25,"KIA-12345")
 my_date
 plot(my_date)
@@ -93,7 +93,7 @@ plot(my_sum_sim)
 ## Execute custom OxCal code
 
 You can also use the package to execute your own OxCal code from within R, and import the results back into the workspace. You can use `R_Date`, `R_Simulate` and `oxcal_Sum` to produce that OxCal code:
-```{r echo=F}
+```{r, echo=F}
 library(knitr)
 hook_output <- knit_hooks$get("output")
 knit_hooks$set(output = function(x, options) {
@@ -124,7 +124,7 @@ my_sum <- oxcal_Sum(my_dates)
 cat(my_sum)
 ```
 or use your own script as string variable.
-```{r output.lines=8}
+```{r, output.lines=8}
 knitr::opts_chunk$set(cache=TRUE)
 my_oxcal_code <- ' Plot()
  {
