@@ -138,7 +138,7 @@ parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
     this_probs <- extractProbsFromOxcalResult(date_text)
     this_sigma_ranges <- extractSigmaRangesFromOxcalResult(date_text)
 
-    RVA <- roxcalCalibratedDate(name = this_name,
+    RVA <- oxcAARCalibratedDate(name = this_name,
                                 bp=this_bp,
                                 std=this_std,
                                 cal_curve = this_cal_curve,
@@ -148,7 +148,7 @@ parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
     RVA
   })
   names(RVA) <- sapply(RVA,function(x) x$name)
-  class(RVA) <- append(class(RVA),"roxcalCalibratedDatesList")
+  class(RVA) <- append(class(RVA),"oxcAARCalibratedDatesList")
   RVA
 }
 

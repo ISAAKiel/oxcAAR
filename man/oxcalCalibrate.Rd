@@ -14,7 +14,7 @@ oxcalCalibrate(bp, std, names = 1:length(bp))
 \item{names}{The names of the measurements, usually the Laboratory numbers}
 }
 \value{
-An object of class \code{\link{roxcalCalibratedDatesList}}
+An object of class \code{\link{oxcAARCalibratedDatesList}}
 }
 \description{
 Calibrates a 14C date using oxcal

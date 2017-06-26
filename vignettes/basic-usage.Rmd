@@ -2,24 +2,26 @@
 title: "Basic Usage"
 author: "Martin Hinz"
 date: '`r Sys.Date()`'
+# output:
+#   rmarkdown::html_vignette:
+#     keep_md: true
 output:
-  rmarkdown::html_vignette:
-    keep_md: true
+  github_document
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
-The package `roxcal` is designed to represent an interface between R and [Oxcal](https://c14.arch.ox.ac.uk). It offers the posibility to parse Oxcal scripts from data within R, execute these scripts and reread the results from the Oxcal output files.
-There are other packages out that also can calibrate <sup>14</sup>C data, like eg. `Bchron`, which will be sufficient and probably also faster than using `roxcal`. But this package is intended to use especially the algorithms of Oxcal, which is a quasi-standard for archaeological research these days.
+The package `oxcAAR` is designed to represent an interface between R and [Oxcal](https://c14.arch.ox.ac.uk). It offers the posibility to parse Oxcal scripts from data within R, execute these scripts and reread the results from the Oxcal output files.
+There are other packages out that also can calibrate <sup>14</sup>C data, like eg. `Bchron`, which will be sufficient and probably also faster than using `oxcAAR`. But this package is intended to use especially the algorithms of Oxcal, which is a quasi-standard for archaeological research these days.
 
 ## Calibration (R_Date)
 
-Lets assume, we want to calibrate a date 5000 BP +- 25 years. `roxcal` has the function `oxcalCalibrate` for doing so. But at first we have to load the package and tell it where to find the local path to the [Oxcal distribution](https://c14.arch.ox.ac.uk/OxCalDistribution.zip). Than you can calibrate the date using bp, std and name.
+Lets assume, we want to calibrate a date 5000 BP +- 25 years. `oxcAAR` has the function `oxcalCalibrate` for doing so. But at first we have to load the package and tell it where to find the local path to the [Oxcal distribution](https://c14.arch.ox.ac.uk/OxCalDistribution.zip). Than you can calibrate the date using bp, std and name.
 
 ```{r,fig.width=7,fig.height=4}
-library(roxcal)
+library(oxcAAR)
 setOxcalExecutablePath("~/OxCal/bin/OxCalLinux")
 my_date <- oxcalCalibrate(5000,25,"KIA-12345")
 my_date
@@ -38,7 +40,7 @@ my_cal_dates
 plot(my_cal_dates)
 ```
 
-The resulting object from the calibration is a list of class `roxcalCalibratedDatesList`, containing elements of class `roxcalCalibratedDate`. Each of these dates is again a list of the essential informations of the calibrated date including the raw probabilities, that can be extracted for additional analysis:
+The resulting object from the calibration is a list of class `oxcAARCalibratedDatesList`, containing elements of class `oxcAARCalibratedDate`. Each of these dates is again a list of the essential informations of the calibrated date including the raw probabilities, that can be extracted for additional analysis:
 
 ```{r}
 str(my_cal_dates, max.level = 1)
@@ -55,7 +57,7 @@ plot(
 
 ## Simulation (R_Simulate)
 
-You can also use `roxcal` to simulate <sup>14</sup>C dates in the same way as OxCal R_Simulate function works. You enter a calibrated year (1000 for 1000 AD, -1000 for 1000 BC), and OxCal will simulate a BP value using a bit of randomisation. This results in the fact that each run will have a slightly different BP value.
+You can also use `oxcAAR` to simulate <sup>14</sup>C dates in the same way as OxCal R_Simulate function works. You enter a calibrated year (1000 for 1000 AD, -1000 for 1000 BC), and OxCal will simulate a BP value using a bit of randomisation. This results in the fact that each run will have a slightly different BP value.
 
 ```{r,fig.width=7,fig.height=4}
 my_cal_date <- data.frame(bp=c(-3400),
@@ -76,7 +78,7 @@ plot(my_simulated_dates)
 ## Simulate Sum Calibration
 
 This package was originally intended to support a series of articles dealing with the investigation of sum calibration. That is why a function is implemented to simulate sum calibration. You can use it to simulate a series of <sup>14</sup>C dates and explore the sum calibrated results. You can specify the beginning and end of the time span that should be used for the simulation (in calender years), the number of <sup>14</sup>C dates that should be simulated, their standard deviation either as vector of length n or as one number for all dates, and the type of distribution that should be used (either equally spaced in time, or random uniform).
-The result is again of class `roxcalCalibratedDate`, so you can access the raw probabilities for further analysis.
+The result is again of class `oxcAARCalibratedDate`, so you can access the raw probabilities for further analysis.
 
 ```{r,fig.width=7,fig.height=4}
 my_sum_sim<-oxcalSumSim(

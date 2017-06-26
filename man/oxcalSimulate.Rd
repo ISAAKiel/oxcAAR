@@ -14,7 +14,7 @@ oxcalSimulate(c_date, std, names = 1:length(c_date))
 \item{names}{The names of the measurements, usually the Laboratory numbers}
 }
 \value{
-An object of class \code{\link{roxcalCalibratedDatesList}}
+An object of class \code{\link{oxcAARCalibratedDatesList}}
 }
 \description{
 Simulates 14C dates using oxcal

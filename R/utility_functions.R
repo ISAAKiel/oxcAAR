@@ -19,14 +19,14 @@
 setOxcalExecutablePath <- function(path) {
   if (!file.exists(path))
     stop("No file at given location")
-  options(roxcal.oxcal_path=path)
+  options(oxcAAR.oxcal_path=path)
   print("Oxcal path set!")
 }
 
 ## ---------- private ----------
 
 getOxcalExecutablePath <- function() {
-  oxcal_path <- getOption("roxcal.oxcal_path")
+  oxcal_path <- getOption("oxcAAR.oxcal_path")
   if (is.null(oxcal_path) || oxcal_path == "") {
     stop("Please set path to oxcal first (using 'setOxcalExecutablePath')!")
   }

@@ -1,13 +1,13 @@
-#' Roxcal Calibrated Dates List
+#' oxcAAR Calibrated Dates List
 #'
-#' A List of \code{\link{roxcalCalibratedDate}}
+#' A List of \code{\link{oxcAARCalibratedDate}}
 #'
-#' @return an object of the class 'roxcalCalibratedDatesList'
-#' @name roxcalCalibratedDatesList
+#' @return an object of the class 'oxcAARCalibratedDatesList'
+#' @name oxcAARCalibratedDatesList
 NULL
 
 #' @export
-print.roxcalCalibratedDatesList <- function(x, ...){
+print.oxcAARCalibratedDatesList <- function(x, ...){
   n <- length(x)
   if (n == 1) print(x[[1]],...)
   else{
@@ -19,20 +19,20 @@ print.roxcalCalibratedDatesList <- function(x, ...){
 }
 
 #' @export
-plot.roxcalCalibratedDatesList <- function(x, ...){
+plot.oxcAARCalibratedDatesList <- function(x, ...){
   if (length(x) == 1) plot(x[[1]],...)
   else{
     #     if (requireNamespace("ggplot2", quietly = TRUE)) {
     #       #  if (FALSE) {
-    #       plotRoxcalCalibratedDatesListGGPlot2(x, ...)
+    #       plotoxcAARCalibratedDatesListGGPlot2(x, ...)
     #     } else {
-    plotRoxcalCalibratedDatesListSystemGraphics(x, ...)
+    plotoxcAARCalibratedDatesListSystemGraphics(x, ...)
     # }
   }
 }
 
 
-plotRoxcalCalibratedDatesListSystemGraphics <- function(x, ...){
+plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
   op <- par(no.readonly = TRUE)
   indices <- 1:length(x)
   min_year <- min(

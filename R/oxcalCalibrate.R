@@ -4,7 +4,7 @@
 #' @param std A vector containing the standard deviations of the measurements
 #' @param names The names of the measurements, usually the Laboratory numbers
 #'
-#' @return An object of class \code{\link{roxcalCalibratedDatesList}}
+#' @return An object of class \code{\link{oxcAARCalibratedDatesList}}
 #'@export
 
 oxcalCalibrate <- function(bp, std, names = 1:length(bp)) {

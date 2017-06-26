@@ -37,7 +37,7 @@ my_date
 plot(my_date)
 ```
 
-![](vignettes/basic-usage_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-1.png)
+![](basic-usage_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-1.png)
 
 You can also calibrate multiple dates at once:
 
@@ -86,7 +86,7 @@ my_cal_dates
 plot(my_cal_dates)
 ```
 
-![](vignettes/basic-usage_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-2-1.png)
+![](basic-usage_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-2-1.png)
 
 The resulting object from the calibration is a list of class `oxcAARCalibratedDatesList`, containing elements of class `oxcAARCalibratedDate`. Each of these dates is again a list of the essential informations of the calibrated date including the raw probabilities, that can be extracted for additional analysis:
 
@@ -155,7 +155,7 @@ plot(
   )
 ```
 
-![](vignettes/basic-usage_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-1.png)
+![](basic-usage_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-1.png)
 
 Simulation (R\_Simulate)
 ------------------------
@@ -191,7 +191,7 @@ my_simulated_dates
 plot(my_simulated_dates)
 ```
 
-![](vignettes/basic-usage_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-4-1.png)
+![](basic-usage_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-4-1.png)
 
 Simulate Sum Calibration
 ------------------------
@@ -236,7 +236,7 @@ str(my_sum_sim)
 plot(my_sum_sim)
 ```
 
-![](vignettes/basic-usage_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-5-1.png)
+![](basic-usage_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-5-1.png)
 
 Execute custom OxCal code
 -------------------------

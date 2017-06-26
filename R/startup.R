@@ -1,10 +1,10 @@
 .onLoad <- function(libname, pkgname) {
   op <- options()
-  op.roxcal <- list(
-    roxcal.oxcal_path = ""
+  op.oxcAAR <- list(
+    oxcAAR.oxcal_path = ""
   )
-  toset <- !(names(op.roxcal) %in% names(op))
-  if(any(toset)) options(op.roxcal[toset])
+  toset <- !(names(op.oxcAAR) %in% names(op))
+  if(any(toset)) options(op.oxcAAR[toset])
 
   invisible()
 }

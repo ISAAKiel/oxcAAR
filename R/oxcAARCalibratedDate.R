@@ -1,6 +1,6 @@
-#' Roxcal Calibratred Dates Object
+#' oxcAAR Calibratred Dates Object
 #'
-#' The function \code{roxcalCalibratedDate} is used to create an object for a calibrated date.
+#' The function \code{oxcAARCalibratedDate} is used to create an object for a calibrated date.
 #'
 #' @param name a string giving the name of the date (usually the lab number)
 #' @param bp a integer giving the BP value for the date
@@ -10,12 +10,12 @@
 #' each a data frame with start, end and probability giving
 #' @param raw_probabilities a data frame of dates and the related probabilities for each date
 #'
-#' @return an object of the class \code{'roxcalCalibratedDate'}
+#' @return an object of the class \code{'oxcAARCalibratedDate'}
 #' @export
-roxcalCalibratedDate <- function(name, bp, std, cal_curve,
+oxcAARCalibratedDate <- function(name, bp, std, cal_curve,
                                  sigma_ranges, raw_probabilities){
 
-  RVA <- structure(list(),class="roxcalCalibratedDate")
+  RVA <- structure(list(),class="oxcAARCalibratedDate")
   RVA$name <- name
   RVA$bp <- bp
   RVA$std <- std
@@ -26,7 +26,7 @@ roxcalCalibratedDate <- function(name, bp, std, cal_curve,
 }
 
 ##' @export
-format.roxcalCalibratedDate <- function(x, ...){
+format.oxcAARCalibratedDate <- function(x, ...){
 
   out_str <- list()
   out_str$name_str <- paste("\n","\t",x$name,sep = "")
@@ -46,18 +46,18 @@ format.roxcalCalibratedDate <- function(x, ...){
 }
 
 #' @export
-print.roxcalCalibratedDate <- function(x, ...) cat(format(x, ...), "\n")
+print.oxcAARCalibratedDate <- function(x, ...) cat(format(x, ...), "\n")
 
 ##' @export
-plot.roxcalCalibratedDate <- function(x, ...){
+plot.oxcAARCalibratedDate <- function(x, ...){
   #   if (requireNamespace("ggplot2", quietly = TRUE)) {
-  #     plotRoxcalDateGGPlot2(x, ...)
+  #     plotoxcAARDateGGPlot2(x, ...)
   #   } else {
-  plotRoxcalDateSystemGraphics(x, ...)
+  plotoxcAARDateSystemGraphics(x, ...)
   # }
 }
 
-plotRoxcalDateSystemGraphics <- function(x, ...){
+plotoxcAARDateSystemGraphics <- function(x, ...){
   years <- x$raw_probabilities$dates
   probability <- x$raw_probabilities$probabilities
   max_prob <- max(probability)

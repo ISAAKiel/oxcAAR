@@ -4,7 +4,7 @@
 #' @param std A vector containing the standard deviations for the simulated dates
 #' @param names The names of the measurements, usually the Laboratory numbers
 #'
-#' @return An object of class \code{\link{roxcalCalibratedDatesList}}
+#' @return An object of class \code{\link{oxcAARCalibratedDatesList}}
 #'@export
 
 oxcalSimulate <- function(c_date, std, names = 1:length(c_date)) {
