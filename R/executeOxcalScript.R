@@ -12,7 +12,7 @@ executeOxcalScript <- function(oxcal_script) {
     option_file <- tempfile()
     output_file <- paste(option_file, ".js", sep = "")
     cat(oxcal_script, file = option_file)
-    system(paste(file.path(oxcal_path), option_file))
+    system(paste(normalizePath(oxcal_path), option_file))
     result <- output_file
     result
 }
