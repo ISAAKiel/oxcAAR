@@ -6,7 +6,7 @@ Date: 2015-09-01
 Authors@R: person("Hinz", "Martin", email = "martin.hinz@ufg.uni-kiel.de",
   role = c("aut", "cre"))
 Description: A set of tools that enables using Oxcal from within R.
-License: GPL-2
+License: GPL-2 | file LICENSE
 LazyData: TRUE
 Imports:
   stringr,
