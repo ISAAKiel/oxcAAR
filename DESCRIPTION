@@ -3,8 +3,10 @@ Type: Package
 Title: Enables Communication with Oxcal
 Version: 0.0.0.9000
 Date: 2015-09-01
-Authors@R: person("Hinz", "Martin", email = "martin.hinz@ufg.uni-kiel.de",
-  role = c("aut", "cre"))
+Authors@R: c(
+  person("Hinz", "Martin", email = "martin.hinz@ufg.uni-kiel.de", role = c("aut", "cre")),
+  person("Clemens", "Schmid", email = "clemens@nevrome.de", role = c("aut"))
+  )
 Description: A set of tools that enables using Oxcal from within R.
 License: GPL-2 | file LICENSE
 LazyData: TRUE
