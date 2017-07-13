@@ -4,3 +4,5 @@
 ^README-.*\.png$
 ^\.travis\.yml$
 ^download_oxcal\.sh$
+^basic-usage\.md$
+^figure$
