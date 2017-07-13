@@ -61,25 +61,25 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
   years <- x$raw_probabilities$dates
   probability <- x$raw_probabilities$probabilities
   max_prob <- max(probability)
-  plot(years, probability, main = x$name, type = "n",
+  graphics::plot(years, probability, main = x$name, type = "n",
        ylim = c(max_prob / 7 * -1, max_prob))
-  mtext(
+  graphics::mtext(
     formatFullSigmaRange(x$sigma_ranges$one_sigma,"one sigma"),
     3, line=0, cex=0.6, adj=1
   )
-  mtext(
+  graphics::mtext(
     formatFullSigmaRange(x$sigma_ranges$two_sigma,"two sigma"),
     3, line=1,cex=0.6,adj=1
   )
-  mtext(
+  graphics::mtext(
     formatFullSigmaRange(x$sigma_ranges$three_sigma,"three sigma"),
     3, line=2,cex=0.6,adj=1
   )
-  polygon(years, probability, col = "lightgrey")
+  graphics::polygon(years, probability, col = "lightgrey")
   if (length(x$sigma_ranges$one_sigma[,1]) > 0){
     y_pos <- max_prob / 24 * -1
     arrow_length <- max_prob / 8
-    arrows(
+    graphics::arrows(
       x$sigma_ranges$one_sigma[,1],
       y_pos,
       x$sigma_ranges$one_sigma[,2],
@@ -88,7 +88,7 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
       col="black",code=3,angle=90,length=arrow_length,lty=1,lwd=2
     )
     y_pos <- y_pos * 2
-    arrows(
+    graphics::arrows(
       x$sigma_ranges$two_sigma[,1],
       y_pos,
       x$sigma_ranges$two_sigma[,2],
@@ -97,7 +97,7 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
       col="black",code=3,angle=90,length=arrow_length,lty=1,lwd=2
     )
     y_pos <- y_pos / 2 * 3
-    arrows(
+    graphics::arrows(
       x$sigma_ranges$three_sigma[,1],
       y_pos,
       x$sigma_ranges$three_sigma[,2],
@@ -107,6 +107,6 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
     )
   }
 
-  mtext(paste(x$cal_curve), side = 1, line = 4, adj = 0,
+  graphics::mtext(paste(x$cal_curve), side = 1, line = 4, adj = 0,
         cex = 0.6)
 }

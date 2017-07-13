@@ -20,7 +20,7 @@ print.oxcAARCalibratedDatesList <- function(x, ...){
 
 #' @export
 plot.oxcAARCalibratedDatesList <- function(x, ...){
-  if (length(x) == 1) plot(x[[1]],...)
+  if (length(x) == 1) graphics::plot(x[[1]],...)
   else{
     #     if (requireNamespace("ggplot2", quietly = TRUE)) {
     #       #  if (FALSE) {
@@ -33,7 +33,7 @@ plot.oxcAARCalibratedDatesList <- function(x, ...){
 
 
 plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
-  op <- par(no.readonly = TRUE)
+  op <- graphics::par(no.readonly = TRUE)
   indices <- 1:length(x)
   min_year <- min(
     sapply(
@@ -47,25 +47,25 @@ plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
       function(i) max(x[[i]]$raw_probabilities$dates)
     )
   )
-  par(mfrow=c(length(x),1))
-  par(oma = c(3,4,2,3) + 0.1,
-      mar = c(0,1,0,1) + 0.1)
+  graphics::par(mfrow=c(length(x),1))
+  graphics::par(oma = c(3,4,2,3) + 0.1,
+                mar = c(0,1,0,1) + 0.1)
   for (i in indices) {
     years <- x[[i]]$raw_probabilities$dates
     probability <- x[[i]]$raw_probabilities$probabilities
     max_prob <- max(probability)
-    plot(
+    graphics::plot(
       years, probability,
       type = "n",
       ylim=c(max_prob / 7 * -1,max_prob),
       xlim = c(min_year, max_year),
       axes = FALSE
     )
-    axis(side=4)
-    polygon(years, probability, col="lightgrey")
-    mtext(x[[i]]$name,side=2,las=2,cex=0.6)
-    grid()
+    graphics::axis(side=4)
+    graphics::polygon(years, probability, col="lightgrey")
+    graphics::mtext(x[[i]]$name,side=2,las=2,cex=0.6)
+    graphics::grid()
   }
-  axis(side=1)
-  par(op)
+  graphics::axis(side=1)
+  graphics::par(op)
 }
