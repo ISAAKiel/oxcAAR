@@ -30,11 +30,9 @@ oxcalSumSim <- function(timeframe_begin,
         cal_dates <- seq(timeframe_begin,
                          timeframe_end,
                          by = ( (timeframe_end - timeframe_begin) / n) )
-    } else if (date_distribution == "uniform") {
+    } else {
         date_range <- seq(timeframe_begin, timeframe_end)
         cal_dates <- sample(date_range, n, replace = T)
-    } else {
-        stop("Please give an option for the date distribution.")
     }
 
     script <- oxcal_Sum(R_Simulate(cal_dates, stds))
