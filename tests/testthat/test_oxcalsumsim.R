@@ -23,6 +23,10 @@ with_mock(
       expect_error(oxcalSumSim(timeframe_begin = -1000, timeframe_end = -2000, n = 10, stds = c(10,10)), "Please give either one stds")
     })
 
+    test_that("oxcalSumSim complains when given wrong distribution", {
+      expect_error(oxcalSumSim(timeframe_begin = -1000, timeframe_end = -2000, n = 10, stds = 10, date_distribution = "kaffeemühle" ), "should be one of")
+    })
+
     file.copy("ox_sum.js", "ox_sum_work.js")
     this_result <- oxcalSumSim(timeframe_begin = -1000, timeframe_end = -2000, n = 10, stds = 10)
 
