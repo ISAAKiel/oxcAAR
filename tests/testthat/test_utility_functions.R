@@ -12,4 +12,5 @@ test_that("quickSetupOxcal downloads oxcal and sets correct path",{
   expect_true(basename(options("oxcAAR.oxcal_path")[[1]]) %in% c("OxCalLinux",
                                                                  "OxCalWin.exe",
                                                                  "OxCalMac"))
+  unlink("OxCal/", recursive = T)
 })
