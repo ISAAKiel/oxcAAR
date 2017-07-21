@@ -17,3 +17,11 @@ context("oxcal_Sum")
 test_that("oxcal_Sum produces correct oxcal code", {
   expect_equal(oxcal_Sum(R_Simulate(4000, 10)), "Sum(\" Sum \"){\n R_Simulate(\"1\",\n          4000, 10); \n};")
 })
+
+context("parseFullOxcalOutput")
+
+test_that("parseFullOxcalOutput parses oxcal output file correct", {
+  result <- readOxcalOutput("ox_output.js")
+  RVA <- parseOxcalOutput(result)
+  expect_equal(class(RVA), c("list", "oxcAARCalibratedDatesList"))
+  })
