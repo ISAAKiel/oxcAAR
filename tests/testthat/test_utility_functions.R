@@ -1,8 +1,24 @@
+context("getOxcalExecutablePath")
+
+test_that("getOxcalExecutablePath returns error if not set already", {
+  expect_error(oxcAAR:::getOxcalExecutablePath(), "Please set path to oxcal first")
+})
+
 context("setOxcalExecutablePath")
 
 test_that("setOxcalExecutablePath sets the oxcal path in the environment variable",{
   setOxcalExecutablePath("ox_output.js")
   expect_true(options("oxcAAR.oxcal_path")=="ox_output.js")
+})
+
+context("getOxcalExecutablePath")
+
+test_that("getOxcalExecutablePath returns no error if set already", {
+  expect_error(oxcAAR:::getOxcalExecutablePath(), NA)
+})
+
+test_that("getOxcalExecutablePath returns path set before", {
+  expect_equal(oxcAAR:::getOxcalExecutablePath(), "ox_output.js")
 })
 
 test_that("setOxcalExecutablePath complains when file does not exists",{
