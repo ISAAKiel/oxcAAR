@@ -111,11 +111,23 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
         cex = 0.6)
 }
 
+#' Checks if a variable is of class oxcAARCalibratedDate
+#'
+#' Checks if a variable is of class oxcAARCalibratedDate
+#'
+#' @param x a variable
+#'
+#' @return true if x is a oxcAARCalibratedDate, false otherwise
+#'
+#' @export
+is.oxcAARCalibratedDate <- function(x) {"oxcAARCalibratedDate" %in% class(x)}
+
+
 #### getter ####
 
 # helper function to check class attribute
 check_if_class_is_oxcAARCalibratedDate <- function(x) {
-  if (!("oxcAARCalibratedDate" %in% class(x))) stop("x is not an object of class oxcAARCalibratedDate")
+  if (!is.oxcAARCalibratedDate(x)) stop("x is not an object of class oxcAARCalibratedDate")
 }
 
 #' get date name
