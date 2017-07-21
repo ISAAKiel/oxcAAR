@@ -22,6 +22,6 @@ context("parseFullOxcalOutput")
 
 test_that("parseFullOxcalOutput parses oxcal output file correct", {
   result <- readOxcalOutput("ox_output.js")
-  RVA <- parseOxcalOutput(result)
-  expect_equal(class(RVA), c("list", "oxcAARCalibratedDatesList"))
+  RVA <- oxcAAR::parseFullOxcalOutput(result)
+  expect_equal(length(RVA), 4)
   })
