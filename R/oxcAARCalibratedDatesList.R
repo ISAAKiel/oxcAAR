@@ -69,3 +69,14 @@ plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
   graphics::axis(side=1)
   graphics::par(op)
 }
+
+#' Checks if a variable is of class oxcAARCalibratedDatesList
+#'
+#' Checks if a variable is of class oxcAARCalibratedDatesList
+#'
+#' @param x a variable
+#'
+#' @return true if x is a oxcAARCalibratedDatesList, false otherwise
+#'
+#' @export
+is.oxcAARCalibratedDatesList <- function(x) {"oxcAARCalibratedDatesList" %in% class(x)}
