@@ -25,3 +25,10 @@ context("plot.oxcAARCalibratedDatesList")
 test_that("plot produces no error", {
   expect_error(plot( this_multiple_dates_list), NA)
 })
+
+context("is.oxcAARCalibratedDatesList")
+
+test_that("is.oxcAARCalibratedDatesList distinguishes between objects", {
+  expect_true(is.oxcAARCalibratedDatesList(this_multiple_dates_list))
+  expect_false(is.oxcAARCalibratedDatesList(data.frame(test=NA)))
+})
