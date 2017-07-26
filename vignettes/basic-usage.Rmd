@@ -40,6 +40,13 @@ my_cal_dates
 plot(my_cal_dates)
 ```
 
+And you might like to plot them on the calibration curve:
+
+```{r,fig.width=7,fig.height=4}
+calcurve_plot(my_cal_dates)
+```
+
+
 The resulting object from the calibration is a list of class `oxcAARCalibratedDatesList`, containing elements of class `oxcAARCalibratedDate`. Each of these dates is again a list of the essential informations of the calibrated date including the raw probabilities, that can be extracted for additional analysis:
 
 ```{r}
