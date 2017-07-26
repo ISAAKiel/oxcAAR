@@ -320,11 +320,38 @@ extractSigmaRangesFromOxcalResult <- function(result_text) {
 }
 
 extractCalCurveFromOxcalResult <- function(date_text){
-  regexp <- "calib\\[0\\].ref=\"(.*)\";"
-  RVA <- as.character(
+  regexp_calcurve_name <- "calib\\[0\\].ref=\"(.*)\";"
+  calcurve_name <- as.character(
     stats::na.omit(
-      stringr::str_match(date_text, regexp)[, 2], ", ")
+      stringr::str_match(date_text, regexp_calcurve_name)[, 2], ", ")
   )
+  regexp_calcurve_resolution <- "calib\\[0\\].resolution=(.*);"
+  calcurve_resolution <- as.numeric(
+    stats::na.omit(
+      stringr::str_match(date_text, regexp_calcurve_resolution)[, 2], ", ")
+  )
+  regexp_calcurve_start <- "calib\\[0\\].start=(.*);"
+  calcurve_start <- as.numeric(
+    stats::na.omit(
+      stringr::str_match(date_text, regexp_calcurve_start)[, 2], ", ")
+  )
+  regexp_calcurve_bp <- "calib\\[0\\].bp=\\[(.*)\\];"
+  calcurve_bp <- as.numeric(
+    strsplit(stats::na.omit(
+      stringr::str_match(date_text, regexp_calcurve_bp)[, 2]
+    ), ",")[[1]]
+  )
+  regexp_calcurve_sigma <- "calib\\[0\\].sigma=\\[(.*)\\];"
+  calcurve_sigma <- as.numeric(
+    strsplit(stats::na.omit(
+      stringr::str_match(date_text, regexp_calcurve_sigma)[, 2]
+    ), ",")[[1]]
+  )
+  RVA <- list(name=calcurve_name,
+              resolution = calcurve_resolution,
+              bp = calcurve_bp,
+              bc = seq( from = calcurve_start, by = calcurve_resolution, length.out = length(calcurve_bp) ),
+              sigma = calcurve_sigma)
   RVA
 }
 

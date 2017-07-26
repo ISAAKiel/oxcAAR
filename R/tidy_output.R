@@ -36,7 +36,7 @@ get_tidy_oxcalresult.oxcAARCalibratedDate <- function(x) {
     name = get_name(x),
     bp = get_bp(x),
     std = get_std(x),
-    cal_curve = get_cal_curve(x),
+    cal_curve = I(list(get_cal_curve(x))),
     sigma_ranges = I(list(get_sigma_ranges(x))),
     raw_probabilities = I(list(get_raw_probabilities(x))),
     stringsAsFactors = FALSE
@@ -51,7 +51,7 @@ get_tidy_oxcalresult.oxcAARCalibratedDatesList <- function(x) {
     name = get_name(x),
     bp = get_bp(x),
     std = get_std(x),
-    cal_curve = get_cal_curve(x),
+    cal_curve = I(get_cal_curve(x)),
     sigma_ranges = I(get_sigma_ranges(x)),
     raw_probabilities = I(get_raw_probabilities(x)),
     stringsAsFactors = FALSE

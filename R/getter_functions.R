@@ -171,7 +171,7 @@ get_cal_curve.oxcAARCalibratedDate <- function(x) {
 #' @rdname get_cal_curve
 #' @export
 get_cal_curve.oxcAARCalibratedDatesList <- function(x) {
-  return(unname(sapply(x, function(x) {x[["cal_curve"]]})))
+  return(unname(lapply(x, function(x) {x[["cal_curve"]]})))
 }
 
 #### get_sigma_ranges ####

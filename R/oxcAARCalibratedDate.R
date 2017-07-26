@@ -5,7 +5,7 @@
 #' @param name a string giving the name of the date (usually the lab number)
 #' @param bp a integer giving the BP value for the date
 #' @param std a integer giving the standard deviation for the date
-#' @param cal_curve a string giving the used calibration curve
+#' @param cal_curve a list containing information about the calibration curve (name, resolution, bp, bc, sigma)
 #' @param sigma_ranges a list of three elements (one, two, three sigma),
 #' each a data frame with start, end and probability giving
 #' @param raw_probabilities a data frame of dates and the related probabilities for each date
@@ -39,7 +39,7 @@ format.oxcAARCalibratedDate <- function(x, ...){
                                                 "two sigma")
   out_str$three_sigma_str <- formatFullSigmaRange(x$sigma_ranges$three_sigma,
                                                   "three sigma")
-  out_str$cal_curve_str <- sprintf("\nCalibrated after:\n\t %s",x$cal_curve)
+  out_str$cal_curve_str <- sprintf("\nCalibrated after:\n\t %s",x$cal_curve$name)
 
   RVA <- paste(out_str,collapse = "\n")
   invisible(RVA)
@@ -107,7 +107,7 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
     )
   }
 
-  graphics::mtext(paste(x$cal_curve), side = 1, line = 4, adj = 0,
+  graphics::mtext(paste(x$cal_curve$name), side = 1, line = 4, adj = 0,
         cex = 0.6)
 }
 

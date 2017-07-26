@@ -38,7 +38,7 @@ test_that("get_cal_curve returns std", {
   expect_equal(get_cal_curve(this_date), this_date[['cal_curve']])
   expect_equal(
     get_cal_curve(this_multiple_dates_list),
-    unname(sapply(this_multiple_dates_list, function(x) {x[["cal_curve"]]}))
+    unname(lapply(this_multiple_dates_list, function(x) {x[["cal_curve"]]}))
   )
 })
 

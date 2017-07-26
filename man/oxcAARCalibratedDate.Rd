@@ -13,7 +13,7 @@ oxcAARCalibratedDate(name, bp, std, cal_curve, sigma_ranges, raw_probabilities)
 
 \item{std}{a integer giving the standard deviation for the date}
 
-\item{cal_curve}{a string giving the used calibration curve}
+\item{cal_curve}{a list containing information about the calibration curve (name, resolution, bp, bc, sigma)}
 
 \item{sigma_ranges}{a list of three elements (one, two, three sigma),
 each a data frame with start, end and probability giving}
