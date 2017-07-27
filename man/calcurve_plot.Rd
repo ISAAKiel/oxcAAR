@@ -4,13 +4,17 @@
 \alias{calcurve_plot}
 \title{Plots calibrated dates on the calibration curve}
 \usage{
-calcurve_plot(calibrated_dates, dates_sigma_ranges = c("two_sigma",
-  "one_sigma", "three_sigma"))
+calcurve_plot(x, dates_sigma_ranges = NULL, uncal_range = TRUE,
+  cal_range = TRUE)
 }
 \arguments{
-\item{calibrated_dates}{Either one or a list of calibrated dates}
+\item{x}{an object of class oxcAARCalibratedDate or oxcAARCalibratedDatesList}
 
-\item{dates_sigma_ranges}{the sigma ranges used for the error bars}
+\item{dates_sigma_ranges}{character. The sigma range used for the error bars ("two_sigma", "one_sigma" or "three_sigma")}
+
+\item{uncal_range}{logical. If TRUE (default), the plot contains error bars for the the uncalibrated age}
+
+\item{cal_range}{logical. If TRUE (default), the plot contains error bars for the the calibrated age}
 }
 \description{
 Plots calibrated dates on the calibration curve
