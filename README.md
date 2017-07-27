@@ -1,4 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.org/ISAAKiel/oxcAAR.svg?branch=master)](https://travis-ci.org/ISAAKiel/oxcAAR) [![Coverage nStatus](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://codecov.io/github/ISAAKiel/oxcAAR?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](http://cran.r-project.org/package=oxcAAR) [![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.r-project.org/Licenses/GPL-2)
+[![Travis-CI Build Status](https://travis-ci.org/ISAAKiel/oxcAAR.svg?branch=master)](https://travis-ci.org/ISAAKiel/oxcAAR) [![Coverage Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://codecov.io/github/ISAAKiel/oxcAAR?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](http://cran.r-project.org/package=oxcAAR) [![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.r-project.org/Licenses/GPL-2)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 oxcAAR
