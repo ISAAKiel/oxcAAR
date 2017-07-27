@@ -21,3 +21,14 @@ Installation
     if(!require('devtools')) install.packages('devtools')
     library(devtools)
     install_github('ISAAKiel/oxcAAR')
+
+Get started
+-----------
+
+To get started, just run:
+
+    quickSetupOxcal()
+
+This will download and unzip [Oxcal](https://c14.arch.ox.ac.uk/oxcal.html) into the current working directory. You can change the destination path of Oxcal by setting `path` parameter.
+
+Afterwards you can start calibrating your dates. Check the [Vignette](vignettes/basic-usage.Rmd) to learn how to do this.
