@@ -1,4 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.org/ISAAKiel/oxcAAR.svg?branch=master)](https://travis-ci.org/ISAAKiel/oxcAAR) [![Coverage Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://codecov.io/github/ISAAKiel/oxcAAR?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](http://cran.r-project.org/package=oxcAAR) [![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.r-project.org/Licenses/GPL-2)
+[![Travis-CI Build Status](https://travis-ci.org/ISAAKiel/oxcAAR.svg?branch=master)](https://travis-ci.org/ISAAKiel/oxcAAR) [![Coverage nStatus](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://codecov.io/github/ISAAKiel/oxcAAR?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](http://cran.r-project.org/package=oxcAAR) [![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.r-project.org/Licenses/GPL-2)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 oxcAAR
@@ -21,3 +21,14 @@ Installation
     if(!require('devtools')) install.packages('devtools')
     library(devtools)
     install_github('ISAAKiel/oxcAAR')
+
+Get started
+-----------
+
+To get started, just run:
+
+    quickSetupOxcal()
+
+This will download and unzip [Oxcal](https://c14.arch.ox.ac.uk/oxcal.html) into the current working directory. You can change the destination path of Oxcal by setting `path` parameter.
+
+Afterwards you can start calibrating your dates. Check the [Vignette](vignettes/basic-usage.Rmd) to learn how to do this.
