@@ -33,7 +33,9 @@ setOxcalExecutablePath <- function(path) {
 #'   \item{Windows}
 #'   \item{Darwin}
 #' }
-#' @param path The path to the directory where Oxcal should be stored. Default: "."
+#' @param path The path to the directory where Oxcal is or should be stored. Default: "."
+#'
+#' @return NULL
 #'
 #' @author Clemens Schmid
 #'
@@ -47,8 +49,11 @@ setOxcalExecutablePath <- function(path) {
 
 quickSetupOxcal <- function(os = Sys.info()["sysname"], path = "."){
 
-  # download and unzip OxCal folder
-  downloadOxcal(path = path)
+  # test if Oxcal is already setup correctly
+  if (!("try-error" %in% class(try(suppressWarnings(oxcalCalibrate(5000, 25, "testdate")), silent = TRUE)))) {
+    message("Oxcal is already installed correctly.")
+    return()
+  }
 
   # parse path string depending on os
   os_exe <- switch(
@@ -59,11 +64,24 @@ quickSetupOxcal <- function(os = Sys.info()["sysname"], path = "."){
   )
   exe <- file.path(path, "OxCal/bin", os_exe)
 
+  # test if Oxcal folder is already present and only the path has to be set
+  if (file.exists(exe)) {
+    message("Oxcal is installed but Oxcal executable path is wrong. Let's have a look...")
+    setOxcalExecutablePath(exe)
+    return()
+  }
+
+  # download and unzip OxCal folder
+  message("Oxcal doesn't seem to be installed. Downloading it now:")
+  downloadOxcal(path = path)
+
   # change permissions to allow execution
   Sys.chmod(exe, mode = "0777")
 
   # set path
   setOxcalExecutablePath(exe)
+
+  return()
 }
 
 

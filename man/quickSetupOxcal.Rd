@@ -14,7 +14,7 @@ quickSetupOxcal(os = Sys.info()["sysname"], path = ".")
   \item{Darwin}
 }}
 
-\item{path}{The path to the directory where Oxcal should be stored. Default: "."}
+\item{path}{The path to the directory where Oxcal is or should be stored. Default: "."}
 }
 \description{
 Downloads the latest version of Oxcal and sets the executable path correctly
