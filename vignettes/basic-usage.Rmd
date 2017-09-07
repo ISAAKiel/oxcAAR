@@ -22,7 +22,8 @@ Lets assume, we want to calibrate a date 5000 BP +- 25 years. `oxcAAR` has the f
 
 ```{r,fig.width=7,fig.height=4}
 library(oxcAAR)
-setOxcalExecutablePath("~/OxCal/bin/OxCalLinux")
+quickSetupOxcal()
+#setOxcalExecutablePath("~/OxCal/bin/OxCalLinux")
 my_date <- oxcalCalibrate(5000,25,"KIA-12345")
 my_date
 plot(my_date)
