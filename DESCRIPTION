@@ -5,7 +5,9 @@ Version: 0.0.0.9000
 Date: 2015-09-01
 Authors@R: c(
   person("Hinz", "Martin", email = "martin.hinz@ufg.uni-kiel.de", role = c("aut", "cre")),
-  person("Clemens", "Schmid", email = "clemens@nevrome.de", role = c("aut"))
+  person("Clemens", "Schmid", email = "clemens@nevrome.de", role = c("aut")),
+  person("Daniel", "Knitter", email = "knitter@geographie.uni-kiel.de", role = c("aut")),
+  person("Carolin", "Tietze", email = "Carolin Tietze <ctietze1991@gmail.com>", role = c("aut"))
   )
 Description: A set of tools that enables using Oxcal from within R.
 License: GPL-2 | file LICENSE
