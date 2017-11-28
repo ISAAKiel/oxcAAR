@@ -28,7 +28,7 @@ test_that("setOxcalExecutablePath complains when file does not exists",{
 context("quickSetupOxcal")
 test_that("quickSetupOxcal downloads oxcal and sets correct path",{
   expect_error(quickSetupOxcal(), NA)
-  expect_true(dir.exists("OxCal/bin/"))
+  expect_true(dir.exists(paste0(tempdir(), "/OxCal/bin/")))
   expect_true(basename(options("oxcAAR.oxcal_path")[[1]]) %in% c("OxCalLinux",
                                                                  "OxCalWin.exe",
                                                                  "OxCalMac"))
