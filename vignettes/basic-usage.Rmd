@@ -156,6 +156,16 @@ my_oxcal_code <- ' Plot()
  };'
 my_result_file <- executeOxcalScript(my_oxcal_code)
 my_result_text <- readOxcalOutput(my_result_file)
+```
+You can either parse the result to a 'standard' oxcAAR object:
+```{r, output.lines=8}
+my_result_data <- parseOxcalOutput(my_result_text)
+str(my_result_data)
+print(my_result_data)
+```
+
+Or you get the whole output of Oxcal as object:
+```{r, output.lines=8}
 my_result_data <- parseFullOxcalOutput(my_result_text)
 str(my_result_data)
 ```
