@@ -17,7 +17,7 @@ R_Simulate(c_dates, stds, names = 1:length(c_dates))
 a string containing the respective Oxcal code
 }
 \description{
-R_Simulate takes names, calender dates and standard deviation for those dates as vectors, and returns
+R_Simulate takes names, calendar dates and standard deviation for those dates as vectors, and returns
 a bit of oxcal code that can be used to feed it into oxcal.
 For details concerning the Oxcal simulation please consult the help page of Oxcal.
 }

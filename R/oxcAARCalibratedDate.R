@@ -1,4 +1,4 @@
-#' oxcAAR Calibratred Dates Object
+#' oxcAAR Calibrated Dates Object
 #'
 #' The function \code{oxcAARCalibratedDate} is used to create an object for a calibrated date.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/oxcAARCalibratedDate.R
 \name{oxcAARCalibratedDate}
 \alias{oxcAARCalibratedDate}
-\title{oxcAAR Calibratred Dates Object}
+\title{oxcAAR Calibrated Dates Object}
 \usage{
 oxcAARCalibratedDate(name, bp, std, cal_curve, sigma_ranges, raw_probabilities)
 }
