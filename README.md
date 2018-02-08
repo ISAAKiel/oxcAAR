@@ -1,4 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.org/ISAAKiel/oxcAAR.svg?branch=master)](https://travis-ci.org/ISAAKiel/oxcAAR) [![Coverage Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://codecov.io/github/ISAAKiel/oxcAAR?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](http://cran.r-project.org/package=oxcAAR) [![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.r-project.org/Licenses/GPL-2)
+[![Travis-CI Build Status](https://travis-ci.org/ISAAKiel/oxcAAR.svg?branch=master)](https://travis-ci.org/ISAAKiel/oxcAAR) [![Coverage Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://codecov.io/github/ISAAKiel/oxcAAR?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](https://CRAN.R-project.org/package=oxcAAR) [![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.R-project.org/Licenses/GPL-2)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 oxcAAR
@@ -11,12 +11,12 @@ Please note that there is a [`roxcal` package](https://github.com/gavinsimpson/r
 Licence
 -------
 
-`oxcAAR` is released under the [GNU General Public Licence, version 2](http://www.r-project.org/Licenses/GPL-2). Comments and feedback are welcome, as are code contributions.
+`oxcAAR` is released under the [GNU General Public Licence, version 2](http://www.R-project.org/Licenses/GPL-2). Comments and feedback are welcome, as are code contributions.
 
 Installation
 ------------
 
-`oxcAAR` is currently not on [CRAN](http://cran.r-project.org/), but you can use [devtools](http://cran.r-project.org/web/packages/devtools/index.html) to install the development version. To do so:
+`oxcAAR` is currently not on [CRAN](https://CRAN.R-project.org/), but you can use [devtools](https://CRAN.R-project.org/web/packages/devtools/index.html) to install the development version. To do so:
 
     if(!require('devtools')) install.packages('devtools')
     library(devtools)
