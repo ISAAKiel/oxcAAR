@@ -3,7 +3,7 @@
 #'
 #' @description Transforms oxcAAR output to a tidy data format.
 #' See \url{http://vita.had.co.nz/papers/tidy-data.html} and
-#' \url{https://cran.r-project.org/web/packages/broom/vignettes/broom.html}
+#' \url{https://CRAN.R-project.org/package=broom}
 #'
 #' @param x an object of class oxcAARCalibratedDate or oxcAARCalibratedDatesList
 #'

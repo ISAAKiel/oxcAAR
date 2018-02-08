@@ -24,7 +24,7 @@ a data.frame (with list columns)
 \description{
 Transforms oxcAAR output to a tidy data format.
 See \url{http://vita.had.co.nz/papers/tidy-data.html} and
-\url{https://cran.r-project.org/web/packages/broom/vignettes/broom.html}
+\url{https://CRAN.R-project.org/package=broom}
 }
 \examples{
 \dontrun{

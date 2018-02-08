@@ -11,12 +11,12 @@ Please note that there is a [`roxcal` package](https://github.com/gavinsimpson/r
 Licence
 -------
 
-`oxcAAR` is released under the [GNU General Public Licence, version 2](http://www.R-project.org/Licenses/GPL-2). Comments and feedback are welcome, as are code contributions.
+`oxcAAR` is released under the [GNU General Public Licence, version 2](https://www.R-project.org/Licenses/GPL-2). Comments and feedback are welcome, as are code contributions.
 
 Installation
 ------------
 
-`oxcAAR` is currently not on [CRAN](https://CRAN.R-project.org/), but you can use [devtools](https://CRAN.R-project.org/web/packages/devtools/index.html) to install the development version. To do so:
+`oxcAAR` is currently not on [CRAN](https://CRAN.R-project.org/), but you can use [devtools](https://CRAN.R-project.org/package=devtools) to install the development version. To do so:
 
     if(!require('devtools')) install.packages('devtools')
     library(devtools)
