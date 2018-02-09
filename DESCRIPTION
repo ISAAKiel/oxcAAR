@@ -1,6 +1,6 @@
 Package: oxcAAR
 Type: Package
-Title: Interface to 'OxCal' 14C Calibration
+Title: Interface to 'OxCal' Radiocarbon Calibration
 Version: 1.0.0
 Date: 2018-02-08
 Authors@R: c(
@@ -9,7 +9,7 @@ Authors@R: c(
   person("Daniel", "Knitter", email = "knitter@geographie.uni-kiel.de", role = c("aut")),
   person("Carolin", "Tietze", email = "Carolin Tietze <ctietze1991@gmail.com>", role = c("aut"))
   )
-Description: A set of tools that enables using 'OxCal' from within R. 'OxCal' (<https://c14.arch.ox.ac.uk/oxcal.html>) is a standard archaeological tool intended to provide radiocarbon calibration and analysis of archaeological and environmental chronological information. 'OxcAAR' allows simple calibration with 'Oxcal' and plotting of the results as well as the execution of sophisticated ('OxCal') code and the import of the results of bulk analysis and complex Bayesian sequential calibration.
+Description: A set of tools that enables using 'OxCal' from within R. 'OxCal' (<https://c14.arch.ox.ac.uk/oxcal.html>) is a standard archaeological tool intended to provide 14C calibration and analysis of archaeological and environmental chronological information. 'OxcAAR' allows simple calibration with 'Oxcal' and plotting of the results as well as the execution of sophisticated ('OxCal') code and the import of the results of bulk analysis and complex Bayesian sequential calibration.
 License: GPL-2 | file LICENSE
 LazyData: TRUE
 Imports:
