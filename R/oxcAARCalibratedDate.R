@@ -84,49 +84,86 @@ plot.oxcAARCalibratedDate <- function(x, ...){
 plotoxcAARDateSystemGraphics <- function(x, ...){
   years <- x$raw_probabilities$dates
   probability <- x$raw_probabilities$probabilities
+  years_post <- probability_post <- NA
+  unmodelled_color <- "lightgrey"
   max_prob <- max(probability)
+  this_sigma_ranges <- x$sigma_ranges
+  if (class(x$posterior_probabilities)=="data.frame"){
+    years_post <- x$posterior_probabilities$dates
+    probability_post <- x$posterior_probabilities$probabilities
+    unmodelled_color <- "#eeeeeeee"
+    max_prob <- max(max_prob, probability_post)
+    this_sigma_ranges <- x$posterior_sigma_ranges
+  }
   graphics::plot(years, probability, main = x$name, type = "n",
        ylim = c(max_prob / 7 * -1, max_prob))
   graphics::mtext(
+    "unmodelled",
+    3, line=3, cex=0.6, adj=0
+  )
+  graphics::mtext(
     formatFullSigmaRange(x$sigma_ranges$one_sigma,"one sigma"),
-    3, line=0, cex=0.6, adj=1
+    3, line=0, cex=0.6, adj=0
   )
   graphics::mtext(
     formatFullSigmaRange(x$sigma_ranges$two_sigma,"two sigma"),
-    3, line=1,cex=0.6,adj=1
+    3, line=1,cex=0.6,adj=0
   )
   graphics::mtext(
     formatFullSigmaRange(x$sigma_ranges$three_sigma,"three sigma"),
-    3, line=2,cex=0.6,adj=1
+    3, line=2,cex=0.6,adj=0
   )
-  graphics::polygon(years, probability, col = "lightgrey")
-  if (length(x$sigma_ranges$one_sigma[,1]) > 0){
+
+  if (class(x$posterior_probabilities)=="data.frame") {
+    graphics::mtext(
+      "posterior",
+      3, line=3, cex=0.6, adj=1
+    )
+    graphics::mtext(
+      formatFullSigmaRange(x$posterior_sigma_ranges$one_sigma,"one sigma"),
+      3, line=0, cex=0.6, adj=1
+    )
+    graphics::mtext(
+      formatFullSigmaRange(x$posterior_sigma_ranges$two_sigma,"two sigma"),
+      3, line=1,cex=0.6,adj=1
+    )
+    graphics::mtext(
+      formatFullSigmaRange(x$posterior_sigma_ranges$three_sigma,"three sigma"),
+      3, line=2,cex=0.6,adj=1
+    )
+  }
+
+  graphics::polygon(years, probability, border = "black", col = unmodelled_color)
+  if (unmodelled_color!="lightgrey"){
+    graphics::polygon(years_post, probability_post, border = "black", col = "#aaaaaaaa")
+  }
+  if (length(this_sigma_ranges$one_sigma[,1]) > 0){
     y_pos <- max_prob / 24 * -1
     arrow_length <- max_prob / 8
     graphics::arrows(
-      x$sigma_ranges$one_sigma[,1],
+      this_sigma_ranges$one_sigma[,1],
       y_pos,
-      x$sigma_ranges$one_sigma[,2],
+      this_sigma_ranges$one_sigma[,2],
       y_pos,
-      length(x$sigma_ranges$one_sigma),
+      length(this_sigma_ranges$one_sigma),
       col="black",code=3,angle=90,length=arrow_length,lty=1,lwd=2
     )
     y_pos <- y_pos * 2
     graphics::arrows(
-      x$sigma_ranges$two_sigma[,1],
+      this_sigma_ranges$two_sigma[,1],
       y_pos,
-      x$sigma_ranges$two_sigma[,2],
+      this_sigma_ranges$two_sigma[,2],
       y_pos,
-      length(x$sigma_ranges$two_sigma),
+      length(this_sigma_ranges$two_sigma),
       col="black",code=3,angle=90,length=arrow_length,lty=1,lwd=2
     )
     y_pos <- y_pos / 2 * 3
     graphics::arrows(
-      x$sigma_ranges$three_sigma[,1],
+      this_sigma_ranges$three_sigma[,1],
       y_pos,
-      x$sigma_ranges$three_sigma[,2],
+      this_sigma_ranges$three_sigma[,2],
       y_pos,
-      length(x$sigma_ranges$three_sigma),
+      length(this_sigma_ranges$three_sigma),
       col="black",code=3,angle=90,length=arrow_length,lty=1,lwd=2
     )
   }

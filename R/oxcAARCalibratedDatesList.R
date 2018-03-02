@@ -53,7 +53,15 @@ plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
   for (i in indices) {
     years <- x[[i]]$raw_probabilities$dates
     probability <- x[[i]]$raw_probabilities$probabilities
+    years_post <- probability_post <- NA
+    unmodelled_color <- "lightgrey"
     max_prob <- max(probability)
+    if (class(x[[i]]$posterior_probabilities)=="data.frame"){
+      years_post <- x[[i]]$posterior_probabilities$dates
+      probability_post <- x[[i]]$posterior_probabilities$probabilities
+      unmodelled_color <- "#eeeeeeee"
+      max_prob <- max(max_prob, probability_post)
+    }
     graphics::plot(
       years, probability,
       type = "n",
@@ -62,7 +70,10 @@ plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
       axes = FALSE
     )
     graphics::axis(side=4)
-    graphics::polygon(years, probability, col="lightgrey")
+    graphics::polygon(years, probability, border = "black", col = unmodelled_color)
+    if (unmodelled_color!="lightgrey"){
+      graphics::polygon(years_post, probability_post, border = "black", col = "#aaaaaaaa")
+    }
     graphics::mtext(x[[i]]$name,side=2,las=2,cex=0.6)
     graphics::grid()
   }
