@@ -136,14 +136,18 @@ parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
     this_bp <- extractBpFromOxcalResult(date_text)
     this_std <- extractStdFromOxcalResult(date_text)
     this_probs <- extractProbsFromOxcalResult(date_text)
+    this_posterior_probs <- extractPosteriorProbsFromOxcalResult(date_text)
     this_sigma_ranges <- extractSigmaRangesFromOxcalResult(date_text)
+    this_posterior_sigma_ranges <- extractPosteriorSigmaRangesFromOxcalResult(date_text)
 
     RVA <- oxcAARCalibratedDate(name = this_name,
                                 bp=this_bp,
                                 std=this_std,
                                 cal_curve = this_cal_curve,
                                 sigma_ranges = this_sigma_ranges,
-                                raw_probabilities = this_probs
+                                raw_probabilities = this_probs,
+                                posterior_sigma_ranges = this_posterior_sigma_ranges,
+                                posterior_probabilities = this_posterior_probs
     )
     RVA
   })
@@ -217,6 +221,57 @@ parseFullOxcalOutput <- function(output) {
 
 ## ---------- private ----------
 
+extractPosteriorProbsFromOxcalResult <- function(result_text) {
+  regexp <- "(ocd\\[\\d+\\].posterior.prob=\\[)(.*)(\\];)"
+  probs <- as.double(
+    stats::na.omit(
+      unlist(
+        strsplit(
+          stringr::str_match(result_text, regexp)[, 3], ", ")
+      )
+    )
+  )
+
+  if(length(probs)==0){return(NA)}
+
+  regexp <- "(ocd\\[\\d+\\].posterior.start=)(.*)(;)"
+  probs_start <- as.double(
+    stats::na.omit(
+      unlist(
+        strsplit(
+          stringr::str_match(result_text, regexp)[, 3], ", ")
+      )
+    )
+  )
+
+  regexp <- "(ocd\\[\\d+\\].posterior.resolution=)(.*)(;)"
+  probs_resolution <- as.double(
+    stats::na.omit(
+      unlist(
+        strsplit(
+          stringr::str_match(result_text, regexp)[, 3], ", ")
+      )
+    )
+  )
+
+  regexp <- "(ocd\\[\\d+\\].posterior.probNorm=)(.*)(;)"
+  probs_norm <- as.double(
+    stats::na.omit(
+      unlist(
+        strsplit(
+          stringr::str_match(result_text, regexp)[, 3], ", ")
+      )
+    )
+  )
+
+  if(is.na(probs_norm)) {probs_norm <- 1}
+
+  dates <- seq(probs_start, by = probs_resolution, length.out = length(probs))
+
+  RVAL <- data.frame(dates = dates, probabilities = probs * probs_norm)
+  RVAL
+}
+
 extractProbsFromOxcalResult <- function(result_text) {
   regexp <- "(ocd\\[\\d+\\].likelihood.prob=\\[)(.*)(\\];)"
   probs <- as.double(
@@ -227,6 +282,8 @@ extractProbsFromOxcalResult <- function(result_text) {
       )
     )
   )
+
+  if(length(probs)==0){return(NA)}
 
   regexp <- "(ocd\\[\\d+\\].likelihood.start=)(.*)(;)"
   probs_start <- as.double(
@@ -266,6 +323,57 @@ extractProbsFromOxcalResult <- function(result_text) {
   RVAL
 }
 
+extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
+  regexp <- "(ocd\\[\\d+\\].posterior.range\\[1\\]).*?(=\\[)(.*)(\\];)"
+  sigma_extract <- matrix(
+    as.double(
+      stats::na.omit(
+        unlist(
+          strsplit(
+            stringr::str_match(result_text, regexp)[, 4], ", ")
+        )
+      )
+    ), ncol = 3,
+    byrow = T)
+  one_sigma <- data.frame(start = sigma_extract[, 1],
+                          end = sigma_extract[, 2],
+                          probability = sigma_extract[, 3])
+
+  regexp <- "(ocd\\[\\d+\\].posterior.range\\[2\\]).*?(=\\[)(.*)(\\];)"
+  sigma_extract <- matrix(
+    as.double(
+      stats::na.omit(
+        unlist(
+          strsplit(
+            stringr::str_match(result_text, regexp)[, 4], ", ")
+        )
+      )
+    ), ncol = 3,
+    byrow = T)
+  two_sigma <- data.frame(start = sigma_extract[, 1],
+                          end = sigma_extract[, 2],
+                          probability = sigma_extract[, 3])
+
+  regexp <- "(ocd\\[\\d+\\].posterior.range\\[3\\]).*?(=\\[)(.*)(\\];)"
+  sigma_extract <- matrix(
+    as.double(
+      stats::na.omit(
+        unlist(
+          strsplit(
+            stringr::str_match(result_text, regexp)[, 4], ", ")
+        )
+      )
+    ), ncol = 3,
+    byrow = T)
+  three_sigma <- data.frame(start = sigma_extract[, 1],
+                            end = sigma_extract[, 2],
+                            probability = sigma_extract[, 3])
+
+  RVAL <- list(one_sigma = one_sigma,
+               two_sigma = two_sigma,
+               three_sigma = three_sigma)
+  RVAL
+}
 
 extractSigmaRangesFromOxcalResult <- function(result_text) {
   regexp <- "(ocd\\[\\d+\\].likelihood.range\\[1\\]).*?(=\\[)(.*)(\\];)"

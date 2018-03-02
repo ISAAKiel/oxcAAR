@@ -9,11 +9,15 @@
 #' @param sigma_ranges a list of three elements (one, two, three sigma),
 #' each a data frame with start, end and probability giving
 #' @param raw_probabilities a data frame of dates and the related probabilities for each date
+#' @param posterior_sigma_ranges a list of three elements (one, two, three sigma),
+#' each a data frame with start, end and probability giving for the posterior probabilities
+#' @param posterior_probabilities a data frame of dates and the related posterior probabilities for each date
 #'
 #' @return an object of the class \code{'oxcAARCalibratedDate'}
 #' @export
 oxcAARCalibratedDate <- function(name, bp, std, cal_curve,
-                                 sigma_ranges, raw_probabilities){
+                                 sigma_ranges, raw_probabilities, posterior_probabilities=NA,
+                                 posterior_sigma_ranges=NA){
 
   RVA <- structure(list(),class="oxcAARCalibratedDate")
   RVA$name <- name
@@ -22,6 +26,8 @@ oxcAARCalibratedDate <- function(name, bp, std, cal_curve,
   RVA$cal_curve <- cal_curve
   RVA$sigma_ranges <- sigma_ranges
   RVA$raw_probabilities <- raw_probabilities
+  RVA$posterior_sigma_ranges <- posterior_sigma_ranges
+  RVA$posterior_probabilities <- posterior_probabilities
   RVA
 }
 

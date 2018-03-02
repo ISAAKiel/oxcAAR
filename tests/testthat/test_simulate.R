@@ -31,7 +31,9 @@ with_mock(
                                          "std",
                                          "cal_curve",
                                          "sigma_ranges",
-                                         "raw_probabilities"))
+                                         "raw_probabilities",
+                                         "posterior_sigma_ranges",
+                                         "posterior_probabilities"))
       expect_equal(class(this_result$name), "character")
       expect_equal(class(this_result$bp), "integer")
       expect_equal(class(this_result$std), "integer")

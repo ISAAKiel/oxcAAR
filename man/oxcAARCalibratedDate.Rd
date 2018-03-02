@@ -4,7 +4,8 @@
 \alias{oxcAARCalibratedDate}
 \title{oxcAAR Calibrated Dates Object}
 \usage{
-oxcAARCalibratedDate(name, bp, std, cal_curve, sigma_ranges, raw_probabilities)
+oxcAARCalibratedDate(name, bp, std, cal_curve, sigma_ranges, raw_probabilities,
+  posterior_probabilities = NA, posterior_sigma_ranges = NA)
 }
 \arguments{
 \item{name}{a string giving the name of the date (usually the lab number)}
@@ -19,6 +20,11 @@ oxcAARCalibratedDate(name, bp, std, cal_curve, sigma_ranges, raw_probabilities)
 each a data frame with start, end and probability giving}
 
 \item{raw_probabilities}{a data frame of dates and the related probabilities for each date}
+
+\item{posterior_probabilities}{a data frame of dates and the related posterior probabilities for each date}
+
+\item{posterior_sigma_ranges}{a list of three elements (one, two, three sigma),
+each a data frame with start, end and probability giving for the posterior probabilities}
 }
 \value{
 an object of the class \code{'oxcAARCalibratedDate'}
