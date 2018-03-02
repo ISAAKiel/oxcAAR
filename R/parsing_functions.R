@@ -35,11 +35,11 @@ R_Date <- function(names, r_dates, stds) {
 
 #' Returns the Oxcal code for the simulation of 14C dates
 #'
-#' R_Simulate takes names, calender dates and standard deviation for those dates as vectors, and returns
+#' R_Simulate takes names, calendar dates and standard deviation for those dates as vectors, and returns
 #' a bit of oxcal code that can be used to feed it into oxcal.
 #' For details concerning the Oxcal simulation please consult the help page of Oxcal.
 #'
-#' @param c_dates a vector containing the calender dates that should be simulated
+#' @param c_dates a vector containing the calendar dates that should be simulated
 #' @param stds a vector containing the standard deviation that should be simulated
 #' @param names a vector of names for the resulting simulated dates
 #'

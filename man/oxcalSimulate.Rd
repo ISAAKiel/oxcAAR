@@ -7,7 +7,7 @@
 oxcalSimulate(c_date, std, names = 1:length(c_date))
 }
 \arguments{
-\item{c_date}{A vector containing the calender dates to be simulated}
+\item{c_date}{A vector containing the calendar dates to be simulated}
 
 \item{std}{A vector containing the standard deviations for the simulated dates}
 

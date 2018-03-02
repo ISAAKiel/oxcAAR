@@ -1,6 +1,6 @@
 #' Simulates 14C dates using oxcal
 #'
-#' @param c_date A vector containing the calender dates to be simulated
+#' @param c_date A vector containing the calendar dates to be simulated
 #' @param std A vector containing the standard deviations for the simulated dates
 #' @param names The names of the measurements, usually the Laboratory numbers
 #'
