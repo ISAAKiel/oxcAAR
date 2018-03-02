@@ -33,7 +33,8 @@ setOxcalExecutablePath <- function(path) {
 #'   \item{Windows}
 #'   \item{Darwin}
 #' }
-#' @param path The path to the directory where Oxcal is or should be stored. Default: "."
+#' @param path The path to the directory where Oxcal is or should be stored. Default: "tempdir()".
+#' I recommend thought to install it permanently.
 #'
 #' @return NULL
 #'
@@ -47,7 +48,7 @@ setOxcalExecutablePath <- function(path) {
 #' @export
 #'
 
-quickSetupOxcal <- function(os = Sys.info()["sysname"], path = "."){
+quickSetupOxcal <- function(os = Sys.info()["sysname"], path = tempdir()){
 
   # test if Oxcal is already setup correctly
   if (!("try-error" %in% class(try(suppressWarnings(oxcalCalibrate(5000, 25, "testdate")), silent = TRUE)))) {
