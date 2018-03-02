@@ -4,7 +4,7 @@
 \alias{quickSetupOxcal}
 \title{Quick OxCal setup}
 \usage{
-quickSetupOxcal(os = Sys.info()["sysname"], path = ".")
+quickSetupOxcal(os = Sys.info()["sysname"], path = tempdir())
 }
 \arguments{
 \item{os}{The operating system of the workstation. Default: automatic determination. Options:
@@ -14,7 +14,8 @@ quickSetupOxcal(os = Sys.info()["sysname"], path = ".")
   \item{Darwin}
 }}
 
-\item{path}{The path to the directory where Oxcal is or should be stored. Default: "."}
+\item{path}{The path to the directory where Oxcal is or should be stored. Default: "tempdir()".
+I recommend thought to install it permanently.}
 }
 \description{
 Downloads the latest version of Oxcal and sets the executable path correctly
