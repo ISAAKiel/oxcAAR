@@ -35,16 +35,34 @@ oxcAARCalibratedDate <- function(name, bp, std, cal_curve,
 format.oxcAARCalibratedDate <- function(x, ...){
 
   out_str <- list()
-  out_str$name_str <- paste("\n","\t",x$name,sep = "")
-  out_str$uncal_str <- paste(sprintf("BP = %d, std = %d",
+  sigma_str <- list()
+  out_str$upper_sep <- "\n============================="
+  out_str$name_str <- paste("\t",x$name,sep = "")
+  out_str$name_sep <- "=============================\n"
+
+  out_str$uncal_str <- paste(sprintf("\nBP = %d, std = %d",
                                      x$bp,x$std),
                              "\n",sep = "")
-  out_str$one_sigma_str <- formatFullSigmaRange(x$sigma_ranges$one_sigma,
+
+  sigma_str$unmodelled_remark <- paste("unmodelled:")
+  sigma_str$one_sigma_str <- formatFullSigmaRange(x$sigma_ranges$one_sigma,
                                                 "one sigma")
-  out_str$two_sigma_str <- formatFullSigmaRange(x$sigma_ranges$two_sigma,
+  sigma_str$two_sigma_str <- formatFullSigmaRange(x$sigma_ranges$two_sigma,
                                                 "two sigma")
-  out_str$three_sigma_str <- formatFullSigmaRange(x$sigma_ranges$three_sigma,
+  sigma_str$three_sigma_str <- formatFullSigmaRange(x$sigma_ranges$three_sigma,
                                                   "three sigma")
+  sigma_str$modelled_remark <- sigma_str$posterior_one_sigma_str <- sigma_str$posterior_two_sigma_str <- sigma_str$posterior_three_sigma_str <- ""
+  if(class(x$posterior_probabilities)=="data.frame"){
+    sigma_str$modelled_remark <- paste("posterior:")
+    sigma_str$posterior_one_sigma_str <- formatFullSigmaRange(x$posterior_sigma_ranges$one_sigma,"one sigma")
+    sigma_str$posterior_two_sigma_str <- formatFullSigmaRange(x$posterior_sigma_ranges$two_sigma,"two sigma")
+    sigma_str$posterior_three_sigma_str <- formatFullSigmaRange(x$posterior_sigma_ranges$three_sigma,"three sigma")
+  }
+  out_str$sigma_remark <- sprintf("%s   %31s",sigma_str$unmodelled_remark, sigma_str$modelled_remark)
+  out_str$sigma_divider <- paste(rep(" ",63), collapse="")
+  out_str$one_sigma <- sprintf("%32s   %s",sigma_str$one_sigma_str, sigma_str$posterior_one_sigma_str)
+  out_str$two_sigma <- sprintf("%32s   %s",sigma_str$two_sigma_str, sigma_str$posterior_two_sigma_str)
+  out_str$three_sigma <- sprintf("%32s   %s",sigma_str$three_sigma_str, sigma_str$posterior_three_sigma_str)
   out_str$cal_curve_str <- sprintf("\nCalibrated after:\n\t %s",x$cal_curve$name)
 
   RVA <- paste(out_str,collapse = "\n")
