@@ -133,6 +133,7 @@ parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
     reg_string <- paste("^(", date_internal_names[i], "\\..*)", sep = "")
     date_text <- stats::na.omit(stringr::str_match(result, reg_string))[, 1]
     this_name <- extractNameFromOxcalResult(date_text)
+    this_type <- extractTypeFromOxcalResult(date_text)
     this_bp <- extractBpFromOxcalResult(date_text)
     this_std <- extractStdFromOxcalResult(date_text)
     this_probs <- extractProbsFromOxcalResult(date_text)
@@ -141,6 +142,7 @@ parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
     this_posterior_sigma_ranges <- extractPosteriorSigmaRangesFromOxcalResult(date_text)
 
     RVA <- oxcAARCalibratedDate(name = this_name,
+                                type = this_type,
                                 bp=this_bp,
                                 std=this_std,
                                 cal_curve = this_cal_curve,
@@ -264,7 +266,7 @@ extractPosteriorProbsFromOxcalResult <- function(result_text) {
     )
   )
 
-  if(is.na(probs_norm)) {probs_norm <- 1}
+  if((length(probs_norm)==0) || is.na(probs_norm)) {probs_norm <- 1}
 
   dates <- seq(probs_start, by = probs_resolution, length.out = length(probs))
 
@@ -315,7 +317,7 @@ extractProbsFromOxcalResult <- function(result_text) {
     )
   )
 
-  if(is.na(probs_norm)) {probs_norm <- 1}
+  if((length(probs_norm)==0) || is.na(probs_norm)) {probs_norm <- 1}
 
   dates <- seq(probs_start, by = probs_resolution, length.out = length(probs))
 
@@ -500,6 +502,19 @@ recursivelyPartialUnlist <- function(l) {
 
 extractNameFromOxcalResult <- function(date_text){
   regexp <- "(ocd\\[\\d+\\]\\.name=\")(.*)(\";)"
+  my_name <- as.vector(
+    stats::na.omit(
+      unlist(
+        strsplit(
+          stringr::str_match(date_text, regexp)[, 3], ", ")
+      )
+    )
+  )
+  my_name
+}
+
+extractTypeFromOxcalResult <- function(date_text){
+  regexp <- "(ocd\\[\\d+\\]\\.op=\")(.*)(\";)"
   my_name <- as.vector(
     stats::na.omit(
       unlist(

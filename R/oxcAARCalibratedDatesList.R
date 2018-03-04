@@ -34,39 +34,78 @@ plot.oxcAARCalibratedDatesList <- function(x, ...){
 
 plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
   op <- graphics::par(no.readonly = TRUE)
+  years <- years_post <- NA
+
   indices <- 1:length(x)
+
   min_year <- min(
     sapply(
       indices,
-      function(i) min(x[[i]]$raw_probabilities$dates)
-    )
+      function(i) {
+        this_year_range <- get_years_range(x[[i]])
+        if (!all(is.na(this_year_range))) {
+        min(this_year_range, na.rm=T)
+        } else {
+          NA
+        }
+      }
+    ), na.rm=T
   )
+
   max_year <- max(
     sapply(
       indices,
-      function(i) max(x[[i]]$raw_probabilities$dates)
-    )
+      function(i) {
+        this_year_range <- get_years_range(x[[i]])
+        if (!all(is.na(this_year_range))) {
+          max(this_year_range, na.rm=T)
+        } else {
+          NA
+        }
+      }
+    ), na.rm=T
   )
-  graphics::par(mfrow=c(length(x),1))
+
+  graphics::par(mfrow=c(length(x)+1,1))
   graphics::par(oma = c(3,4,2,3) + 0.1,
                 mar = c(0,1,0,1) + 0.1)
   for (i in indices) {
-    years <- x[[i]]$raw_probabilities$dates
-    probability <- x[[i]]$raw_probabilities$probabilities
-    years_post <- probability_post <- NA
+    max_prob <- 0
+    years <- probability <- NA
+    post_present <- prob_present <- FALSE
+
+    if(class(x[[i]]$raw_probabilities)=="data.frame") {
+      prob_present <- TRUE
+      years <- x[[i]]$raw_probabilities$dates
+      probability <- x[[i]]$raw_probabilities$probabilities
+      max_prob <- max(probability)
+    }
+
     unmodelled_color <- "lightgrey"
-    max_prob <- max(probability)
-    if (class(x[[i]]$posterior_probabilities)=="data.frame"){
+
+    years_post <- probability_post <- NA
+
+    if(class(x[[i]]$posterior_probabilities)=="data.frame") {
+      post_present <- TRUE
       years_post <- x[[i]]$posterior_probabilities$dates
       probability_post <- x[[i]]$posterior_probabilities$probabilities
       unmodelled_color <- "#eeeeeeee"
       max_prob <- max(max_prob, probability_post)
     }
+
+    if(!prob_present & !post_present)
+    {
+      year_range <-c(0,1)
+    } else {
+      year_range <- get_years_range(x[[i]])
+    }
+
     graphics::plot(
-      years, probability,
+      years,
+      probability,
       type = "n",
       ylim=c(max_prob / 7 * -1,max_prob),
-      xlim = c(min_year, max_year),
+      xlim = c(min_year,max_year),
       axes = FALSE
     )
     graphics::axis(side=4)
@@ -74,9 +113,12 @@ plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
     if (unmodelled_color!="lightgrey"){
       graphics::polygon(years_post, probability_post, border = "black", col = "#aaaaaaaa")
     }
-    graphics::mtext(x[[i]]$name,side=2,las=2,cex=0.6)
+    graphics::mtext(print_label(x[[i]]),side=2,las=2,cex=0.6)
     graphics::grid()
   }
+  plot(c(min_year,max_year),c(0,0),
+       axes = FALSE,
+       type="n")
   graphics::axis(side=1)
   graphics::par(op)
 }
