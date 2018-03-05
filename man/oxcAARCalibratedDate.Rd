@@ -4,11 +4,14 @@
 \alias{oxcAARCalibratedDate}
 \title{oxcAAR Calibrated Dates Object}
 \usage{
-oxcAARCalibratedDate(name, bp, std, cal_curve, sigma_ranges, raw_probabilities,
-  posterior_probabilities = NA, posterior_sigma_ranges = NA)
+oxcAARCalibratedDate(name, type, bp, std, cal_curve, sigma_ranges,
+  raw_probabilities, posterior_probabilities = NA,
+  posterior_sigma_ranges = NA)
 }
 \arguments{
 \item{name}{a string giving the name of the date (usually the lab number)}
+
+\item{type}{a string giving the type of the date in OxCal terminology ("R_Date", "R_Simulate", ...)}
 
 \item{bp}{a integer giving the BP value for the date}
 

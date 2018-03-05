@@ -3,6 +3,7 @@
 #' The function \code{oxcAARCalibratedDate} is used to create an object for a calibrated date.
 #'
 #' @param name a string giving the name of the date (usually the lab number)
+#' @param type a string giving the type of the date in OxCal terminology ("R_Date", "R_Simulate", ...)
 #' @param bp a integer giving the BP value for the date
 #' @param std a integer giving the standard deviation for the date
 #' @param cal_curve a list containing information about the calibration curve (name, resolution, bp, bc, sigma)
