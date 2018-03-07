@@ -63,7 +63,7 @@ format.oxcAARCalibratedDate <- function(x, ...){
   out_str$one_sigma <- sprintf("%32s   %s",sigma_str$one_sigma_str, sigma_str$posterior_one_sigma_str)
   out_str$two_sigma <- sprintf("%32s   %s",sigma_str$two_sigma_str, sigma_str$posterior_two_sigma_str)
   out_str$three_sigma <- sprintf("%32s   %s",sigma_str$three_sigma_str, sigma_str$posterior_three_sigma_str)
-  out_str$cal_curve_str <- sprintf("\nCalibrated after:\n\t %s",x$cal_curve$name)
+  out_str$cal_curve_str <- sprintf("\nCalibrated with:\n\t %s",x$cal_curve$name)
 
   RVA <- paste(out_str,collapse = "\n")
   invisible(RVA)

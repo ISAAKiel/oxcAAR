@@ -110,11 +110,15 @@ formatDateAdBc <- function (value_to_print) {
 }
 
 formatFullSigmaRange <- function (sigma_range, name) {
-  sigma_str <- ""
+  sigma_str <- character(length = nrow(sigma_range))
   if (length(sigma_range[,1]) > 0) {
-  sigma_min <- formatDateAdBc(round(min(sigma_range[,1])))
-  sigma_max <- formatDateAdBc(round(max(sigma_range[,2])))
-  sigma_str <- sprintf("%11s: %s - %s",name, sigma_min,sigma_max)
+    sigma_str <- apply(sigma_range,1,
+                       function(x) sprintf("%9s - %s (%s%%)",
+                                           formatDateAdBc(round(x[1])),
+                                           formatDateAdBc(round(x[2])),
+                                           x[3]))
   }
-  sigma_str
+  sigma_str <- paste(sigma_str, collapse="\n")
+  sigma_str <- paste(name,sigma_str, sep = "\n")
+  return(sigma_str)
 }
