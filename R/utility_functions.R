@@ -113,12 +113,37 @@ formatFullSigmaRange <- function (sigma_range, name) {
   sigma_str <- character(length = nrow(sigma_range))
   if (length(sigma_range[,1]) > 0) {
     sigma_str <- apply(sigma_range,1,
-                       function(x) sprintf("%9s - %s (%s%%)",
+                       function(x) sprintf("%s - %s (%s%%)",
                                            formatDateAdBc(round(x[1])),
                                            formatDateAdBc(round(x[2])),
                                            x[3]))
-  }
   sigma_str <- paste(sigma_str, collapse="\n")
   sigma_str <- paste(name,sigma_str, sep = "\n")
+  }
   return(sigma_str)
+}
+
+side_by_side_output <- function(left, right) {
+  RVA <- ""
+  left_vec_tmp <- unlist(strsplit(left,"\n"))
+  right_vec_tmp <- unlist(strsplit(right,"\n"))
+
+  lines <- max(length(left_vec_tmp),length(right_vec_tmp))
+
+  left_vec <- right_vec <- rep("",times = lines)
+
+  if(length(left_vec_tmp)>0){
+  left_vec[1:length(left_vec_tmp)] <- left_vec_tmp
+  }
+  if(length(right_vec_tmp)>0){
+  right_vec[1:length(right_vec_tmp)] <- right_vec_tmp
+  }
+  if(lines>0){
+  for(i in 1:lines){
+    RVA <- paste(RVA,sprintf("%s %s",
+                             paste(left_vec[i],strrep(" ", 30-nchar(left_vec[i])),sep = ""),
+                             right_vec[i]),sep="\n")
+  }
+  }
+  return(RVA)
 }

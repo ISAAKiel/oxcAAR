@@ -41,17 +41,22 @@ format.oxcAARCalibratedDate <- function(x, ...){
   out_str$name_str <- paste("\t",print_label(x),sep = "")
   out_str$name_sep <- "=============================\n"
 
-  out_str$uncal_str <- paste(sprintf("\nBP = %d, std = %d",
-                                     x$bp,x$std),
-                             "\n",sep = "")
+  if(!is.na(x$bp)){
+    out_str$uncal_str <- paste(sprintf("\nBP = %d, std = %d",
+                                       x$bp,x$std),
+                               "\n",sep = "")
+  }
 
-  sigma_str$unmodelled_remark <- paste("unmodelled:")
-  sigma_str$one_sigma_str <- formatFullSigmaRange(x$sigma_ranges$one_sigma,
-                                                  "one sigma")
-  sigma_str$two_sigma_str <- formatFullSigmaRange(x$sigma_ranges$two_sigma,
-                                                  "two sigma")
-  sigma_str$three_sigma_str <- formatFullSigmaRange(x$sigma_ranges$three_sigma,
-                                                    "three sigma")
+  sigma_str$unmodelled_remark <- sigma_str$one_sigma_str <- sigma_str$two_sigma_str <- sigma_str$three_sigma_str <- ""
+  if(class(x$raw_probabilities)=="data.frame"){
+    sigma_str$unmodelled_remark <- paste("unmodelled:")
+    sigma_str$one_sigma_str <- formatFullSigmaRange(x$sigma_ranges$one_sigma,
+                                                    "one sigma")
+    sigma_str$two_sigma_str <- formatFullSigmaRange(x$sigma_ranges$two_sigma,
+                                                    "two sigma")
+    sigma_str$three_sigma_str <- formatFullSigmaRange(x$sigma_ranges$three_sigma,
+                                                      "three sigma")
+  }
   sigma_str$modelled_remark <- sigma_str$posterior_one_sigma_str <- sigma_str$posterior_two_sigma_str <- sigma_str$posterior_three_sigma_str <- ""
   if(class(x$posterior_probabilities)=="data.frame"){
     sigma_str$modelled_remark <- paste("posterior:")
@@ -59,11 +64,13 @@ format.oxcAARCalibratedDate <- function(x, ...){
     sigma_str$posterior_two_sigma_str <- formatFullSigmaRange(x$posterior_sigma_ranges$two_sigma,"two sigma")
     sigma_str$posterior_three_sigma_str <- formatFullSigmaRange(x$posterior_sigma_ranges$three_sigma,"three sigma")
   }
-  out_str$sigma_remark <- sprintf("%s   %31s",sigma_str$unmodelled_remark, sigma_str$modelled_remark)
-  out_str$sigma_divider <- paste(rep(" ",63), collapse="")
-  out_str$one_sigma <- sprintf("%32s   %s",sigma_str$one_sigma_str, sigma_str$posterior_one_sigma_str)
-  out_str$two_sigma <- sprintf("%32s   %s",sigma_str$two_sigma_str, sigma_str$posterior_two_sigma_str)
-  out_str$three_sigma <- sprintf("%32s   %s",sigma_str$three_sigma_str, sigma_str$posterior_three_sigma_str)
+  if(has_posterior_probabilities(x) | has_raw_probabilities(x))
+  {
+    out_str$sigma_remark <- side_by_side_output(sigma_str$unmodelled_remark, sigma_str$modelled_remark)
+    out_str$one_sigma <- side_by_side_output(sigma_str$one_sigma_str, sigma_str$posterior_one_sigma_str)
+    out_str$two_sigma <- side_by_side_output(sigma_str$two_sigma_str, sigma_str$posterior_two_sigma_str)
+    out_str$three_sigma <- side_by_side_output(sigma_str$three_sigma_str, sigma_str$posterior_three_sigma_str)
+  }
   out_str$cal_curve_str <- sprintf("\nCalibrated with:\n\t %s",x$cal_curve$name)
 
   RVA <- paste(out_str,collapse = "\n")
@@ -115,43 +122,29 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
 
   prob_range <- c(0,min(max_prob,1,na.rm=T))
 
-  graphics::plot(year_range, prob_range, main = print_label(x), type = "n",
-                 ylim = c(max_prob / 7 * -1, max_prob))
+  graphics::plot(year_range, prob_range,
+                 main = paste(print_label(x), print_bp_std_bracket(x)),
+                 type = "n",
+                 ylim = c(max_prob / 7 * -1, max_prob), ylab="probability", xlab="date")
   if(prob_present){
-    graphics::mtext(
+    sigma_text <- paste(
       "unmodelled",
-      3, line=3, cex=0.6, adj=0
-    )
-    graphics::mtext(
       formatFullSigmaRange(x$sigma_ranges$one_sigma,"one sigma"),
-      3, line=0, cex=0.6, adj=0
-    )
-    graphics::mtext(
       formatFullSigmaRange(x$sigma_ranges$two_sigma,"two sigma"),
-      3, line=1,cex=0.6,adj=0
-    )
-    graphics::mtext(
       formatFullSigmaRange(x$sigma_ranges$three_sigma,"three sigma"),
-      3, line=2,cex=0.6,adj=0
+      sep = "\n"
     )
+    text(x = year_range[1], y = prob_range[2], labels = format(sigma_text), cex = 0.4, adj=c(0,1))
   }
   if (post_present) {
-    graphics::mtext(
+    sigma_text <- paste(
       "posterior",
-      3, line=3, cex=0.6, adj=1
-    )
-    graphics::mtext(
       formatFullSigmaRange(x$posterior_sigma_ranges$one_sigma,"one sigma"),
-      3, line=0, cex=0.6, adj=1
-    )
-    graphics::mtext(
       formatFullSigmaRange(x$posterior_sigma_ranges$two_sigma,"two sigma"),
-      3, line=1,cex=0.6,adj=1
-    )
-    graphics::mtext(
       formatFullSigmaRange(x$posterior_sigma_ranges$three_sigma,"three sigma"),
-      3, line=2,cex=0.6,adj=1
+      sep = "\n"
     )
+    text(x = year_range[2], y = prob_range[2], labels = format(sigma_text), cex = 0.4, adj=c(1,1))
   }
   if(!prob_present & !post_present) {return()}
   if(prob_present){
@@ -191,7 +184,7 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
     )
   }
 
-  graphics::mtext(paste(x$cal_curve$name), side = 1, line = 4, adj = 0,
+  graphics::mtext(x$cal_curve$name, side = 1, line = 4, adj = 1,
                   cex = 0.6)
 }
 
@@ -212,12 +205,12 @@ get_years_range <- function(calibrated_date) {
   if (is.na(years) && is.na(years_post)) {
     return(NA)
   } else {
-  return(
-    c(
-    min(years,years_post, na.rm = TRUE),
-    max(years,years_post, na.rm = TRUE)
-  )
-  )
+    return(
+      c(
+        min(years,years_post, na.rm = TRUE),
+        max(years,years_post, na.rm = TRUE)
+      )
+    )
   }
 }
 
@@ -247,4 +240,20 @@ has_posterior_probabilities <- function(calibrated_date) {
 
 print_label <- function(calibrated_date) {
   paste(calibrated_date$type, ": " ,calibrated_date$name, sep="")
+}
+
+print_bp_std_bracket <- function(calibrated_date) {
+  RVA <- ""
+  if(!is.na(calibrated_date$bp)){
+    RVA <- paste("(",print_bp_std(calibrated_date),")", sep="")
+  }
+  return(RVA)
+}
+
+print_bp_std <- function(calibrated_date) {
+  RVA <- ""
+  if(!is.na(calibrated_date$bp)){
+    RVA <- paste(calibrated_date$bp, " ± ", calibrated_date$std)
+  }
+  return(RVA)
 }
