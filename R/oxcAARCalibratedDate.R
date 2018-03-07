@@ -115,8 +115,9 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
 
   prob_range <- c(0,min(max_prob,1,na.rm=T))
 
-  graphics::plot(year_range, prob_range, main = print_label(x), type = "n",
+  graphics::plot(year_range, prob_range, type = "n",
                  ylim = c(max_prob / 7 * -1, max_prob))
+  graphics::title(print_label(x), line = 3)
   if(prob_present){
     graphics::mtext(
       "unmodelled",

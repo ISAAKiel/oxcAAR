@@ -118,7 +118,7 @@ formatFullSigmaRange <- function (sigma_range, name) {
                                            formatDateAdBc(round(x[2])),
                                            x[3]))
   }
-  sigma_str <- paste(sigma_str, collapse="\n")
+  sigma_str <- paste(sigma_str, collapse=" ")
   sigma_str <- paste(name,sigma_str, sep = "\n")
   return(sigma_str)
 }
