@@ -27,6 +27,7 @@ with_mock(
       this_result <- oxcalSimulate(5000,25,"KIA-12345")[[1]]
       expect_equal(class(this_result), c("oxcAARCalibratedDate"))
       expect_equal(names(this_result), c("name",
+                                         "type",
                                          "bp",
                                          "std",
                                          "cal_curve",
@@ -35,6 +36,7 @@ with_mock(
                                          "posterior_sigma_ranges",
                                          "posterior_probabilities"))
       expect_equal(class(this_result$name), "character")
+      expect_equal(class(this_result$type), "character")
       expect_equal(class(this_result$bp), "integer")
       expect_equal(class(this_result$std), "integer")
       expect_equal(class(this_result$cal_curve), "list")
