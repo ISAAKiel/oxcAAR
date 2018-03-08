@@ -110,6 +110,7 @@ formatDateAdBc <- function (value_to_print) {
 }
 
 formatFullSigmaRange <- function (sigma_range, name) {
+  if(all(is.na(sigma_range))) return(NA)
   sigma_str <- character(length = nrow(sigma_range))
   if (length(sigma_range[,1]) > 0) {
     sigma_str <- apply(sigma_range,1,

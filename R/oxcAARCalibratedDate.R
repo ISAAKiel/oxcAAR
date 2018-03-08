@@ -88,7 +88,8 @@ plot.oxcAARCalibratedDate <- function(x, ...){
   plotoxcAARDateSystemGraphics(x, ...)
   # }
 }
-
+#' @importFrom "graphics" "text"
+#' @importFrom "stats" "na.omit"
 plotoxcAARDateSystemGraphics <- function(x, ...){
   max_prob <- 0
   years <- years_post <- NA
@@ -152,7 +153,7 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
   if (post_present){
     graphics::polygon(years_post, probability_post, border = "black", col = "#aaaaaaaa")
   }
-  if (length(this_sigma_ranges$one_sigma[,1]) > 0){
+  if ((!is.na(this_sigma_ranges$one_sigma)) && (length(this_sigma_ranges$one_sigma[,1])) > 0){
     y_pos <- max_prob / 24 * -1
     arrow_length <- max_prob / 8
     graphics::arrows(
@@ -252,7 +253,7 @@ print_bp_std_bracket <- function(calibrated_date) {
 print_bp_std <- function(calibrated_date) {
   RVA <- ""
   if(!is.na(calibrated_date$bp)){
-    RVA <- paste(calibrated_date$bp, " ± ", calibrated_date$std)
+    RVA <- paste(calibrated_date$bp, " \u00b1 ", calibrated_date$std)
   }
   return(RVA)
 }
