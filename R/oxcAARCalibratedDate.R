@@ -122,10 +122,9 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
 
   prob_range <- c(0,min(max_prob,1,na.rm=T))
 
-  graphics::plot(year_range, prob_range,
-                 main = paste(print_label(x), print_bp_std_bracket(x)),
-                 type = "n",
-                 ylim = c(max_prob / 7 * -1, max_prob), ylab="probability", xlab="date")
+  graphics::plot(year_range, prob_range, type = "n",
+                 ylim = c(max_prob / 7 * -1, max_prob))
+  graphics::title(paste(print_label(x), print_bp_std_bracket(x)), line = 3)
   if(prob_present){
     sigma_text <- paste(
       "unmodelled",
