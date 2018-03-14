@@ -81,6 +81,86 @@ oxcal_Sum <- function(oxcal_string, name = "Sum") {
   paste("Sum(\"", name, "\"){\n", oxcal_string, "\n};")
 }
 
+#' Returns the Oxcal code for Phase
+#'
+#' Phase takes a set of R_Dates as vectors, and returns
+#' a bit of oxcal code that can be used to feed it into oxcal.
+#' In this code the R_Dates are encapsuled in an OxCal Phases, one Phase for each string.
+#' For details concerning the Oxcal simulation please consult the help page of Oxcal.
+#'
+#' @param r_dates_strings a vector containing strings of OxCal code, usually consisting of R_Date commands, but any other code strings might be used that can be interpreted by OxCal within a Phase
+#' @param names a optional vector of names for the resulting Phases
+#'
+#' @return a string containing the respective Oxcal code
+#' @export
+#'
+Phase <- function(r_dates_strings, names='') {
+  paste("Phase(\"", names, "\"){\n",r_dates_strings,"};", sep = "")
+}
+
+#' Returns the Oxcal code for a Boundary
+#'
+#' Boundary returns the OxCal code for a Boundary.
+#' For details concerning the Oxcal simulation please consult the help page of Oxcal.
+#'
+#' @param names a optional vector of names for the resulting Phases dates. If given, for each name a boundary is returned. If not given, one Boundary without name is returned.
+#'
+#' @return a string containing the respective Oxcal code
+#' @export
+#'
+Boundary <- function(names) {
+  paste("Boundary(\"", names, "\");", sep = "")
+}
+
+#' Returns the Oxcal code for Sequence
+#'
+#' Sequence takes a set of Phases or R_Dates as vectors, and returns
+#' a bit of oxcal code that can be used to feed it into OxCal.
+#' In this code the Phases and/or R_Dates are encapsuled in an OxCal Phases, one Phase for each string.
+#' For details concerning the Oxcal simulation please consult the help page of Oxcal.
+#'
+#' @param sequence_elements a vector containing strings of OxCal code, usually consisting of Phase or R_Date commands, but any other code strings might be used that can be interpreted by OxCal within a Sequence
+#' @param names a optional vector of names for the resulting Sequences
+#'
+#' @return a string containing the respective Oxcal code
+#' @export
+#'
+Sequence <- function(sequence_elements, names='') {
+  paste("Sequence(\"", names, "\")\n{", paste(sequence_elements,collapse="\n"), "};", sep="")
+}
+
+#' Wrap OxCal commands in Boundary commands
+#'
+#' wrap_in_boundaries takes a set of Phases or R_Dates as vectors, and returns
+#' a bit of oxcal code that can be used to feed it into OxCal.
+#' In this code the Phases and/or R_Dates are interleaved and wraped in OxCal Boundaries, the number of Boundaries is equal to the number of strings + 1.
+#' The resulting string starts with a boundary, than the OxCal strings from the vector are interleaved with Boundary commands.
+#' For details concerning the Oxcal simulation please consult the help page of Oxcal.
+#'
+#' @param phases_strings a vector containing strings of OxCal code, usually consisting of Phase or R_Date commands, but any other code strings might be used that can be interpreted by OxCal inbetween a Boundary
+#' @param boundary_names a optional vector of names for the resulting Boundaries (length of phases_strings + 1). If not given, the boundaries are named with consecutive numbers.
+#'
+#' @return a string containing the respective Oxcal code
+#' @importFrom   utils tail
+#' @export
+#'
+wrap_in_boundaries <- function(phases_strings, boundary_names=NA) {
+  n_phases <- length(phases_strings)
+  if(length(boundary_names)==1) {
+    if(is.na(boundary_names)){
+      boundary_names <- 1:n_phases + 1
+    } else {
+      boundary_names <- rep(boundary_names,n_phases + 1)
+    }
+  }
+  my_result <- character(n_phases*2+1)
+  for(i in 1:n_phases) {
+    my_result[2*i-1] <- Boundary(boundary_names[i])
+    my_result[2*i] <- phases_strings[i]
+  }
+  my_result[length(my_result)] <- Boundary(tail(boundary_names, n=1))
+  return(my_result)
+}
 
 # ---------- Oxcal to R ----------
 
