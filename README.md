@@ -31,10 +31,7 @@ welcome, as are code contributions.
 Installation
 ------------
 
-`oxcAAR` is currently not on [CRAN](http://cran.r-project.org/), but you
-can use
-[devtools](http://cran.r-project.org/web/packages/devtools/index.html)
-to install the development version. To do so:
+`oxcAAR` is available on [CRAN](https://cran.r-project.org/web/packages/oxcAAR/index.html) and can be installed through `install.packages("oxcAAR")`. You can use [devtools](https://CRAN.R-project.org/package=devtools) to install the development version. To do so:
 
     if(!require('devtools')) install.packages('devtools')
     library(devtools)
