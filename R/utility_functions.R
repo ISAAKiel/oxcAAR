@@ -129,8 +129,8 @@ formatFullSigmaRange <- function (sigma_range, name) {
 
 side_by_side_output <- function(left, right) {
   RVA <- ""
-  left_vec_tmp <- unlist(strsplit(left,"\n"))
-  right_vec_tmp <- unlist(strsplit(right,"\n"))
+  left_vec_tmp <- ifelse(is.na(left),"NA",unlist(strsplit(left,"\n")))
+  right_vec_tmp <- ifelse(is.na(right),"NA",unlist(strsplit(right,"\n")))
 
   lines <- max(length(left_vec_tmp),length(right_vec_tmp))
 
