@@ -34,3 +34,9 @@ test_that("quickSetupOxcal downloads oxcal and sets correct path",{
                                                                  "OxCalMac"))
   unlink("OxCal/", recursive = T)
 })
+
+context("formatDateAdBc")
+test_that("formatDateAdBc can handle NAs",{
+  expect_error(oxcAAR:::formatDateAdBc(NA), NA)
+  expect_equal(oxcAAR:::formatDateAdBc(NA), "NA")
+})
