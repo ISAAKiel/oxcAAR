@@ -105,8 +105,11 @@ getOxcalExecutablePath <- function() {
 
 formatDateAdBc <- function (value_to_print) {
   RVA <- abs(value_to_print)
-  suffix <- if (value_to_print < 0) "BC" else if (value_to_print > 0) "AD" else ""
-  paste(RVA, suffix)
+  suffix <- ""
+  if (!is.na(value_to_print)) {
+    suffix <- if (value_to_print < 0) " BC" else if (value_to_print > 0) " AD"
+  }
+  paste0(RVA, suffix)
 }
 
 formatFullSigmaRange <- function (sigma_range, name) {
