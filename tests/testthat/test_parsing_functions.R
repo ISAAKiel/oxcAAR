@@ -18,6 +18,21 @@ test_that("oxcal_Sum produces correct oxcal code", {
   expect_equal(oxcal_Sum(R_Simulate(4000, 10)), "Sum(\" Sum \"){\n R_Simulate(\"1\",\n          4000, 10); \n};")
 })
 
+context("atomic parsing operations")
+
+test_result <- oxcAAR::readOxcalOutput("ox_output.js")
+date_text <- stats::na.omit(stringr::str_match(test_result, "^ocd\\[2\\]\\..*"))[, 1]
+
+test_that("extractSigmaValuesFromOxcalResult does is job", {
+  expect_equal(
+    oxcAAR:::extractSigmaValuesFromOxcalResult(
+      date_text,
+      "(ocd\\[\\d+\\].likelihood.range\\[1\\]).*?(=\\[)(.*)(\\];)"
+    ),
+    matrix(c(1177, 1292.5, 68.2), 1, 3)
+  )
+})
+
 context("parseFullOxcalOutput")
 
 test_that("parseFullOxcalOutput parses oxcal output file correct", {

@@ -461,10 +461,8 @@ extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
   RVAL
 }
 
-extractSigmaRangesFromOxcalResult <- function(result_text) {
-  one_sigma <- two_sigma <- three_sigma <- NA
-  regexp <- "(ocd\\[\\d+\\].likelihood.range\\[1\\]).*?(=\\[)(.*)(\\];)"
-  sigma_extract <- matrix(
+extractSigmaValuesFromOxcalResult <- function(result_text,regexp) {
+  matrix(
     as.double(
       stats::na.omit(
         unlist(
@@ -474,38 +472,26 @@ extractSigmaRangesFromOxcalResult <- function(result_text) {
       )
     ), ncol = 3,
     byrow = T)
+}
+
+extractSigmaRangesFromOxcalResult <- function(result_text) {
+  one_sigma <- two_sigma <- three_sigma <- NA
+  regexp <- "(ocd\\[\\d+\\].likelihood.range\\[1\\]).*?(=\\[)(.*)(\\];)"
+  sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(result_text, regexp))
   if(nrow(na.omit(sigma_extract))>0){
     one_sigma <- data.frame(start = sigma_extract[, 1],
                             end = sigma_extract[, 2],
                             probability = sigma_extract[, 3])
   }
   regexp <- "(ocd\\[\\d+\\].likelihood.range\\[2\\]).*?(=\\[)(.*)(\\];)"
-  sigma_extract <- matrix(
-    as.double(
-      stats::na.omit(
-        unlist(
-          strsplit(
-            stringr::str_match(result_text, regexp)[, 4], ", ")
-        )
-      )
-    ), ncol = 3,
-    byrow = T)
+  sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(result_text, regexp))
   if(nrow(na.omit(sigma_extract))>0){
     two_sigma <- data.frame(start = sigma_extract[, 1],
                             end = sigma_extract[, 2],
                             probability = sigma_extract[, 3])
   }
   regexp <- "(ocd\\[\\d+\\].likelihood.range\\[3\\]).*?(=\\[)(.*)(\\];)"
-  sigma_extract <- matrix(
-    as.double(
-      stats::na.omit(
-        unlist(
-          strsplit(
-            stringr::str_match(result_text, regexp)[, 4], ", ")
-        )
-      )
-    ), ncol = 3,
-    byrow = T)
+  sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(result_text, regexp))
   if(nrow(na.omit(sigma_extract))>0){
     three_sigma <- data.frame(start = sigma_extract[, 1],
                               end = sigma_extract[, 2],

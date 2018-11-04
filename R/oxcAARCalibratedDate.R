@@ -57,9 +57,9 @@ format.oxcAARCalibratedDate <- function(x, ...){
     sigma_str$three_sigma_str <- formatFullSigmaRange(x$sigma_ranges$three_sigma,
                                                       "three sigma")
   }
-  sigma_str$modelled_remark <- sigma_str$posterior_one_sigma_str <- sigma_str$posterior_two_sigma_str <- sigma_str$posterior_three_sigma_str <- ""
+  sigma_str$posterior_one_sigma_str <- sigma_str$posterior_two_sigma_str <- sigma_str$posterior_three_sigma_str <- ""
+  sigma_str$modelled_remark <- paste("posterior:")
   if(class(x$posterior_probabilities)=="data.frame"){
-    sigma_str$modelled_remark <- paste("posterior:")
     sigma_str$posterior_one_sigma_str <- formatFullSigmaRange(x$posterior_sigma_ranges$one_sigma,"one sigma")
     sigma_str$posterior_two_sigma_str <- formatFullSigmaRange(x$posterior_sigma_ranges$two_sigma,"two sigma")
     sigma_str$posterior_three_sigma_str <- formatFullSigmaRange(x$posterior_sigma_ranges$three_sigma,"three sigma")
