@@ -13,10 +13,11 @@ Description: A set of tools that enables using 'OxCal' from within R. 'OxCal' (<
 License: GPL-2 | file LICENSE
 LazyData: TRUE
 Imports:
+  stringi,
   stringr,
   jsonlite
 Suggests: knitr,
     testthat
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Encoding: UTF-8

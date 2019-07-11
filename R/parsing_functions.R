@@ -183,14 +183,14 @@ parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
   if (only.R_Date == T){
     date_internal_names <- as.vector(
       stats::na.omit(
-        stringr::str_match(result, "^(ocd\\[\\d+\\])\\.op=\"R_Date\";")[, 2]
+        do.call(rbind, stringi::stri_match_all_regex(result, "^(ocd\\[\\d+\\])\\.op=\"R_Date\";"))[, 2]
       )
     )
   } else {
     date_internal_names <- unique(
       as.vector(
         stats::na.omit(
-          stringr::str_match(result, "^(ocd\\[\\d+\\]).*;$")[, 2]
+          do.call(rbind, stringi::stri_match_all_regex(result, "^(ocd\\[\\d+\\]).*;$"))[, 2]
         )
       )
     )
@@ -211,7 +211,7 @@ parseOxcalOutput <- function(result, first=FALSE, only.R_Date=T) {
 
   RVA <- lapply(1:length(date_internal_names), function(i) {
     reg_string <- paste("^(", date_internal_names[i], "\\..*)", sep = "")
-    date_text <- stats::na.omit(stringr::str_match(result, reg_string))[, 1]
+    date_text <- stats::na.omit(do.call(rbind, stringi::stri_match_all_regex(result, reg_string)))[, 1]
     this_name <- extractNameFromOxcalResult(date_text)
     this_type <- extractTypeFromOxcalResult(date_text)
     this_bp <- extractBpFromOxcalResult(date_text)
@@ -309,7 +309,7 @@ extractPosteriorProbsFromOxcalResult <- function(result_text) {
     stats::na.omit(
       unlist(
         strsplit(
-          stringr::str_match(result_text, regexp)[, 3], ", ")
+          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
       )
     )
   )
@@ -321,7 +321,7 @@ extractPosteriorProbsFromOxcalResult <- function(result_text) {
     stats::na.omit(
       unlist(
         strsplit(
-          stringr::str_match(result_text, regexp)[, 3], ", ")
+          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
       )
     )
   )
@@ -331,7 +331,7 @@ extractPosteriorProbsFromOxcalResult <- function(result_text) {
     stats::na.omit(
       unlist(
         strsplit(
-          stringr::str_match(result_text, regexp)[, 3], ", ")
+          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
       )
     )
   )
@@ -341,7 +341,7 @@ extractPosteriorProbsFromOxcalResult <- function(result_text) {
     stats::na.omit(
       unlist(
         strsplit(
-          stringr::str_match(result_text, regexp)[, 3], ", ")
+          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
       )
     )
   )
@@ -360,7 +360,7 @@ extractProbsFromOxcalResult <- function(result_text) {
     stats::na.omit(
       unlist(
         strsplit(
-          stringr::str_match(result_text, regexp)[, 3], ", ")
+          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
       )
     )
   )
@@ -372,7 +372,7 @@ extractProbsFromOxcalResult <- function(result_text) {
     stats::na.omit(
       unlist(
         strsplit(
-          stringr::str_match(result_text, regexp)[, 3], ", ")
+          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
       )
     )
   )
@@ -382,7 +382,7 @@ extractProbsFromOxcalResult <- function(result_text) {
     stats::na.omit(
       unlist(
         strsplit(
-          stringr::str_match(result_text, regexp)[, 3], ", ")
+          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
       )
     )
   )
@@ -392,7 +392,7 @@ extractProbsFromOxcalResult <- function(result_text) {
     stats::na.omit(
       unlist(
         strsplit(
-          stringr::str_match(result_text, regexp)[, 3], ", ")
+          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
       )
     )
   )
@@ -413,7 +413,7 @@ extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
       stats::na.omit(
         unlist(
           strsplit(
-            stringr::str_match(result_text, regexp)[, 4], ", ")
+            do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 4], ", ")
         )
       )
     ), ncol = 3,
@@ -429,7 +429,7 @@ extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
       stats::na.omit(
         unlist(
           strsplit(
-            stringr::str_match(result_text, regexp)[, 4], ", ")
+            do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 4], ", ")
         )
       )
     ), ncol = 3,
@@ -445,7 +445,7 @@ extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
       stats::na.omit(
         unlist(
           strsplit(
-            stringr::str_match(result_text, regexp)[, 4], ", ")
+            do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 4], ", ")
         )
       )
     ), ncol = 3,
@@ -467,7 +467,7 @@ extractSigmaValuesFromOxcalResult <- function(result_text,regexp) {
       stats::na.omit(
         unlist(
           strsplit(
-            stringr::str_match(result_text, regexp)[, 4], ", ")
+            do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 4], ", ")
         )
       )
     ), ncol = 3,
@@ -507,28 +507,28 @@ extractCalCurveFromOxcalResult <- function(date_text){
   regexp_calcurve_name <- "calib\\[0\\].ref=\"(.*)\";"
   calcurve_name <- as.character(
     stats::na.omit(
-      stringr::str_match(date_text, regexp_calcurve_name)[, 2], ", ")
+      do.call(rbind, stringi::stri_match_all_regex(date_text, regexp_calcurve_name))[, 2], ", ")
   )
   regexp_calcurve_resolution <- "calib\\[0\\].resolution=(.*);"
   calcurve_resolution <- as.numeric(
     stats::na.omit(
-      stringr::str_match(date_text, regexp_calcurve_resolution)[, 2], ", ")
+      do.call(rbind, stringi::stri_match_all_regex(date_text, regexp_calcurve_resolution))[, 2], ", ")
   )
   regexp_calcurve_start <- "calib\\[0\\].start=(.*);"
   calcurve_start <- as.numeric(
     stats::na.omit(
-      stringr::str_match(date_text, regexp_calcurve_start)[, 2], ", ")
+      do.call(rbind, stringi::stri_match_all_regex(date_text, regexp_calcurve_start))[, 2], ", ")
   )
   regexp_calcurve_bp <- "calib\\[0\\].bp=\\[(.*)\\];"
   calcurve_bp <- as.numeric(
     strsplit(stats::na.omit(
-      stringr::str_match(date_text, regexp_calcurve_bp)[, 2]
+      do.call(rbind, stringi::stri_match_all_regex(date_text, regexp_calcurve_bp))[, 2]
     ), ",")[[1]]
   )
   regexp_calcurve_sigma <- "calib\\[0\\].sigma=\\[(.*)\\];"
   calcurve_sigma <- as.numeric(
     strsplit(stats::na.omit(
-      stringr::str_match(date_text, regexp_calcurve_sigma)[, 2]
+      do.call(rbind, stringi::stri_match_all_regex(date_text, regexp_calcurve_sigma))[, 2]
     ), ",")[[1]]
   )
   RVA <- list(name=calcurve_name,
@@ -580,7 +580,7 @@ extractNameFromOxcalResult <- function(date_text){
     stats::na.omit(
       unlist(
         strsplit(
-          stringr::str_match(date_text, regexp)[, 3], ", ")
+          do.call(rbind, stringi::stri_match_all_regex(date_text, regexp))[, 3], ", ")
       )
     )
   )
@@ -593,7 +593,7 @@ extractTypeFromOxcalResult <- function(date_text){
     stats::na.omit(
       unlist(
         strsplit(
-          stringr::str_match(date_text, regexp)[, 3], ", ")
+          do.call(rbind, stringi::stri_match_all_regex(date_text, regexp))[, 3], ", ")
       )
     )
   )
@@ -603,7 +603,7 @@ extractTypeFromOxcalResult <- function(date_text){
 extractBpFromOxcalResult <- function(date_text){
   regexp <- "(ocd\\[\\d+\\]\\.date=)(.*)(;)"
   my_date <- NA
-  my_result <- na.omit(stringr::str_match(date_text, regexp))
+  my_result <- na.omit(do.call(rbind, stringi::stri_match_all_regex(date_text, regexp)))
   if (length(my_result) > 0){
     my_date <- as.integer(stats::na.omit(
       unlist(
@@ -622,7 +622,7 @@ extractStdFromOxcalResult <- function(date_text){
   my_result <- as.integer(stats::na.omit(
     unlist(
       strsplit(
-        stringr::str_match(date_text, regexp)[, 3], ", ")
+        do.call(rbind, stringi::stri_match_all_regex(date_text, regexp))[, 3], ", ")
     )
   )
   )
