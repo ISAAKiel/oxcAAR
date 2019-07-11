@@ -506,7 +506,7 @@ extractSigmaRangesFromOxcalResult <- function(result_text) {
   RVAL
 }
 
-date_text <- oxcAAR::readOxcalOutput("tests/testthat/ox_output.js")
+#date_text <- oxcAAR::readOxcalOutput("tests/testthat/ox_output.js")
 
 extractCalCurveFromOxcalResult <- function(date_text){
   identifier <- "calib[0].ref="
@@ -626,10 +626,15 @@ extractBpFromOxcalResult <- function(date_text){
   date_text <- reduce_to_relevant_lines(date_text, identifier)
   regexp <- "(ocd\\[\\d+\\]\\.date=)(.*)(;)"
   my_date <- NA
-  my_result <- as.integer(extract_clean_vector(date_text, regexp, 3, ", ")
-  )
+  my_result <- na.omit(do.call(rbind, stringi::stri_match_all_regex(date_text, regexp)))
   if (length(my_result) > 0){
-    my_error <- my_result
+    my_date <- as.integer(stats::na.omit(
+      unlist(
+        strsplit(
+          my_result[, 3], ", ", fixed = T)
+      )
+    )
+    )
   }
   my_date
 }
@@ -639,7 +644,12 @@ extractStdFromOxcalResult <- function(date_text){
   date_text <- reduce_to_relevant_lines(date_text, identifier)
   regexp <- "(ocd\\[\\d+\\]\\.error=)(.*)(;)"
   my_error <- NA
-  my_result <- as.integer(extract_clean_vector(date_text, regexp, 3, ", ")
+  my_result <- as.integer(stats::na.omit(
+    unlist(
+      strsplit(
+        stringr::str_match(date_text, regexp)[, 3], ", ", fixed = T)
+    )
+  )
   )
   if (length(my_result) > 0){
     my_error <- my_result
@@ -647,24 +657,6 @@ extractStdFromOxcalResult <- function(date_text){
   my_error
 }
 
-extract_clean_vector <- function(date_text, regexp, position, split) {
-  stats::na.omit(
-    unlist(
-  extract_and_split_fixed(date_text, regexp, position, split)
-    ))
-}
-
-extract_and_split_fixed <- function(date_text, regexp, position, split) {
-  strsplit(
-    extract_by_regex(date_text, regexp, position), split, fixed=T)
-}
-
-extract_by_regex <- function(date_text, regexp, position)
-{
-  do.call(rbind, stringi::stri_match_all_regex(date_text, regexp))[, 3]
-}
-
-
 reduce_to_relevant_lines <- function(date_text, identifier) {
-  date_text <- date_text[stringi::stri_detect_fixed(date_text, identifier)]
+  date_text <- date_text[grepl(identifier, date_text, fixed = T)]
 }
