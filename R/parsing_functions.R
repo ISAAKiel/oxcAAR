@@ -623,15 +623,10 @@ extractBpFromOxcalResult <- function(date_text){
   date_text <- reduce_to_relevant_lines(date_text, identifier)
   regexp <- "(ocd\\[\\d+\\]\\.date=)(.*)(;)"
   my_date <- NA
-  my_result <- na.omit(do.call(rbind, stringi::stri_match_all_regex(date_text, regexp)))
+  my_result <- as.integer(extract_clean_vector(date_text, regexp, 3, ", ")
+  )
   if (length(my_result) > 0){
-    my_date <- as.integer(stats::na.omit(
-      unlist(
-        strsplit(
-          my_result[, 3], ", ", fixed = T)
-      )
-    )
-    )
+    my_error <- my_result
   }
   my_date
 }
@@ -641,11 +636,7 @@ extractStdFromOxcalResult <- function(date_text){
   date_text <- reduce_to_relevant_lines(date_text, identifier)
   regexp <- "(ocd\\[\\d+\\]\\.error=)(.*)(;)"
   my_error <- NA
-  my_result <- as.integer(stats::na.omit(
-    unlist(
-        extract_and_split_fixed(date_text, regexp, 3, ", ")
-    )
-  )
+  my_result <- as.integer(extract_clean_vector(date_text, regexp, 3, ", ")
   )
   if (length(my_result) > 0){
     my_error <- my_result
@@ -672,5 +663,5 @@ extract_by_regex <- function(date_text, regexp, position)
 
 
 reduce_to_relevant_lines <- function(date_text, identifier) {
-  date_text <- date_text[grepl(identifier, date_text, fixed = T)]
+  date_text <- date_text[stringi::stri_detect_fixed(date_text, identifier)]
 }
