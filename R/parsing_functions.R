@@ -355,47 +355,27 @@ extractPosteriorProbsFromOxcalResult <- function(result_text) {
 }
 
 extractProbsFromOxcalResult <- function(result_text) {
+  identifier <- "].likelihood.prob="
+  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
   regexp <- "(ocd\\[\\d+\\].likelihood.prob=\\[)(.*)(\\];)"
-  probs <- as.double(
-    stats::na.omit(
-      unlist(
-        strsplit(
-          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
-      )
-    )
-  )
+  probs <- extractDoubleFromOxcalResult(this_date_text, regexp, 3)
 
   if(length(probs)==0){return(NA)}
 
+  identifier <- "].likelihood.start="
+  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
   regexp <- "(ocd\\[\\d+\\].likelihood.start=)(.*)(;)"
-  probs_start <- as.double(
-    stats::na.omit(
-      unlist(
-        strsplit(
-          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
-      )
-    )
-  )
+  probs_start <- extractDoubleFromOxcalResult(this_date_text, regexp, 3)
 
+  identifier <- "].likelihood.resolution="
+  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
   regexp <- "(ocd\\[\\d+\\].likelihood.resolution=)(.*)(;)"
-  probs_resolution <- as.double(
-    stats::na.omit(
-      unlist(
-        strsplit(
-          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
-      )
-    )
-  )
+  probs_resolution <- extractDoubleFromOxcalResult(this_date_text, regexp, 3)
 
+  identifier <- "].likelihood.probNorm="
+  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
   regexp <- "(ocd\\[\\d+\\].likelihood.probNorm=)(.*)(;)"
-  probs_norm <- as.double(
-    stats::na.omit(
-      unlist(
-        strsplit(
-          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
-      )
-    )
-  )
+  probs_norm <- extractDoubleFromOxcalResult(this_date_text, regexp, 3)
 
   if((length(probs_norm)==0) || is.na(probs_norm)) {probs_norm <- 1}
 
@@ -404,6 +384,25 @@ extractProbsFromOxcalResult <- function(result_text) {
   RVAL <- data.frame(dates = dates, probabilities = probs * probs_norm)
   RVAL
 }
+
+extractDoubleFromOxcalResult <- function(result_text, regexp, position) {
+  as.double(
+    stats::na.omit(
+      unlist(
+        strsplit(
+          do.call(rbind,
+                  stringi::stri_match_all_regex(
+                    result_text,
+                    regexp
+                    )
+                  )[, position],
+          ", ",
+          fixed = TRUE
+          )
+        )
+      )
+  )
+  }
 
 #result_text <- oxcAAR::readOxcalOutput("tests/testthat/ox_output.js")
 
