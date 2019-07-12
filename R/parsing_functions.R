@@ -306,6 +306,7 @@ parseFullOxcalOutput <- function(output) {
 extractPosteriorProbsFromOxcalResult <- function(result_text) {
   identifier <- "].posterior.prob="
   this_date_text <- reduce_to_relevant_lines(result_text, identifier)
+  if(length(this_date_text)==0){return(NA)}
   regexp <- "(ocd\\[\\d+\\].posterior.prob=\\[)(.*)(\\];)"
   probs <- extractDoubleFromOxcalResult(this_date_text, regexp, 3)
 
