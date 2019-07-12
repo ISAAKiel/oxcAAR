@@ -423,6 +423,7 @@ extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
                             end = sigma_extract[, 2],
                             probability = sigma_extract[, 3])
   }
+
   regexp <- "(ocd\\[\\d+\\].posterior.range\\[2\\]).*?(=\\[)(.*)(\\];)"
   sigma_extract <- matrix(
     as.double(
