@@ -304,47 +304,27 @@ parseFullOxcalOutput <- function(output) {
 ## ---------- private ----------
 
 extractPosteriorProbsFromOxcalResult <- function(result_text) {
+  identifier <- "].posterior.prob="
+  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
   regexp <- "(ocd\\[\\d+\\].posterior.prob=\\[)(.*)(\\];)"
-  probs <- as.double(
-    stats::na.omit(
-      unlist(
-        strsplit(
-          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
-      )
-    )
-  )
+  probs <- extractDoubleFromOxcalResult(this_date_text, regexp, 3)
 
   if(length(probs)==0){return(NA)}
 
+  identifier <- "].posterior.start="
+  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
   regexp <- "(ocd\\[\\d+\\].posterior.start=)(.*)(;)"
-  probs_start <- as.double(
-    stats::na.omit(
-      unlist(
-        strsplit(
-          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
-      )
-    )
-  )
+  probs_start <- extractDoubleFromOxcalResult(this_date_text, regexp, 3)
 
+  identifier <- "].posterior.resolution="
+  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
   regexp <- "(ocd\\[\\d+\\].posterior.resolution=)(.*)(;)"
-  probs_resolution <- as.double(
-    stats::na.omit(
-      unlist(
-        strsplit(
-          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
-      )
-    )
-  )
+  probs_resolution <- extractDoubleFromOxcalResult(this_date_text, regexp, 3)
 
+  identifier <- "].posterior.probNorm="
+  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
   regexp <- "(ocd\\[\\d+\\].posterior.probNorm=)(.*)(;)"
-  probs_norm <- as.double(
-    stats::na.omit(
-      unlist(
-        strsplit(
-          do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 3], ", ")
-      )
-    )
-  )
+  probs_norm <- extractDoubleFromOxcalResult(this_date_text, regexp, 3)
 
   if((length(probs_norm)==0) || is.na(probs_norm)) {probs_norm <- 1}
 
