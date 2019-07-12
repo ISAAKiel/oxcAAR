@@ -405,19 +405,14 @@ extractProbsFromOxcalResult <- function(result_text) {
   RVAL
 }
 
+#result_text <- oxcAAR::readOxcalOutput("tests/testthat/ox_output.js")
+
 extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
   one_sigma <- two_sigma <- three_sigma <- NA
+  identifier <- "].posterior.range"
+  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
   regexp <- "(ocd\\[\\d+\\].posterior.range\\[1\\]).*?(=\\[)(.*)(\\];)"
-  sigma_extract <- matrix(
-    as.double(
-      stats::na.omit(
-        unlist(
-          strsplit(
-            do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 4], ", ")
-        )
-      )
-    ), ncol = 3,
-    byrow = T)
+  sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(this_date_text, regexp))
   if(nrow(na.omit(sigma_extract))>0){
     one_sigma <- data.frame(start = sigma_extract[, 1],
                             end = sigma_extract[, 2],
@@ -425,32 +420,14 @@ extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
   }
 
   regexp <- "(ocd\\[\\d+\\].posterior.range\\[2\\]).*?(=\\[)(.*)(\\];)"
-  sigma_extract <- matrix(
-    as.double(
-      stats::na.omit(
-        unlist(
-          strsplit(
-            do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 4], ", ")
-        )
-      )
-    ), ncol = 3,
-    byrow = T)
+  sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(this_date_text, regexp))
   if(nrow(na.omit(sigma_extract))>0){
     two_sigma <- data.frame(start = sigma_extract[, 1],
                             end = sigma_extract[, 2],
                             probability = sigma_extract[, 3])
   }
   regexp <- "(ocd\\[\\d+\\].posterior.range\\[3\\]).*?(=\\[)(.*)(\\];)"
-  sigma_extract <- matrix(
-    as.double(
-      stats::na.omit(
-        unlist(
-          strsplit(
-            do.call(rbind, stringi::stri_match_all_regex(result_text, regexp))[, 4], ", ")
-        )
-      )
-    ), ncol = 3,
-    byrow = T)
+  sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(this_date_text, regexp))
   if(nrow(na.omit(sigma_extract))>0){
     three_sigma <- data.frame(start = sigma_extract[, 1],
                               end = sigma_extract[, 2],
@@ -463,7 +440,8 @@ extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
 }
 
 extractSigmaValuesFromOxcalResult <- function(result_text,regexp) {
-  RVA <- matrix(
+  if(length(result_text)==0) result_text <- ""
+  matrix(
     as.double(
       stats::na.omit(
         unlist(
@@ -508,8 +486,6 @@ extractSigmaRangesFromOxcalResult <- function(result_text) {
                three_sigma = three_sigma)
   RVAL
 }
-
-#result_text <- oxcAAR::readOxcalOutput("tests/testthat/ox_output.js")
 
 extractCalCurveFromOxcalResult <- function(date_text){
   identifier <- "calib[0].ref="
