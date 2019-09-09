@@ -385,8 +385,6 @@ extractDoubleFromOxcalResult <- function(result_text, regexp, position) {
   )
   }
 
-#result_text <- oxcAAR::readOxcalOutput("tests/testthat/ox_output.js")
-
 extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
   one_sigma <- two_sigma <- three_sigma <- NA
   identifier <- "].posterior.range"
