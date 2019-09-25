@@ -101,6 +101,11 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
 
   if (prob_present){
     years <- x$raw_probabilities$dates
+
+    if(max(years) == 1950.5){
+      x$raw_probabilities$probabilities[length(x$raw_probabilities$probabilities)] <- 0
+    }
+
     probability <- x$raw_probabilities$probabilities
     unmodelled_color <- "lightgrey"
     max_prob <- max(probability)
