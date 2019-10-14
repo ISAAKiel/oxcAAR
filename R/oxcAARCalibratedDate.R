@@ -100,11 +100,10 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
   if(has_posterior_probabilities(x)) {post_present <- TRUE}
 
   if (prob_present){
-    years <- x$raw_probabilities$dates
 
-    if(max(years) == 1950.5){
-      x$raw_probabilities$probabilities[length(x$raw_probabilities$probabilities)] <- 0
-    }
+    x$raw_probabilities <- protect_against_younger_than_bp(x$raw_probabilities)
+
+    years <- x$raw_probabilities$dates
 
     probability <- x$raw_probabilities$probabilities
     unmodelled_color <- "lightgrey"
@@ -112,6 +111,9 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
     this_sigma_ranges <- x$sigma_ranges
   }
   if (post_present){
+
+    x$posterior_probabilities <- protect_against_younger_than_bp(x$posterior_probabilities)
+
     years_post <- x$posterior_probabilities$dates
     probability_post <- x$posterior_probabilities$probabilities
     unmodelled_color <- "#eeeeeeee"
@@ -158,7 +160,7 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
   if (post_present){
     graphics::polygon(years_post, probability_post, border = "black", col = "#aaaaaaaa")
   }
-  if ((!is.na(this_sigma_ranges$one_sigma)) && (length(this_sigma_ranges$one_sigma[,1])) > 0){
+  if (any((!is.na(this_sigma_ranges$one_sigma))) && any((length(this_sigma_ranges$one_sigma[,1])) > 0)){
     y_pos <- max_prob / 24 * -1
     arrow_length <- max_prob / 8
     graphics::arrows(
@@ -207,7 +209,7 @@ is.oxcAARCalibratedDate <- function(x) {"oxcAARCalibratedDate" %in% class(x)}
 get_years_range <- function(calibrated_date) {
   years <- get_prior_years(calibrated_date)
   years_post <- get_posterior_years(calibrated_date)
-  if (is.na(years) && is.na(years_post)) {
+  if (all(is.na(years)) && all(is.na(years_post))) {
     return(NA)
   } else {
     return(
@@ -261,4 +263,11 @@ print_bp_std <- function(calibrated_date) {
     RVA <- paste(calibrated_date$bp, " \u00b1 ", calibrated_date$std)
   }
   return(RVA)
+}
+
+protect_against_younger_than_bp <- function(x) {
+  if(max(x$dates)>1950) {
+      x <- rbind(x, c(1951,0))
+  }
+  return(x)
 }
