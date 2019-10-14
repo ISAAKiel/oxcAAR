@@ -29,7 +29,7 @@ test_that("extractSigmaValuesFromOxcalResult does is job", {
       date_text,
       "(ocd\\[\\d+\\].likelihood.range\\[1\\]).*?(=\\[)(.*)(\\];)"
     ),
-    matrix(c(1177, 1292.5, 68.2), 1, 3)
+    data.frame(matrix(c(1177, 1292.5, 68.2), 1, 3))
   )
 })
 

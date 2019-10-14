@@ -462,7 +462,7 @@ extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
 }
 
 extractSigmaValuesFromOxcalResult <- function(result_text,regexp) {
-  matrix(
+  RVA <- matrix(
     as.double(
       stats::na.omit(
         unlist(
@@ -472,31 +472,34 @@ extractSigmaValuesFromOxcalResult <- function(result_text,regexp) {
       )
     ), ncol = 3,
     byrow = T)
+  RVA <- data.frame(RVA)
+  RVA <- RVA[rowSums(is.na(RVA))<3,]
 }
 
 extractSigmaRangesFromOxcalResult <- function(result_text) {
   one_sigma <- two_sigma <- three_sigma <- NA
   regexp <- "(ocd\\[\\d+\\].likelihood.range\\[1\\]).*?(=\\[)(.*)(\\];)"
   sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(result_text, regexp))
-  if(nrow(na.omit(sigma_extract))>0){
+  if(nrow(sigma_extract)>0){
     one_sigma <- data.frame(start = sigma_extract[, 1],
                             end = sigma_extract[, 2],
                             probability = sigma_extract[, 3])
   }
   regexp <- "(ocd\\[\\d+\\].likelihood.range\\[2\\]).*?(=\\[)(.*)(\\];)"
   sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(result_text, regexp))
-  if(nrow(na.omit(sigma_extract))>0){
+  if(nrow(sigma_extract)>0){
     two_sigma <- data.frame(start = sigma_extract[, 1],
                             end = sigma_extract[, 2],
                             probability = sigma_extract[, 3])
   }
   regexp <- "(ocd\\[\\d+\\].likelihood.range\\[3\\]).*?(=\\[)(.*)(\\];)"
   sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(result_text, regexp))
-  if(nrow(na.omit(sigma_extract))>0){
+  if(nrow(sigma_extract)>0){
     three_sigma <- data.frame(start = sigma_extract[, 1],
                               end = sigma_extract[, 2],
                               probability = sigma_extract[, 3])
   }
+
   RVAL <- list(one_sigma = one_sigma,
                two_sigma = two_sigma,
                three_sigma = three_sigma)
