@@ -101,7 +101,7 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
 
   if (prob_present){
 
-    x$raw_probabilities <- protect_against_younger_than_bp(x$raw_probabilities)
+    x$raw_probabilities <- protect_against_out_of_range(x$raw_probabilities)
 
     years <- x$raw_probabilities$dates
 
@@ -112,7 +112,7 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
   }
   if (post_present){
 
-    x$posterior_probabilities <- protect_against_younger_than_bp(x$posterior_probabilities)
+    x$posterior_probabilities <- protect_against_out_of_range(x$posterior_probabilities)
 
     years_post <- x$posterior_probabilities$dates
     probability_post <- x$posterior_probabilities$probabilities
@@ -265,9 +265,8 @@ print_bp_std <- function(calibrated_date) {
   return(RVA)
 }
 
-protect_against_younger_than_bp <- function(x) {
-  if(max(x$dates)>1950) {
-      x <- rbind(x, c(1951,0))
-  }
+protect_against_out_of_range <- function(x) {
+  x <- rbind(c(min(x$dates)-1,0), x)
+  x <- rbind(x, c(max(x$dates)+1,0))
   return(x)
 }
