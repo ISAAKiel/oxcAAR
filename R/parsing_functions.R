@@ -419,7 +419,7 @@ extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
 
 extractSigmaValuesFromOxcalResult <- function(result_text,regexp) {
   if(length(result_text)==0) result_text <- ""
-  matrix(
+  RVA <- matrix(
     as.double(
       stats::na.omit(
         unlist(
@@ -431,6 +431,7 @@ extractSigmaValuesFromOxcalResult <- function(result_text,regexp) {
     byrow = T)
   RVA <- data.frame(RVA)
   RVA <- RVA[rowSums(is.na(RVA))<3,]
+  return(RVA)
 }
 
 extractSigmaRangesFromOxcalResult <- function(result_text) {
