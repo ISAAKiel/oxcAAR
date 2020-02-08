@@ -121,7 +121,7 @@ plotoxcAARDateGGPlot2<-function(x, ...){
   m <- ggplot() + theme_light()
 
   graph <- m +
-    geom_area(data = to_plot, aes(x=dates,y=probability), fill = "#fc8d62", alpha = .6) +
+    geom_area(data = to_plot, aes(x=dates,y=probability), fill = "#fc8d62", alpha = .6, color="black") +
     labs(title = paste0(x$name, ": ", x$bp, "\u00B1", x$std), caption = x$cal_curve$name, x = "Calibrated Date")
   graph <- graph +
     geom_ribbon(data = cal_curve_df, aes(x = bc,
