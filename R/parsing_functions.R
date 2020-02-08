@@ -385,6 +385,7 @@ extractDoubleFromOxcalResult <- function(result_text, regexp, position) {
   )
   }
 
+
 extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
   one_sigma <- two_sigma <- three_sigma <- NA
   identifier <- "].posterior.range"
