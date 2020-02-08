@@ -4,8 +4,13 @@
 \alias{oxcalSumSim}
 \title{Sum calibration for simulated dates}
 \usage{
-oxcalSumSim(timeframe_begin, timeframe_end, n, stds,
-  date_distribution = c("equidist", "uniform"))
+oxcalSumSim(
+  timeframe_begin,
+  timeframe_end,
+  n,
+  stds,
+  date_distribution = c("equidist", "uniform")
+)
 }
 \arguments{
 \item{timeframe_begin, timeframe_end}{beginning and end of the time frame for which dates should be simulated}

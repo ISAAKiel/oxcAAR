@@ -34,9 +34,11 @@ get_std(y)
 
 }
 \seealso{
-Other getter functions: \code{\link{get_bp}},
-  \code{\link{get_cal_curve}}, \code{\link{get_name}},
-  \code{\link{get_raw_probabilities}},
-  \code{\link{get_sigma_ranges}}
+Other getter functions: 
+\code{\link{get_bp}()},
+\code{\link{get_cal_curve}()},
+\code{\link{get_name}()},
+\code{\link{get_raw_probabilities}()},
+\code{\link{get_sigma_ranges}()}
 }
 \concept{getter functions}
