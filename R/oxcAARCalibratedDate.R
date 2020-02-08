@@ -81,13 +81,73 @@ format.oxcAARCalibratedDate <- function(x, ...){
 print.oxcAARCalibratedDate <- function(x, ...) cat(format(x, ...), "\n")
 
 ##' @export
-plot.oxcAARCalibratedDate <- function(x, ...){
-  #   if (requireNamespace("ggplot2", quietly = TRUE)) {
-  #     plotoxcAARDateGGPlot2(x, ...)
-  #   } else {
-  plotoxcAARDateSystemGraphics(x, ...)
-  # }
+plot.oxcAARCalibratedDate <- function(x, use_ggplot=T, ...){
+  if (requireNamespace("ggplot2", quietly = TRUE) & use_ggplot) {
+    plotoxcAARDateGGPlot2(x, ...)
+  } else {
+    plotoxcAARDateSystemGraphics(x, ...)
+  }
 }
+
+#' @importFrom "ggplot2" "ggplot" "aes" "geom_area" "labs" "theme_light" "geom_ribbon" "scale_y_continuous" "sec_axis" "ggplot_build" "geom_polygon" "scale_x_continuous" "annotate" "geom_errorbarh"
+plotoxcAARDateGGPlot2<-function(x, ...){
+  to_plot <- data.frame(dates=x$raw_probabilities$dates, probability = x$raw_probabilities$probabilities)
+  cal_curve_df <- data.frame(bp = x$cal_curve$bp,
+                             bc = x$cal_curve$bc,
+                             sigma = x$cal_curve$sigma)
+
+  base_unit_y <- max(to_plot$probability)/25
+
+  cal_curve_df <- subset(cal_curve_df, bc >= min(to_plot$dates) & bc <= max(to_plot$dates))
+
+  cal_curve_df_old_min <- min(cal_curve_df$bp)
+  cal_curve_df_old_range <- diff(range(cal_curve_df$bp))
+  cal_curve_df_new_min <- max(to_plot$probability)
+  cal_curve_df_new_range <- diff(range(to_plot$probability))
+
+  this_bp_distribution<-NULL
+  this_bp_distribution$y <- pretty(c(x$bp+5*x$std, x$bp-5*x$std), n=20)
+  this_bp_distribution$x <- dnorm(this_bp_distribution$y,x$bp, x$std)
+  this_bp_distribution <- as.data.frame(this_bp_distribution)
+
+  this_bp_distribution$y_rescaled <- (this_bp_distribution$y - cal_curve_df_old_min) / cal_curve_df_old_range * cal_curve_df_new_range + cal_curve_df_new_min
+
+  cal_curve_df$bp_rescaled <-
+    (cal_curve_df$bp - cal_curve_df_old_min) / cal_curve_df_old_range * cal_curve_df_new_range + cal_curve_df_new_min
+
+  cal_curve_df$sigma_rescaled <-
+    cal_curve_df$sigma / cal_curve_df_old_range * cal_curve_df_new_range
+
+  m <- ggplot() + theme_light()
+
+  graph <- m +
+    geom_area(data = to_plot, aes(x=dates,y=probability), fill = "#fc8d62", alpha = .6) +
+    labs(title = paste0(x$name, ": ", x$bp, "\u00B1", x$std), caption = x$cal_curve$name, x = "Calibrated Date")
+  graph <- graph +
+    geom_ribbon(data = cal_curve_df, aes(x = bc,
+                                         ymax = bp_rescaled + sigma_rescaled,
+                                         ymin = bp_rescaled - sigma_rescaled),
+                color = "#8da0cb", fill = "#8da0cb", alpha = 0.5) +
+    scale_y_continuous("Probability", sec.axis = sec_axis(~ (. - cal_curve_df_new_min)/ cal_curve_df_new_range * cal_curve_df_old_range + cal_curve_df_old_min, name = "BP", breaks=pretty(cal_curve_df$bp)), position = "right")
+
+  x_extend <- ggplot_build(graph)$layout$panel_scales_x[[1]]$range$range
+
+  this_bp_distribution$x_rescaled <- this_bp_distribution$x / max(this_bp_distribution$x) * diff(x_extend)/4 + x_extend[1]
+
+  graph <- graph +
+    geom_polygon(data = this_bp_distribution, aes(x=x_rescaled, y=y_rescaled), fill = "#66c2a5", alpha=0.5) +
+    scale_x_continuous(limits=x_extend, expand = c(0,0))
+
+  sigma_text<-paste(oxcAAR:::formatFullSigmaRange(x$sigma_ranges$one_sigma,"one sigma"),
+                    oxcAAR:::formatFullSigmaRange(x$sigma_ranges$two_sigma,"two sigma"),
+                    oxcAAR:::formatFullSigmaRange(x$sigma_ranges$three_sigma,"three sigma"),
+                    sep="\n")
+  g2 <- graph + annotate("text", x=x_extend[2] - diff(x_extend)/20, y=max(x$raw_probabilities$probabilities)*2, label= sigma_text, hjust=1, vjust=1, size=2) + geom_errorbarh(data=x$sigma_ranges$one_sigma, aes(y=-1*base_unit_y, xmin=start, xmax=end), height = base_unit_y)+ geom_errorbarh(data=x$sigma_ranges$two_sigma, aes(y=-2*base_unit_y, xmin=start, xmax=end), height = base_unit_y)+ geom_errorbarh(data=x$sigma_ranges$three_sigma, aes(y=-3*base_unit_y, xmin=start, xmax=end), height = base_unit_y)
+
+  plot(g2)
+
+}
+
 #' @importFrom "graphics" "text"
 #' @importFrom "stats" "na.omit"
 plotoxcAARDateSystemGraphics <- function(x, ...){
@@ -205,6 +265,71 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
 #'
 #' @export
 is.oxcAARCalibratedDate <- function(x) {"oxcAARCalibratedDate" %in% class(x)}
+
+#' @title Convert to a CalDates object
+#' @description Convert oxcAARCalibratedDatesList to an rcarbon CalDates object. The function is taken and adapted from rcarbon (Bevan, A. and Crema, E.R., 2019).
+#' @param x One or more calibrated dated in the form of an oxcAARCalibratedDatesList
+#' @return A CalDates object
+#' @examples
+#' \dontrun{
+#' library(oxcAAR)
+#' library(rcarbon)
+#' quickSetupOxcal()
+#' dates <- data.frame(CRA=c(3200,2100,1900), Error=c(35,40,50))
+#' rcaldates <- rcarbon::calibrate(dates$CRA, dates$Error, calCurves=rep("intcal13"))
+#' ocaldates <- oxcAAR::oxcalCalibrate(c(3200,2100,1900),c(35,40,50),c("a","b","c"))
+#' ## Convert to rcarbon format
+#' caldates.o <- as.CalDates(ocaldates)
+#' ## Comparison plot
+#' plot(rcaldates$grids[[2]]$calBP,rcaldates$grids[[2]]$PrDens,
+#' type="l", col="green", xlim=c(2300,1900))
+#' lines(caldates.o$grids[[2]]$calBP,caldates.o$grids[[2]]$PrDens, col="blue")
+#' legend("topright", legend=c("rcarbon","OxCal"), col=c("green","blue"), lwd=2)
+#' }
+#' @export
+#'
+as.CalDates <- function(x){
+  if (!any(class(x)%in%c("oxcAARCalibratedDatesList"))){
+    stop("x must be of class oxcAARCalibratedDatesList")
+  }
+  if (any(class(x)=="oxcAARCalibratedDatesList")){
+    reslist <- vector(mode="list", length=2)
+    sublist <- vector(mode="list", length=length(x))
+    names(sublist) <- names(x)
+    names(reslist) <- c("metadata","grids")
+    ## metadata
+    df <- as.data.frame(matrix(ncol=12, nrow=length(x)), stringsAFactors=FALSE)
+    names(df) <- c("DateID","CRA","Error","Details","CalCurve","ResOffsets","ResErrors","StartBP","EndBP","Normalised","CalEPS", "Method")
+    df$DateID <- names(x)
+    df$CRA <- as.numeric(unlist(lapply(X=x, FUN=`[[`, "bp")))
+    df$Error <- as.numeric(unlist(lapply(X=x, FUN=`[[`, "std")))
+    df$CalCurve=lapply(lapply(lapply(lapply(lapply(x,FUN=`[[`,"cal_curve"),FUN=`[[`,"name"),strsplit," "),unlist),FUN=`[[`,2)
+    df$CalCurve=tolower(df$CalCurve)
+    df$ResOffsets <- NA
+    df$ResErrors <- NA
+    df$StartBP <- NA
+    df$EndBP <- NA
+    df$Normalised <- TRUE
+    df$CalEPS <- 0
+    df$Method <- 'oxcAAR'
+    reslist[["metadata"]] <- df
+    ## grids
+    for (i in 1:length(x)){
+      tmp <- x[[i]]$raw_probabilities
+      rr <- range(tmp$dates)
+      res <- 	approx(x=tmp$dates,y=tmp$probabilities,xout=ceiling(rr[1]):floor(rr[2]))
+      res$x <- abs(res$x-1950)
+      res <- data.frame(calBP=res$x,PrDens=res$y)
+      res$PrDens <- res$PrDens/sum(res$PrDens)
+      class(res) <- append(class(res),"calGrid")
+      sublist[[i]] <- res
+    }
+    reslist[["grids"]] <- sublist
+    reslist[["calmatrix"]] <- NA
+    class(reslist) <- c("CalDates",class(reslist))
+    return(reslist)
+  }
+}
 
 get_years_range <- function(calibrated_date) {
   years <- get_prior_years(calibrated_date)

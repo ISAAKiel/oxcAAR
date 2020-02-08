@@ -19,18 +19,25 @@ print.oxcAARCalibratedDatesList <- function(x, ...){
 }
 
 #' @export
-plot.oxcAARCalibratedDatesList <- function(x, ...){
-  if (length(x) == 1) graphics::plot(x[[1]],...)
+plot.oxcAARCalibratedDatesList <- function(x, use_ggplot = T, ...){
+  if (length(x) == 1) plot(x[[1]], use_ggplot, ...)
   else{
-    #     if (requireNamespace("ggplot2", quietly = TRUE)) {
-    #       #  if (FALSE) {
-    #       plotoxcAARCalibratedDatesListGGPlot2(x, ...)
-    #     } else {
-    plotoxcAARCalibratedDatesListSystemGraphics(x, ...)
-    # }
+    if (requireNamespace("ggplot2", quietly == TRUE) & use_ggplot) {
+      #  if (FALSE) {
+      plotoxcAARCalibratedDatesListGGPlot2(x, ...)
+    } else {
+      plotoxcAARCalibratedDatesListSystemGraphics(x, ...)
+    }
   }
 }
 
+#' @importFrom "ggplot2" "ggplot" "aes" "geom_area" "facet_grid" "theme" "element_blank" "element_text"
+plotoxcAARCalibratedDatesListGGPlot2<-function(x, ...){
+  to_plot<-do.call(rbind,lapply(x,function(x){data.frame(dates=x$raw_probabilities$dates,probability=x$raw_probabilities$probabilities,name=x$name)}))
+  m <- ggplot(to_plot,aes(x=dates,y=probability))
+  graph <- m + geom_area() + facet_grid(name~.) + theme(panel.background = element_blank(),strip.background=element_blank(),strip.text.y=element_text(angle=0))
+  show(graph)
+}
 
 plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
   op <- graphics::par(no.readonly = TRUE)
@@ -44,7 +51,7 @@ plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
       function(i) {
         this_year_range <- get_years_range(x[[i]])
         if (!all(is.na(this_year_range))) {
-        min(this_year_range, na.rm=T)
+          min(this_year_range, na.rm=T)
         } else {
           NA
         }
