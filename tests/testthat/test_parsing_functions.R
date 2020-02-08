@@ -21,7 +21,7 @@ test_that("oxcal_Sum produces correct oxcal code", {
 context("atomic parsing operations")
 
 test_result <- oxcAAR::readOxcalOutput("ox_output.js")
-date_text <- stats::na.omit(stringr::str_match(test_result, "^ocd\\[2\\]\\..*"))[, 1]
+date_text <- stats::na.omit(do.call(rbind, stringi::stri_match_all_regex(test_result, "^ocd\\[2\\]\\..*")))[, 1]
 
 test_that("extractSigmaValuesFromOxcalResult does is job", {
   expect_equal(
