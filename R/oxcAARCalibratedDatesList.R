@@ -31,11 +31,12 @@ plot.oxcAARCalibratedDatesList <- function(x, use_ggplot = T, ...){
   }
 }
 
-#' @importFrom "ggplot2" "ggplot" "aes" "geom_area" "facet_grid" "theme" "element_blank" "element_text"
+#' @importFrom "ggplot2" "ggplot" "aes" "theme" "theme_light"
+#' @importFrom "ggridges" "geom_ridgeline"
 plotoxcAARCalibratedDatesListGGPlot2<-function(x, ...){
   to_plot<-do.call(rbind,lapply(x,function(x){data.frame(dates=x$raw_probabilities$dates,probability=x$raw_probabilities$probabilities,name=x$name)}))
   m <- ggplot(to_plot,aes(x=dates,y=probability))
-  graph <- m + geom_area() + facet_grid(name~.) + theme(panel.background = element_blank(),strip.background=element_blank(),strip.text.y=element_text(angle=0))
+  graph <- m + geom_ridgeline(aes(x=dates,height=probability, y = name), scale=100, fill = "#fc8d62", alpha=0.5) + theme_light() + labs(y="Dates")
   show(graph)
 }
 
