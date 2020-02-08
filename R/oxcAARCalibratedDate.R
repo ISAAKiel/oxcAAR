@@ -206,6 +206,71 @@ plotoxcAARDateSystemGraphics <- function(x, ...){
 #' @export
 is.oxcAARCalibratedDate <- function(x) {"oxcAARCalibratedDate" %in% class(x)}
 
+#' @title Convert to a CalDates object
+#' @description Convert oxcAARCalibratedDatesList to an rcarbon CalDates object. The function is taken and adapted from rcarbon (Bevan, A. and Crema, E.R., 2019).
+#' @param x One or more calibrated dated in the form of an oxcAARCalibratedDatesList
+#' @return A CalDates object
+#' @examples
+#' \dontrun{
+#' library(oxcAAR)
+#' library(rcarbon)
+#' quickSetupOxcal()
+#' dates <- data.frame(CRA=c(3200,2100,1900), Error=c(35,40,50))
+#' rcaldates <- rcarbon::calibrate(dates$CRA, dates$Error, calCurves=rep("intcal13"))
+#' ocaldates <- oxcAAR::oxcalCalibrate(c(3200,2100,1900),c(35,40,50),c("a","b","c"))
+#' ## Convert to rcarbon format
+#' caldates.o <- as.CalDates(ocaldates)
+#' ## Comparison plot
+#' plot(rcaldates$grids[[2]]$calBP,rcaldates$grids[[2]]$PrDens,
+#' type="l", col="green", xlim=c(2300,1900))
+#' lines(caldates.o$grids[[2]]$calBP,caldates.o$grids[[2]]$PrDens, col="blue")
+#' legend("topright", legend=c("rcarbon","OxCal"), col=c("green","blue"), lwd=2)
+#' }
+#' @export
+#'
+as.CalDates <- function(x){
+  if (!any(class(x)%in%c("oxcAARCalibratedDatesList"))){
+    stop("x must be of class oxcAARCalibratedDatesList")
+  }
+  if (any(class(x)=="oxcAARCalibratedDatesList")){
+    reslist <- vector(mode="list", length=2)
+    sublist <- vector(mode="list", length=length(x))
+    names(sublist) <- names(x)
+    names(reslist) <- c("metadata","grids")
+    ## metadata
+    df <- as.data.frame(matrix(ncol=12, nrow=length(x)), stringsAFactors=FALSE)
+    names(df) <- c("DateID","CRA","Error","Details","CalCurve","ResOffsets","ResErrors","StartBP","EndBP","Normalised","CalEPS", "Method")
+    df$DateID <- names(x)
+    df$CRA <- as.numeric(unlist(lapply(X=x, FUN=`[[`, "bp")))
+    df$Error <- as.numeric(unlist(lapply(X=x, FUN=`[[`, "std")))
+    df$CalCurve=lapply(lapply(lapply(lapply(lapply(x,FUN=`[[`,"cal_curve"),FUN=`[[`,"name"),strsplit," "),unlist),FUN=`[[`,2)
+    df$CalCurve=tolower(df$CalCurve)
+    df$ResOffsets <- NA
+    df$ResErrors <- NA
+    df$StartBP <- NA
+    df$EndBP <- NA
+    df$Normalised <- TRUE
+    df$CalEPS <- 0
+    df$Method <- 'oxcAAR'
+    reslist[["metadata"]] <- df
+    ## grids
+    for (i in 1:length(x)){
+      tmp <- x[[i]]$raw_probabilities
+      rr <- range(tmp$dates)
+      res <- 	approx(x=tmp$dates,y=tmp$probabilities,xout=ceiling(rr[1]):floor(rr[2]))
+      res$x <- abs(res$x-1950)
+      res <- data.frame(calBP=res$x,PrDens=res$y)
+      res$PrDens <- res$PrDens/sum(res$PrDens)
+      class(res) <- append(class(res),"calGrid")
+      sublist[[i]] <- res
+    }
+    reslist[["grids"]] <- sublist
+    reslist[["calmatrix"]] <- NA
+    class(reslist) <- c("CalDates",class(reslist))
+    return(reslist)
+  }
+}
+
 get_years_range <- function(calibrated_date) {
   years <- get_prior_years(calibrated_date)
   years_post <- get_posterior_years(calibrated_date)
