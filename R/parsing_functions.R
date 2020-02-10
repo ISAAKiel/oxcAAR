@@ -367,6 +367,7 @@ extractProbsFromOxcalResult <- function(result_text) {
 }
 
 extractDoubleFromOxcalResult <- function(result_text, regexp, position) {
+  if(length(result_text)==0) return(NULL)
   as.double(
     stats::na.omit(
       unlist(
@@ -375,15 +376,15 @@ extractDoubleFromOxcalResult <- function(result_text, regexp, position) {
                   stringi::stri_match_all_regex(
                     result_text,
                     regexp
-                    )
-                  )[, position],
+                  )
+          )[, position],
           ", ",
           fixed = TRUE
-          )
         )
       )
+    )
   )
-  }
+}
 
 
 extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
