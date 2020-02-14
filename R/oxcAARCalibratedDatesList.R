@@ -44,7 +44,7 @@ plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
       function(i) {
         this_year_range <- get_years_range(x[[i]])
         if (!all(is.na(this_year_range))) {
-        min(this_year_range, na.rm=T)
+          min(this_year_range, na.rm=T)
         } else {
           NA
         }
@@ -67,8 +67,10 @@ plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
   )
 
   graphics::par(mfrow=c(length(x)+1,1))
-  graphics::par(oma = c(3,4,2,3) + 0.1,
+
+  graphics::par(oma = c(3,1,2,2) + 0.1,
                 mar = c(0,1,0,1) + 0.1)
+
   for (i in indices) {
     max_prob <- 0
     years <- probability <- NA
@@ -113,13 +115,13 @@ plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
     if (unmodelled_color!="lightgrey"){
       graphics::polygon(years_post, probability_post, border = "black", col = "#aaaaaaaa")
     }
-    graphics::mtext(print_label(x[[i]]),side=2,las=2,cex=0.6)
+    graphics::text(x=min_year, y=max_prob, labels=print_label(x[[i]]),las=2,cex=0.6, adj=0)
     graphics::grid()
   }
   plot(c(min_year,max_year),c(0,0),
        axes = FALSE,
        type="n")
-  graphics::axis(side=1)
+  graphics::axis(side=1, pretty(c(min_year, max_year)))
   graphics::par(op)
 }
 
