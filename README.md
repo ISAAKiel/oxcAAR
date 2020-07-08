@@ -7,7 +7,7 @@ Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](htt
 [![rstudio mirror downloads
 monthly](http://cranlogs.r-pkg.org/badges/oxcAAR)](http://cran.rstudio.com/web/packages/oxcAAR/index.html)
 [![rstudio mirror downloads
-total](http://cranlogs.r-pkg.org/badges/grand-total/oxcAAR)](http://cran.rstudio.com/web/packages/oxcAAR/index.html)
+total](http://cranlogs.r-pkg.org/badges/grand-total/oxcAAR)](http://cran.rstudio.com/web/packages/oxcAAR/index.html) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 oxcAAR
