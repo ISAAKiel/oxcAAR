@@ -4,8 +4,12 @@
 \alias{calcurve_plot}
 \title{Plots calibrated dates on the calibration curve}
 \usage{
-calcurve_plot(x, dates_sigma_ranges = NULL, uncal_range = TRUE,
-  cal_range = TRUE)
+calcurve_plot(
+  x,
+  dates_sigma_ranges = NULL,
+  uncal_range = TRUE,
+  cal_range = TRUE
+)
 }
 \arguments{
 \item{x}{an object of class oxcAARCalibratedDate or oxcAARCalibratedDatesList}

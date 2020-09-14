@@ -4,9 +4,17 @@
 \alias{oxcAARCalibratedDate}
 \title{oxcAAR Calibrated Dates Object}
 \usage{
-oxcAARCalibratedDate(name, type, bp, std, cal_curve, sigma_ranges,
-  raw_probabilities, posterior_probabilities = NA,
-  posterior_sigma_ranges = NA)
+oxcAARCalibratedDate(
+  name,
+  type,
+  bp,
+  std,
+  cal_curve,
+  sigma_ranges,
+  raw_probabilities,
+  posterior_probabilities = NA,
+  posterior_sigma_ranges = NA
+)
 }
 \arguments{
 \item{name}{a string giving the name of the date (usually the lab number)}
