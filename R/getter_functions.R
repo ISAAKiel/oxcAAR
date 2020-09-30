@@ -261,3 +261,75 @@ get_raw_probabilities.oxcAARCalibratedDate <- function(x) {
 get_raw_probabilities.oxcAARCalibratedDatesList <- function(x) {
   return(unname(lapply(x, function(x) {x[["raw_probabilities"]]})))
 }
+
+#### get_posterior_sigma_ranges ####
+
+#' @name get_posterior_sigma_ranges
+#' @title get posterior sigma ranges
+#'
+#' @description queries values from date objects
+#'
+#' @param x an object of class oxcAARCalibratedDate or oxcAARCalibratedDatesList
+#'
+#' @return a list of three data.frames or a list of those lists
+#' @export
+#'
+#' @rdname get_posterior_sigma_ranges
+#' @family getter functions
+get_posterior_sigma_ranges <- function(x) {
+  UseMethod("get_posterior_sigma_ranges")
+}
+
+#' @rdname get_posterior_sigma_ranges
+#' @export
+get_posterior_sigma_ranges.default <- function(x) {
+  stop("x is not an object of class oxcAARCalibratedDate or oxcAARCalibratedDatesList")
+}
+
+#' @rdname get_posterior_sigma_ranges
+#' @export
+get_posterior_sigma_ranges.oxcAARCalibratedDate <- function(x) {
+  return(x[["posterior_sigma_ranges"]])
+}
+
+#' @rdname get_posterior_sigma_ranges
+#' @export
+get_posterior_sigma_ranges.oxcAARCalibratedDatesList <- function(x) {
+  return(unname(lapply(x, function(x) {x[["posterior_sigma_ranges"]]})))
+}
+
+#### get_posterior_probabilities ####
+
+#' @name get_posterior_probabilities
+#' @title get posterior raw probabilities
+#'
+#' @description queries values from date objects
+#'
+#' @param x an object of class oxcAARCalibratedDate or oxcAARCalibratedDatesList
+#'
+#' @return a list of three data.frames or a list of those lists
+#' @export
+#'
+#' @rdname get_posterior_probabilities
+#' @family getter functions
+get_posterior_probabilities <- function(x) {
+  UseMethod("get_posterior_probabilities")
+}
+
+#' @rdname get_posterior_probabilities
+#' @export
+get_posterior_probabilities.default <- function(x) {
+  stop("x is not an object of class oxcAARCalibratedDate or oxcAARCalibratedDatesList")
+}
+
+#' @rdname get_posterior_probabilities
+#' @export
+get_posterior_probabilities.oxcAARCalibratedDate <- function(x) {
+  return(x[["posterior_probabilities"]])
+}
+
+#' @rdname get_posterior_probabilities
+#' @export
+get_posterior_probabilities.oxcAARCalibratedDatesList <- function(x) {
+  return(unname(lapply(x, function(x) {x[["posterior_probabilities"]]})))
+}
