@@ -39,7 +39,7 @@ get_tidy_oxcalresult.oxcAARCalibratedDate <- function(x) {
     cal_curve = I(list(get_cal_curve(x))),
     sigma_ranges = I(list(get_sigma_ranges(x))),
     raw_probabilities = I(list(get_raw_probabilities(x))),
-    posterior_sigma_ranges = I(get_posterior_sigma_ranges(x)),
+    posterior_sigma_ranges = I(list(get_posterior_sigma_ranges(x))),
     posterior_probabilities = I(get_posterior_probabilities(x)),
     stringsAsFactors = FALSE
   )
