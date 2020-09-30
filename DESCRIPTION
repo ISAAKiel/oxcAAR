@@ -17,7 +17,8 @@ Imports:
   stringr,
   jsonlite
 Suggests: knitr,
-    testthat
+    testthat,
+    rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Encoding: UTF-8
