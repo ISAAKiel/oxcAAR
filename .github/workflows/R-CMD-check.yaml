@@ -63,6 +63,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          install.packages(c("remotes"))
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("covr")
