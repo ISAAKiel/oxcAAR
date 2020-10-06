@@ -1,5 +1,5 @@
-[![Travis-CI Build
-Status](https://travis-ci.org/ISAAKiel/oxcAAR.svg?branch=master)](https://travis-ci.org/ISAAKiel/oxcAAR)
+[![R build
+status](https://github.com/ISAAKiel/oxcAAR/workflows/R-CMD-check/badge.svg)](https://github.com/ISAAKiel/oxcAAR/actions)
 [![Coverage
 Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://codecov.io/github/ISAAKiel/oxcAAR?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](http://cran.r-project.org/package=oxcAAR)
@@ -8,8 +8,6 @@ Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](htt
 monthly](http://cranlogs.r-pkg.org/badges/oxcAAR)](http://cran.rstudio.com/web/packages/oxcAAR/index.html)
 [![rstudio mirror downloads
 total](http://cranlogs.r-pkg.org/badges/grand-total/oxcAAR)](http://cran.rstudio.com/web/packages/oxcAAR/index.html)
-[![R build
-status](https://github.com/ISAAKiel/oxcAAR/workflows/R-CMD-check/badge.svg)](https://github.com/ISAAKiel/oxcAAR/actions)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
