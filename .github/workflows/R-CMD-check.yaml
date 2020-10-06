@@ -64,7 +64,7 @@ jobs:
       - name: Install curl
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get install curl
+          sudo apt-get install curl libcurl4-openssl-dev
 
       - name: Install dependencies
         run: |
