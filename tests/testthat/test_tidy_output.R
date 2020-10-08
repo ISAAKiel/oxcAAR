@@ -25,11 +25,11 @@ test_that("get_tidy_oxcalresult produces a data.frame with the correct amount of
 })
 
 test_that("get_tidy_oxcalresult produces a data.frame with the correct cols (names", {
-  expect_true(all(c("name", "bp", "std", "cal_curve", "sigma_ranges", "raw_probabilities") %in% colnames(tidy_res)))
-  expect_true(all(c("name", "bp", "std", "cal_curve", "sigma_ranges", "raw_probabilities") %in% colnames(tidy_res_list)))
+  expect_true(all(c("name", "bp", "std", "cal_curve", "sigma_ranges", "raw_probabilities", "posterior_sigma_ranges", "posterior_probabilities") %in% colnames(tidy_res)))
+  expect_true(all(c("name", "bp", "std", "cal_curve", "sigma_ranges", "raw_probabilities", "posterior_sigma_ranges", "posterior_probabilities") %in% colnames(tidy_res_list)))
 })
 
 test_that("get_tidy_oxcalresult produces a data.frame with the correct cols (classes)", {
-  expect_true(all(c("character", "integer", "integer", "character", "AsIs", "AsIs") %in% sapply(tidy_res, class)))
-  expect_true(all(c("character", "integer", "integer", "character", "AsIs", "AsIs") %in% sapply(tidy_res_list, class)))
+  expect_true(all(c("character", "integer", "integer", "character", "AsIs", "AsIs", "AsIs", "AsIs") %in% sapply(tidy_res, class)))
+  expect_true(all(c("character", "integer", "integer", "character", "AsIs", "AsIs", "AsIs", "AsIs") %in% sapply(tidy_res_list, class)))
 })
