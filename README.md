@@ -1,15 +1,16 @@
-[![Travis-CI Build
-Status](https://travis-ci.org/ISAAKiel/oxcAAR.svg?branch=master)](https://travis-ci.org/ISAAKiel/oxcAAR)
+[![R build
+status](https://github.com/ISAAKiel/oxcAAR/workflows/R-CMD-check/badge.svg)](https://github.com/ISAAKiel/oxcAAR/actions)
 [![Coverage
 Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://codecov.io/github/ISAAKiel/oxcAAR?branch=master)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](http://cran.r-project.org/package=oxcAAR)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](http://cran.r-project.org/package=oxcAAR)
 [![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.r-project.org/Licenses/GPL-2)
 [![rstudio mirror downloads
 monthly](http://cranlogs.r-pkg.org/badges/oxcAAR)](http://cran.rstudio.com/web/packages/oxcAAR/index.html)
 [![rstudio mirror downloads
-total](http://cranlogs.r-pkg.org/badges/grand-total/oxcAAR)](http://cran.rstudio.com/web/packages/oxcAAR/index.html) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+total](http://cranlogs.r-pkg.org/badges/grand-total/oxcAAR)](http://cran.rstudio.com/web/packages/oxcAAR/index.html)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 oxcAAR
 ======
 
@@ -31,7 +32,10 @@ welcome, as are code contributions.
 Installation
 ------------
 
-`oxcAAR` is available on [CRAN](https://cran.r-project.org/web/packages/oxcAAR/index.html) and can be installed through `install.packages("oxcAAR")`. You can use [devtools](https://CRAN.R-project.org/package=devtools) to install the development version. To do so:
+`oxcAAR` is currently not on [CRAN](http://cran.r-project.org/), but you
+can use
+[devtools](http://cran.r-project.org/web/packages/devtools/index.html)
+to install the development version. To do so:
 
     if(!require('devtools')) install.packages('devtools')
     library(devtools)
