@@ -22,7 +22,7 @@ print.oxcAARCalibratedDatesList <- function(x, ...){
 plot.oxcAARCalibratedDatesList <- function(x, use_ggplot = T, ...){
   if (length(x) == 1) plot(x[[1]], use_ggplot, ...)
   else{
-    if (requireNamespace("ggplot2", quietly == TRUE) & use_ggplot) {
+    if (requireNamespace("ggplot2", quietly = TRUE) & use_ggplot) {
       #  if (FALSE) {
       plotoxcAARCalibratedDatesListGGPlot2(x, ...)
     } else {
@@ -31,12 +31,50 @@ plot.oxcAARCalibratedDatesList <- function(x, use_ggplot = T, ...){
   }
 }
 
-#' @importFrom "ggplot2" "ggplot" "aes" "theme" "theme_light"
+#' @importFrom "ggplot2" "ggplot" "aes" "theme" "theme_light" "scale_alpha_manual"
 #' @importFrom "ggridges" "geom_ridgeline"
+#' @importFrom "methods" "show"
 plotoxcAARCalibratedDatesListGGPlot2<-function(x, ...){
-  to_plot<-do.call(rbind,lapply(x,function(x){data.frame(dates=x$raw_probabilities$dates,probability=x$raw_probabilities$probabilities,name=x$name)}))
-  m <- ggplot(to_plot,aes(x=dates,y=probability))
-  graph <- m + geom_ridgeline(aes(x=dates,height=probability, y = name), scale=100, fill = "#fc8d62", alpha=0.5) + theme_light() + labs(y="Dates")
+  .data <- NULL
+  to_plot<-lapply(x,function(y){
+    alpha <- ifelse((!(is.null(y$posterior_probabilities))& !(is.na(y$posterior_probabilities))),
+                    c(0.25,0.75),
+                      c(0.75,0)
+                      )
+    outdata <- data.frame(
+      dates=y$raw_probabilities$dates,
+      probability=y$raw_probabilities$probabilities,
+      name=y$name,
+      class = "unmodelled",
+      alpha=alpha[1])
+    if(!(is.null(y$posterior_probabilities)) & !(is.na(y$posterior_probabilities))) {
+      outdata <- rbind(outdata,
+                   data.frame(
+                     dates=y$posterior_probabilities$dates,
+                     probability=y$posterior_probabilities$probabilities,
+                     name=y$name,
+                     class = "modelled",
+                     alpha=alpha[2])
+      )
+    }
+    return(outdata)
+
+  })
+  to_plot <- do.call(rbind,to_plot)
+
+  m <- ggplot(to_plot)
+
+  graph <- m + geom_ridgeline(aes(x = .data$dates,
+                                  y = .data$name,
+                                  height = .data$probability,
+                                  alpha = .data$alpha,
+                                  group = interaction(.data$class,.data$name)),
+                              scale=100,
+                              fill = "#fc8d62",
+                              color="#00000077") +
+    theme_light() + labs(y="Dates")  +
+    ggplot2::scale_alpha_continuous(guide = FALSE)
+
   show(graph)
 }
 

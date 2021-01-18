@@ -89,12 +89,14 @@ plot.oxcAARCalibratedDate <- function(x, use_ggplot=T, ...){
   }
 }
 
-#' @importFrom "ggplot2" "ggplot" "aes" "geom_area" "labs" "theme_light" "geom_ribbon" "scale_y_continuous" "sec_axis" "ggplot_build" "geom_polygon" "scale_x_continuous" "annotate" "geom_errorbarh"
+#' @importFrom "ggplot2" "ggplot" "aes" "geom_area" "labs" "theme_light" "geom_ribbon" "scale_y_continuous" "sec_axis" "ggplot_build" "geom_polygon" "scale_x_continuous" "annotate" "geom_errorbarh" "scale_alpha_manual"
+#' @importFrom "stats" "dnorm"
 plotoxcAARDateGGPlot2<-function(x, ...){
+  bc <- .data <- NULL
   to_plot <- data.frame(dates=x$raw_probabilities$dates,
                         probability = x$raw_probabilities$probabilities,
                         class = "unmodelled")
-  if(!(is.null(x$posterior_probabilities))) {
+  if(!(is.null(x$posterior_probabilities)) & !(is.na(x$posterior_probabilities))) {
     to_plot <- rbind(to_plot,
                      data.frame(dates=x$posterior_probabilities$dates,
                                 probability = x$posterior_probabilities$probabilities,
@@ -131,12 +133,14 @@ plotoxcAARDateGGPlot2<-function(x, ...){
   m <- ggplot() + theme_light()
 
   graph <- m +
-    geom_area(data = to_plot, aes(x=dates,
-                                  y=probability,
-                                  group = class,
-                                  alpha = class),
+    geom_area(data = to_plot, aes(x=.data$dates,
+                                  y=.data$probability,
+                                  group = .data$class,
+                                  alpha = .data$class),
               fill = "#fc8d62",
-              position = "identity") +
+              position = "identity",
+              color="#00000077"
+              ) +
     labs(title = paste0(x$name,
                         ": ",
                         x$bp,
@@ -144,12 +148,12 @@ plotoxcAARDateGGPlot2<-function(x, ...){
                         x$std),
          caption = x$cal_curve$name,
          x = "Calibrated Date")  +
-    scale_alpha_manual(values = c(0.75, 0.25), guide = FALSE)
+    ggplot2::scale_alpha_manual(values = c(0.75, 0.25), guide = FALSE)
 
   graph <- graph +
-    geom_ribbon(data = cal_curve_df, aes(x = bc,
-                                         ymax = bp_rescaled + sigma_rescaled,
-                                         ymin = bp_rescaled - sigma_rescaled),
+    geom_ribbon(data = cal_curve_df, aes(x = .data$bc,
+                                         ymax = .data$bp_rescaled + .data$sigma_rescaled,
+                                         ymin = .data$bp_rescaled - .data$sigma_rescaled),
                 color = "#8da0cb",
                 fill = "#8da0cb",
                 alpha = 0.5) +
@@ -164,14 +168,14 @@ plotoxcAARDateGGPlot2<-function(x, ...){
   this_bp_distribution$x_rescaled <- this_bp_distribution$x / max(this_bp_distribution$x) * diff(x_extend)/4 + x_extend[1]
 
   graph <- graph +
-    geom_polygon(data = this_bp_distribution, aes(x=x_rescaled, y=y_rescaled),
+    geom_polygon(data = this_bp_distribution, aes(x=.data$x_rescaled, y=.data$y_rescaled),
                  fill = "#66c2a5",
                  alpha=0.5) +
     scale_x_continuous(limits=x_extend, expand = c(0,0))
 
   this_sigma_ranges <- x$sigma_ranges
   this_sigma_qualifier <- "unmodelled"
-  if(!(is.null(x$posterior_sigma_ranges))) {
+  if(all(!(is.null(x$posterior_sigma_ranges)), !(is.na(x$posterior_sigma_ranges)))) {
     this_sigma_ranges <- x$posterior_sigma_ranges
     this_sigma_qualifier <- "modelled"
   }
@@ -181,8 +185,8 @@ plotoxcAARDateGGPlot2<-function(x, ...){
                     oxcAAR:::formatFullSigmaRange(this_sigma_ranges$two_sigma,"two sigma"),
                     oxcAAR:::formatFullSigmaRange(this_sigma_ranges$three_sigma,"three sigma"),
                     sep="\n")
-
-  g2 <- graph + annotate("text",
+if(!(any(is.na(this_sigma_ranges)))){
+  graph <- graph + annotate("text",
                          x=x_extend[2] - diff(x_extend)/20,
                          y=max(x$raw_probabilities$probabilities)*2,
                          label= sigma_text,
@@ -191,21 +195,21 @@ plotoxcAARDateGGPlot2<-function(x, ...){
                          size=2) +
     geom_errorbarh(data=this_sigma_ranges$one_sigma,
                    aes(y=-1*base_unit_y,
-                       xmin=start,
-                       xmax=end),
+                       xmin=.data$start,
+                       xmax=.data$end),
                    height = base_unit_y) +
     geom_errorbarh(data=this_sigma_ranges$two_sigma,
                    aes(y=-2*base_unit_y,
-                       xmin=start,
-                       xmax=end),
+                       xmin=.data$start,
+                       xmax=.data$end),
                    height = base_unit_y)+
     geom_errorbarh(data=this_sigma_ranges$three_sigma,
                    aes(y=-3*base_unit_y,
-                       xmin=start,
-                       xmax=end),
+                       xmin=.data$start,
+                       xmax=.data$end),
                    height = base_unit_y)
-
-  plot(g2)
+}
+  plot(graph)
 
 }
 
@@ -348,7 +352,7 @@ is.oxcAARCalibratedDate <- function(x) {"oxcAARCalibratedDate" %in% class(x)}
 #' legend("topright", legend=c("rcarbon","OxCal"), col=c("green","blue"), lwd=2)
 #' }
 #' @export
-#'
+#' @importFrom "stats" "approx"
 as.CalDates <- function(x){
   if (!any(class(x)%in%c("oxcAARCalibratedDatesList"))){
     stop("x must be of class oxcAARCalibratedDatesList")

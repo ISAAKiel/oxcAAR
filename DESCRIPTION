@@ -15,9 +15,12 @@ LazyData: TRUE
 Imports:
   stringi,
   stringr,
-  jsonlite
+  jsonlite,
+  ggplot2,
+  ggridges,
+  methods
 Suggests: knitr,
     testthat
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Encoding: UTF-8
