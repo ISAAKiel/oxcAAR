@@ -91,7 +91,17 @@ plot.oxcAARCalibratedDate <- function(x, use_ggplot=T, ...){
 
 #' @importFrom "ggplot2" "ggplot" "aes" "geom_area" "labs" "theme_light" "geom_ribbon" "scale_y_continuous" "sec_axis" "ggplot_build" "geom_polygon" "scale_x_continuous" "annotate" "geom_errorbarh"
 plotoxcAARDateGGPlot2<-function(x, ...){
-  to_plot <- data.frame(dates=x$raw_probabilities$dates, probability = x$raw_probabilities$probabilities)
+  to_plot <- data.frame(dates=x$raw_probabilities$dates,
+                        probability = x$raw_probabilities$probabilities,
+                        class = "unmodelled")
+  if(!(is.null(x$posterior_probabilities))) {
+    to_plot <- rbind(to_plot,
+                     data.frame(dates=x$posterior_probabilities$dates,
+                                probability = x$posterior_probabilities$probabilities,
+                                class = "modelled")
+                     )
+  }
+
   cal_curve_df <- data.frame(bp = x$cal_curve$bp,
                              bc = x$cal_curve$bc,
                              sigma = x$cal_curve$sigma)
@@ -121,28 +131,79 @@ plotoxcAARDateGGPlot2<-function(x, ...){
   m <- ggplot() + theme_light()
 
   graph <- m +
-    geom_area(data = to_plot, aes(x=dates,y=probability), fill = "#fc8d62", alpha = .6, color="black") +
-    labs(title = paste0(x$name, ": ", x$bp, "\u00B1", x$std), caption = x$cal_curve$name, x = "Calibrated Date")
+    geom_area(data = to_plot, aes(x=dates,
+                                  y=probability,
+                                  group = class,
+                                  alpha = class),
+              fill = "#fc8d62",
+              position = "identity") +
+    labs(title = paste0(x$name,
+                        ": ",
+                        x$bp,
+                        "\u00B1",
+                        x$std),
+         caption = x$cal_curve$name,
+         x = "Calibrated Date")  +
+    scale_alpha_manual(values = c(0.75, 0.25), guide = FALSE)
+
   graph <- graph +
     geom_ribbon(data = cal_curve_df, aes(x = bc,
                                          ymax = bp_rescaled + sigma_rescaled,
                                          ymin = bp_rescaled - sigma_rescaled),
-                color = "#8da0cb", fill = "#8da0cb", alpha = 0.5) +
-    scale_y_continuous("Probability", sec.axis = sec_axis(~ (. - cal_curve_df_new_min)/ cal_curve_df_new_range * cal_curve_df_old_range + cal_curve_df_old_min, name = "BP", breaks=pretty(cal_curve_df$bp)), position = "right")
+                color = "#8da0cb",
+                fill = "#8da0cb",
+                alpha = 0.5) +
+    scale_y_continuous("Probability",
+                       sec.axis = sec_axis(~ (. - cal_curve_df_new_min)/ cal_curve_df_new_range * cal_curve_df_old_range + cal_curve_df_old_min,
+                                           name = "BP",
+                                           breaks=pretty(cal_curve_df$bp)),
+                       position = "right")
 
   x_extend <- ggplot_build(graph)$layout$panel_scales_x[[1]]$range$range
 
   this_bp_distribution$x_rescaled <- this_bp_distribution$x / max(this_bp_distribution$x) * diff(x_extend)/4 + x_extend[1]
 
   graph <- graph +
-    geom_polygon(data = this_bp_distribution, aes(x=x_rescaled, y=y_rescaled), fill = "#66c2a5", alpha=0.5) +
+    geom_polygon(data = this_bp_distribution, aes(x=x_rescaled, y=y_rescaled),
+                 fill = "#66c2a5",
+                 alpha=0.5) +
     scale_x_continuous(limits=x_extend, expand = c(0,0))
 
-  sigma_text<-paste(oxcAAR:::formatFullSigmaRange(x$sigma_ranges$one_sigma,"one sigma"),
-                    oxcAAR:::formatFullSigmaRange(x$sigma_ranges$two_sigma,"two sigma"),
-                    oxcAAR:::formatFullSigmaRange(x$sigma_ranges$three_sigma,"three sigma"),
+  this_sigma_ranges <- x$sigma_ranges
+  this_sigma_qualifier <- "unmodelled"
+  if(!(is.null(x$posterior_sigma_ranges))) {
+    this_sigma_ranges <- x$posterior_sigma_ranges
+    this_sigma_qualifier <- "modelled"
+  }
+
+  sigma_text<-paste(this_sigma_qualifier,
+                    oxcAAR:::formatFullSigmaRange(this_sigma_ranges$one_sigma,"one sigma"),
+                    oxcAAR:::formatFullSigmaRange(this_sigma_ranges$two_sigma,"two sigma"),
+                    oxcAAR:::formatFullSigmaRange(this_sigma_ranges$three_sigma,"three sigma"),
                     sep="\n")
-  g2 <- graph + annotate("text", x=x_extend[2] - diff(x_extend)/20, y=max(x$raw_probabilities$probabilities)*2, label= sigma_text, hjust=1, vjust=1, size=2) + geom_errorbarh(data=x$sigma_ranges$one_sigma, aes(y=-1*base_unit_y, xmin=start, xmax=end), height = base_unit_y)+ geom_errorbarh(data=x$sigma_ranges$two_sigma, aes(y=-2*base_unit_y, xmin=start, xmax=end), height = base_unit_y)+ geom_errorbarh(data=x$sigma_ranges$three_sigma, aes(y=-3*base_unit_y, xmin=start, xmax=end), height = base_unit_y)
+
+  g2 <- graph + annotate("text",
+                         x=x_extend[2] - diff(x_extend)/20,
+                         y=max(x$raw_probabilities$probabilities)*2,
+                         label= sigma_text,
+                         hjust=1,
+                         vjust=1,
+                         size=2) +
+    geom_errorbarh(data=this_sigma_ranges$one_sigma,
+                   aes(y=-1*base_unit_y,
+                       xmin=start,
+                       xmax=end),
+                   height = base_unit_y) +
+    geom_errorbarh(data=this_sigma_ranges$two_sigma,
+                   aes(y=-2*base_unit_y,
+                       xmin=start,
+                       xmax=end),
+                   height = base_unit_y)+
+    geom_errorbarh(data=this_sigma_ranges$three_sigma,
+                   aes(y=-3*base_unit_y,
+                       xmin=start,
+                       xmax=end),
+                   height = base_unit_y)
 
   plot(g2)
 
