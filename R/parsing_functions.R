@@ -367,6 +367,7 @@ extractProbsFromOxcalResult <- function(result_text) {
 }
 
 extractDoubleFromOxcalResult <- function(result_text, regexp, position) {
+  if(length(result_text)==0) return(NULL)
   as.double(
     stats::na.omit(
       unlist(
@@ -375,15 +376,15 @@ extractDoubleFromOxcalResult <- function(result_text, regexp, position) {
                   stringi::stri_match_all_regex(
                     result_text,
                     regexp
-                    )
-                  )[, position],
+                  )
+          )[, position],
           ", ",
           fixed = TRUE
-          )
         )
       )
+    )
   )
-  }
+}
 
 
 extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
@@ -475,6 +476,7 @@ extractCalCurveFromOxcalResult <- function(date_text){
     stats::na.omit(
       do.call(rbind, stringi::stri_match_all_regex(this_date_text, regexp_calcurve_name))[, 2], ", ")
   )
+  calcurve_name <- calcurve_name[length(calcurve_name)]
   identifier <- "calib[0].resolution="
   this_date_text <- reduce_to_relevant_lines(date_text, identifier)
   regexp_calcurve_resolution <- "calib\\[0\\].resolution=(.*);"
@@ -482,6 +484,7 @@ extractCalCurveFromOxcalResult <- function(date_text){
     stats::na.omit(
       do.call(rbind, stringi::stri_match_all_regex(this_date_text, regexp_calcurve_resolution))[, 2], ", ")
   )
+  calcurve_resolution <- calcurve_resolution[length(calcurve_resolution)]
   identifier <- "calib[0].start="
   this_date_text <- reduce_to_relevant_lines(date_text, identifier)
   regexp_calcurve_start <- "calib\\[0\\].start=(.*);"
@@ -489,6 +492,7 @@ extractCalCurveFromOxcalResult <- function(date_text){
     stats::na.omit(
       do.call(rbind, stringi::stri_match_all_regex(this_date_text, regexp_calcurve_start))[, 2], ", ")
   )
+  calcurve_start <- calcurve_start[length(calcurve_start)]
   identifier <- "calib[0].bp="
   this_date_text <- reduce_to_relevant_lines(date_text, identifier)
   regexp_calcurve_bp <- "calib\\[0\\].bp=\\[(.*)\\];"
