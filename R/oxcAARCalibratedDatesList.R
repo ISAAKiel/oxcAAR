@@ -30,7 +30,7 @@ plot.oxcAARCalibratedDatesList <- function(x, use_ggplot = T, ...){
   }
 }
 
-#' @importFrom "ggplot2" "ggplot" "aes" "theme" "theme_light" "scale_alpha_manual"
+#' @importFrom "ggplot2" "ggplot" "aes" "theme" "theme_light" "scale_alpha_manual" "scale_alpha_continuous"
 #' @importFrom "ggridges" "geom_ridgeline"
 #' @importFrom "methods" "show"
 plotoxcAARCalibratedDatesListGGPlot2<-function(x, ...){
@@ -72,7 +72,7 @@ plotoxcAARCalibratedDatesListGGPlot2<-function(x, ...){
                               fill = "#fc8d62",
                               color="#00000077") +
     theme_light() + labs(y="Dates")  +
-    ggplot2::scale_alpha_continuous(guide = FALSE)
+    scale_alpha_continuous(guide = FALSE)
 
   show(graph)
 }
