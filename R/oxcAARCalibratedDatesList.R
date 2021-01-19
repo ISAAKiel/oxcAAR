@@ -23,7 +23,6 @@ plot.oxcAARCalibratedDatesList <- function(x, use_ggplot = T, ...){
   if (length(x) == 1) plot(x[[1]], use_ggplot, ...)
   else{
     if (requireNamespace("ggplot2", quietly = TRUE) & use_ggplot) {
-      #  if (FALSE) {
       plotoxcAARCalibratedDatesListGGPlot2(x, ...)
     } else {
       plotoxcAARCalibratedDatesListSystemGraphics(x, ...)
