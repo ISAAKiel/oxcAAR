@@ -181,9 +181,9 @@ plotoxcAARDateGGPlot2<-function(x, ...){
   }
 
   sigma_text<-paste(this_sigma_qualifier,
-                    oxcAAR:::formatFullSigmaRange(this_sigma_ranges$one_sigma,"one sigma"),
-                    oxcAAR:::formatFullSigmaRange(this_sigma_ranges$two_sigma,"two sigma"),
-                    oxcAAR:::formatFullSigmaRange(this_sigma_ranges$three_sigma,"three sigma"),
+                    formatFullSigmaRange(this_sigma_ranges$one_sigma,"one sigma"),
+                    formatFullSigmaRange(this_sigma_ranges$two_sigma,"two sigma"),
+                    formatFullSigmaRange(this_sigma_ranges$three_sigma,"three sigma"),
                     sep="\n")
 if(!(any(is.na(this_sigma_ranges)))){
   graph <- graph + annotate("text",
