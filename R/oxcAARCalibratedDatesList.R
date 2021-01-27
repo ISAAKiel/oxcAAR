@@ -30,9 +30,6 @@ plot.oxcAARCalibratedDatesList <- function(x, use_ggplot = T, ...){
   }
 }
 
-#' @importFrom "ggplot2" "ggplot" "aes" "theme" "theme_light" "scale_alpha_manual" "scale_alpha_continuous"
-#' @importFrom "ggridges" "geom_ridgeline"
-#' @importFrom "methods" "show"
 plotoxcAARCalibratedDatesListGGPlot2<-function(x, ...){
   .data <- NULL
   to_plot<-lapply(x,function(y){
@@ -61,9 +58,9 @@ plotoxcAARCalibratedDatesListGGPlot2<-function(x, ...){
   })
   to_plot <- do.call(rbind,to_plot)
 
-  m <- ggplot(to_plot)
+  m <- ggplot2::ggplot(to_plot)
 
-  graph <- m + geom_ridgeline(aes(x = .data$dates,
+  graph <- m + ggridges::geom_ridgeline(ggplot2::aes(x = .data$dates,
                                   y = .data$name,
                                   height = .data$probability,
                                   alpha = .data$alpha,
@@ -71,10 +68,10 @@ plotoxcAARCalibratedDatesListGGPlot2<-function(x, ...){
                               scale=100,
                               fill = "#fc8d62",
                               color="#00000077") +
-    theme_light() + labs(y="Dates")  +
-    scale_alpha_continuous(guide = FALSE)
+    ggplot2::theme_light() + ggplot2::labs(y="Dates")  +
+    ggplot2::scale_alpha_continuous(guide = FALSE)
 
-  show(graph)
+  methods::show(graph)
 }
 
 plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){

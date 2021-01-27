@@ -15,13 +15,13 @@ LazyData: TRUE
 Imports:
   stringi,
   stringr,
-  jsonlite,
-  ggplot2,
-  ggridges,
-  methods
+  jsonlite
 Suggests: knitr,
     testthat,
-    rmarkdown
+    rmarkdown,
+    ggplot2,
+    ggridges,
+    methods
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Encoding: UTF-8
