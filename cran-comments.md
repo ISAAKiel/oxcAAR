@@ -1,9 +1,9 @@
 
 
 ## Test environments
-* GitHub Action (macOS): R 4.0.3
+* GitHub Action (macOS), R 4.0.3
 * GitHub Action (ubuntu 20.04, release and devel), R 4.0.3
-* GitHub Action Windows, R 4.0.3
+* GitHub Action (windows), R 4.0.3
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
