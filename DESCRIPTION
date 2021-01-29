@@ -1,10 +1,10 @@
 Package: oxcAAR
 Type: Package
 Title: Interface to 'OxCal' Radiocarbon Calibration
-Version: 1.0.0
-Date: 2018-02-08
+Version: 1.1.0
+Date: 2021-02-01
 Authors@R: c(
-  person("Hinz", "Martin", email = "martin.hinz@ufg.uni-kiel.de", role = c("aut", "cre")),
+  person("Hinz", "Martin", email = "martin.hinz@iaw.unibe.ch", role = c("aut", "cre")),
   person("Clemens", "Schmid", email = "clemens@nevrome.de", role = c("aut")),
   person("Daniel", "Knitter", email = "knitter@geographie.uni-kiel.de", role = c("aut")),
   person("Carolin", "Tietze", email = "Carolin Tietze <ctietze1991@gmail.com>", role = c("aut"))
