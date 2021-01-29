@@ -40,3 +40,14 @@ test_that("formatDateAdBc can handle NAs",{
   expect_error(oxcAAR:::formatDateAdBc(NA), NA)
   expect_equal(oxcAAR:::formatDateAdBc(NA), "NA")
 })
+
+precise_sigma_range <- data.frame(start=-3956.5,
+                                  end = -3643,
+                                  probability = 99.73002)
+
+context("formatFullSigmaRange")
+test_that("formatFullSigmaRange should have a precision of 2",{
+  sigma_text <- oxcAAR:::formatFullSigmaRange(precise_sigma_range, "name")
+  sigma_prescision <- stringr::str_extract_all(sigma_text, pattern = "(?<=\\().+?(?=%\\))")[[1]]
+  expect_equal(as.numeric(sigma_prescision), round(as.numeric(sigma_prescision),2))
+})
