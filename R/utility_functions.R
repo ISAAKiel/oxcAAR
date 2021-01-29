@@ -120,7 +120,7 @@ formatFullSigmaRange <- function (sigma_range, name) {
                        function(x) sprintf("%s - %s (%s%%)",
                                            formatDateAdBc(round(x[1])),
                                            formatDateAdBc(round(x[2])),
-                                           x[3]))
+                                           round(x[3], 2)))
   sigma_str <- paste(sigma_str, collapse="\n")
   sigma_str <- paste(name,sigma_str, sep = "\n")
   }
