@@ -9,3 +9,4 @@
 ^OxCal$
 ^cran-comments\.md$
 ^\.github$
+^NEWS.txt$
