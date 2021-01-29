@@ -6,5 +6,16 @@
 ## R CMD check results
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
+winbuilder note:
+
+Maintainer: 'Hinz Martin <martin.hinz@iaw.unibe.ch>'
+
+New maintainer:
+  Hinz Martin <martin.hinz@iaw.unibe.ch>
+Old maintainer(s):
+  Hinz Martin <martin.hinz@ufg.uni-kiel.de>
+
+Changed my Employer.
+
 ## Downstream dependencies
 I have also run R CMD check on downstream dependencies via revdep. All packages passed.
