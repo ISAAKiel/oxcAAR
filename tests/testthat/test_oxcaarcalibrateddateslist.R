@@ -5,6 +5,8 @@ this_date_list[[1]]$name <- "date"
 this_multiple_dates_list <- this_date_list
 this_multiple_dates_list[[2]] <- this_date_list[[1]]
 names(this_multiple_dates_list) <- c("date1", "date2")
+this_multiple_dates_list[[1]]$name <- "date1"
+this_multiple_dates_list[[2]]$name <- "date2"
 
 context("print.oxcAARCalibratedDatesList")
 

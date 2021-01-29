@@ -21,6 +21,7 @@ There are other packages that can also calibrate <sup>14</sup>C data, like eg. `
 Lets assume we want to calibrate the date 5000 BP +- 25 years. `oxcAAR` has the function `oxcalCalibrate` for doing so. But at first we have to load the package and tell it where to find the local path to the [Oxcal distribution](https://c14.arch.ox.ac.uk/OxCalDistribution.zip). Afterwards you can calibrate the date using bp, std and name.
 
 ```{r,fig.width=7,fig.height=4}
+library(ggplot2)
 library(oxcAAR)
 quickSetupOxcal()
 #setOxcalExecutablePath("~/OxCal/bin/OxCalLinux")

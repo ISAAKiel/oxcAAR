@@ -19,18 +19,60 @@ print.oxcAARCalibratedDatesList <- function(x, ...){
 }
 
 #' @export
-plot.oxcAARCalibratedDatesList <- function(x, ...){
-  if (length(x) == 1) graphics::plot(x[[1]],...)
+plot.oxcAARCalibratedDatesList <- function(x, use_ggplot = T, ...){
+  if (length(x) == 1) plot(x[[1]], use_ggplot, ...)
   else{
-    #     if (requireNamespace("ggplot2", quietly = TRUE)) {
-    #       #  if (FALSE) {
-    #       plotoxcAARCalibratedDatesListGGPlot2(x, ...)
-    #     } else {
-    plotoxcAARCalibratedDatesListSystemGraphics(x, ...)
-    # }
+    if (requireNamespace("ggplot2", quietly = TRUE) & use_ggplot) {
+      plotoxcAARCalibratedDatesListGGPlot2(x, ...)
+    } else {
+      plotoxcAARCalibratedDatesListSystemGraphics(x, ...)
+    }
   }
 }
 
+plotoxcAARCalibratedDatesListGGPlot2<-function(x, ...){
+  .data <- NULL
+  to_plot<-lapply(x,function(y){
+    alpha <- ifelse((!(is.null(y$posterior_probabilities))& !(is.na(y$posterior_probabilities))),
+                    c(0.25,0.75),
+                      c(0.75,0)
+                      )
+    outdata <- data.frame(
+      dates=y$raw_probabilities$dates,
+      probability=y$raw_probabilities$probabilities,
+      name=y$name,
+      class = "unmodelled",
+      alpha=alpha[1])
+    if(!(is.null(y$posterior_probabilities)) & !(is.na(y$posterior_probabilities))) {
+      outdata <- rbind(outdata,
+                   data.frame(
+                     dates=y$posterior_probabilities$dates,
+                     probability=y$posterior_probabilities$probabilities,
+                     name=y$name,
+                     class = "modelled",
+                     alpha=alpha[2])
+      )
+    }
+    return(outdata)
+
+  })
+  to_plot <- do.call(rbind,to_plot)
+
+  m <- ggplot2::ggplot(to_plot)
+
+  graph <- m + ggridges::geom_ridgeline(ggplot2::aes(x = .data$dates,
+                                  y = .data$name,
+                                  height = .data$probability,
+                                  alpha = .data$alpha,
+                                  group = interaction(.data$class,.data$name)),
+                              scale=100,
+                              fill = "#fc8d62",
+                              color="#00000077") +
+    ggplot2::theme_light() + ggplot2::labs(y="Dates")  +
+    ggplot2::scale_alpha_continuous(guide = FALSE)
+
+  methods::show(graph)
+}
 
 plotoxcAARCalibratedDatesListSystemGraphics <- function(x, ...){
   op <- graphics::par(no.readonly = TRUE)

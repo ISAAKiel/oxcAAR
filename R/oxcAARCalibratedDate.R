@@ -81,13 +81,136 @@ format.oxcAARCalibratedDate <- function(x, ...){
 print.oxcAARCalibratedDate <- function(x, ...) cat(format(x, ...), "\n")
 
 ##' @export
-plot.oxcAARCalibratedDate <- function(x, ...){
-  #   if (requireNamespace("ggplot2", quietly = TRUE)) {
-  #     plotoxcAARDateGGPlot2(x, ...)
-  #   } else {
-  plotoxcAARDateSystemGraphics(x, ...)
-  # }
+plot.oxcAARCalibratedDate <- function(x, use_ggplot=T, ...){
+  if (requireNamespace("ggplot2", quietly = TRUE) & use_ggplot) {
+    plotoxcAARDateGGPlot2(x, ...)
+  } else {
+    plotoxcAARDateSystemGraphics(x, ...)
+  }
 }
+
+plotoxcAARDateGGPlot2<-function(x, ...){
+  bc <- .data <- NULL
+  to_plot <- data.frame(dates=x$raw_probabilities$dates,
+                        probability = x$raw_probabilities$probabilities,
+                        class = "unmodelled")
+  if(!(is.null(x$posterior_probabilities)) & !(is.na(x$posterior_probabilities))) {
+    to_plot <- rbind(to_plot,
+                     data.frame(dates=x$posterior_probabilities$dates,
+                                probability = x$posterior_probabilities$probabilities,
+                                class = "modelled")
+                     )
+  }
+
+  cal_curve_df <- data.frame(bp = x$cal_curve$bp,
+                             bc = x$cal_curve$bc,
+                             sigma = x$cal_curve$sigma)
+
+  base_unit_y <- max(to_plot$probability)/25
+
+  cal_curve_df <- subset(cal_curve_df, bc >= min(to_plot$dates) & bc <= max(to_plot$dates))
+
+  cal_curve_df_old_min <- min(cal_curve_df$bp)
+  cal_curve_df_old_range <- diff(range(cal_curve_df$bp))
+  cal_curve_df_new_min <- max(to_plot$probability)
+  cal_curve_df_new_range <- diff(range(to_plot$probability))
+
+  this_bp_distribution<-NULL
+  this_bp_distribution$y <- pretty(c(x$bp+5*x$std, x$bp-5*x$std), n=20)
+  this_bp_distribution$x <- stats::dnorm(this_bp_distribution$y,x$bp, x$std)
+  this_bp_distribution <- as.data.frame(this_bp_distribution)
+
+  this_bp_distribution$y_rescaled <- (this_bp_distribution$y - cal_curve_df_old_min) / cal_curve_df_old_range * cal_curve_df_new_range + cal_curve_df_new_min
+
+  cal_curve_df$bp_rescaled <-
+    (cal_curve_df$bp - cal_curve_df_old_min) / cal_curve_df_old_range * cal_curve_df_new_range + cal_curve_df_new_min
+
+  cal_curve_df$sigma_rescaled <-
+    cal_curve_df$sigma / cal_curve_df_old_range * cal_curve_df_new_range
+
+  m <- ggplot2::ggplot() + ggplot2::theme_light()
+
+  graph <- m +
+    ggplot2::geom_area(data = to_plot, ggplot2::aes(x=.data$dates,
+                                  y=.data$probability,
+                                  group = .data$class,
+                                  alpha = .data$class),
+              fill = "#fc8d62",
+              position = "identity",
+              color="#00000077"
+              ) +
+    ggplot2::labs(title = paste0(x$name,
+                        ": ",
+                        x$bp,
+                        "\u00B1",
+                        x$std),
+         caption = x$cal_curve$name,
+         x = "Calibrated Date")  +
+    ggplot2::scale_alpha_manual(values = c(0.75, 0.25), guide = FALSE)
+
+  graph <- graph +
+    ggplot2::geom_ribbon(data = cal_curve_df, ggplot2::aes(x = .data$bc,
+                                         ymax = .data$bp_rescaled + .data$sigma_rescaled,
+                                         ymin = .data$bp_rescaled - .data$sigma_rescaled),
+                color = "#8da0cb",
+                fill = "#8da0cb",
+                alpha = 0.5) +
+    ggplot2::scale_y_continuous("Probability",
+                       sec.axis = ggplot2::sec_axis(~ (. - cal_curve_df_new_min)/ cal_curve_df_new_range * cal_curve_df_old_range + cal_curve_df_old_min,
+                                           name = "BP",
+                                           breaks=pretty(cal_curve_df$bp)),
+                       position = "right")
+
+  x_extend <- ggplot2::ggplot_build(graph)$layout$panel_scales_x[[1]]$range$range
+
+  this_bp_distribution$x_rescaled <- this_bp_distribution$x / max(this_bp_distribution$x) * diff(x_extend)/4 + x_extend[1]
+
+  graph <- graph +
+    ggplot2::geom_polygon(data = this_bp_distribution, ggplot2::aes(x=.data$x_rescaled, y=.data$y_rescaled),
+                 fill = "#66c2a5",
+                 alpha=0.5) +
+    ggplot2::scale_x_continuous(limits=x_extend, expand = c(0,0))
+
+  this_sigma_ranges <- x$sigma_ranges
+  this_sigma_qualifier <- "unmodelled"
+  if(all(!(is.null(x$posterior_sigma_ranges)), !(is.na(x$posterior_sigma_ranges)))) {
+    this_sigma_ranges <- x$posterior_sigma_ranges
+    this_sigma_qualifier <- "modelled"
+  }
+
+  sigma_text<-paste(this_sigma_qualifier,
+                    formatFullSigmaRange(this_sigma_ranges$one_sigma,"one sigma"),
+                    formatFullSigmaRange(this_sigma_ranges$two_sigma,"two sigma"),
+                    formatFullSigmaRange(this_sigma_ranges$three_sigma,"three sigma"),
+                    sep="\n")
+if(!(any(is.na(this_sigma_ranges)))){
+  graph <- graph + ggplot2::annotate("text",
+                         x=x_extend[2] - diff(x_extend)/20,
+                         y=max(x$raw_probabilities$probabilities)*2,
+                         label= sigma_text,
+                         hjust=1,
+                         vjust=1,
+                         size=2) +
+    ggplot2::geom_errorbarh(data=this_sigma_ranges$one_sigma,
+                   ggplot2::aes(y=-1*base_unit_y,
+                       xmin=.data$start,
+                       xmax=.data$end),
+                   height = base_unit_y) +
+    ggplot2::geom_errorbarh(data=this_sigma_ranges$two_sigma,
+                   ggplot2::aes(y=-2*base_unit_y,
+                       xmin=.data$start,
+                       xmax=.data$end),
+                   height = base_unit_y)+
+    ggplot2::geom_errorbarh(data=this_sigma_ranges$three_sigma,
+                   ggplot2::aes(y=-3*base_unit_y,
+                       xmin=.data$start,
+                       xmax=.data$end),
+                   height = base_unit_y)
+}
+  plot(graph)
+
+}
+
 #' @importFrom "graphics" "text"
 #' @importFrom "stats" "na.omit"
 plotoxcAARDateSystemGraphics <- function(x, ...){
