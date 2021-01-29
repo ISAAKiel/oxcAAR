@@ -1,4 +1,4 @@
-oxcAAR v1.1 Flora (Release date: 2021-??-??)
+oxcAAR v1.1 Flora (Release date: 2021-02-01)
 =================
 
 New features:
