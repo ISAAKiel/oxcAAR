@@ -9,3 +9,5 @@
 ^OxCal$
 ^cran-comments\.md$
 ^\.github$
+^NEWS.txt$
+^codemeta\.json$

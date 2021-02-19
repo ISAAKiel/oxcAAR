@@ -1,0 +1,12 @@
+oxcAAR v1.1 Flora (Release date: 2021-02-01)
+=================
+
+New features:
+* enabled processing (reading, printing, plotting) of sequential calibration results from OxCal
+* added ggplot versions of the plot of individual and multiple dates
+* added Boundary, Phase, Sequence and wrap_in_boundary to OxCal convenience functions
+
+Bug fixes:
+* fixed parsing of sigma ranges
+* fixed display of dates exceeding the calibration curve range
+* fixed overprecise sigma range percentage reporting
