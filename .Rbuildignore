@@ -11,3 +11,4 @@
 ^\.github$
 ^NEWS.txt$
 ^codemeta\.json$
+^CRAN-RELEASE$
