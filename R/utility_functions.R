@@ -89,10 +89,19 @@ quickSetupOxcal <- function(os = Sys.info()["sysname"], path = tempdir()){
 ## ---------- private ----------
 downloadOxcal <- function(path = ".") {
   temp <- tempfile()
-  utils::download.file("https://c14.arch.ox.ac.uk/OxCalDistribution.zip", temp)
-  utils::unzip(temp, exdir = path)
-  unlink(temp)
-  message("Oxcal download to ", normalizePath(path), " successful!")
+
+  test <- tryCatch(utils::download.file("https://c14.arch.ox.ac.uk/OxCalDistribution.zip", temp),
+            condition=function(e) {
+              message("Error Downloading OxCalDistribution.zip:")
+              message(e)
+              message("\nNo internet connection or data source broken?")
+            }
+  )
+  if (!is.null(test) && test==0) {
+    utils::unzip(temp, exdir = path)
+    unlink(temp)
+    message("Oxcal stored successful at ", normalizePath(path), "!")
+  }
 }
 
 getOxcalExecutablePath <- function() {
