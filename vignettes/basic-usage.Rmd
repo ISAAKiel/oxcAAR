@@ -86,7 +86,7 @@ plot(my_simulated_dates)
 
 ## Simulate Sum Calibration
 
-This package was originally intended to support a series of articles dealing with the investigation of sum calibration. This is why a function is implemented to simulate sum calibration. You can use it to simulate a series of <sup>14</sup>C dates and explore the sum calibrated results. You can specify the beginning and end of the time span that should be used for the simulation (in calender years), the number of <sup>14</sup>C dates that should be simulated, their standard deviation, either as vector of length n or as one number for all dates, and the type of distribution that should be used (either equally spaced in time, or random uniform).
+This package was originally intended to support a series of articles dealing with the investigation of sum calibration. This is why a function is implemented to simulate sum calibration. You can use it to simulate a series of <sup>14</sup>C dates and explore the sum calibrated results. You can specify the beginning and end of the time span that should be used for the simulation (in calendar years), the number of <sup>14</sup>C dates that should be simulated, their standard deviation, either as vector of length n or as one number for all dates, and the type of distribution that should be used (either equally spaced in time, or random uniform).
 The result is again of class `oxcAARCalibratedDate` so you can access the raw probabilities for further analysis.
 
 ```{r,fig.width=7,fig.height=4}

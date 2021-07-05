@@ -13,13 +13,13 @@ Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](htt
 can be used to execute [OxCal](https://c14.arch.ox.ac.uk) from within R.
 
 Please note that there is a [`roxcal`
-package](https://github.com/gavinsimpson/roxcal) package on Github,
+package](https://github.com/gavinsimpson/roxcal) package on GitHub,
 created by [Gavin Simpson](https://github.com/gavinsimpson). If you just
 need to import OxCal result files, you may consider using his package.
 
-## Licence
+## License
 
-`oxcAAR` is released under the [GNU General Public Licence, version
+`oxcAAR` is released under the [GNU General Public License, version
 2](https://www.R-project.org/Licenses/GPL-2). Comments and feedback are
 welcome, as are code contributions.
 
@@ -42,8 +42,8 @@ To get started, just run:
     quickSetupOxcal()
 
 This will download and unzip
-[Oxcal](https://c14.arch.ox.ac.uk/oxcal.html) into tempdir(). You can
-change the destination path of Oxcal by setting the `path` parameter.
+[OxCal](https://c14.arch.ox.ac.uk/oxcal.html) into tempdir(). You can
+change the destination path of OxCal by setting the `path` parameter.
 Please make sure that you have a working internet connection when
 attempting to use this function!
 

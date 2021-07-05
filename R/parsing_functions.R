@@ -85,7 +85,7 @@ oxcal_Sum <- function(oxcal_string, name = "Sum") {
 #'
 #' Phase takes a set of R_Dates as vectors, and returns
 #' a bit of oxcal code that can be used to feed it into oxcal.
-#' In this code the R_Dates are encapsuled in an OxCal Phases, one Phase for each string.
+#' In this code the R_Dates are encapsulated in an OxCal Phases, one Phase for each string.
 #' For details concerning the Oxcal simulation please consult the help page of Oxcal.
 #'
 #' @param r_dates_strings a vector containing strings of OxCal code, usually consisting of R_Date commands, but any other code strings might be used that can be interpreted by OxCal within a Phase
@@ -116,7 +116,7 @@ Boundary <- function(names) {
 #'
 #' Sequence takes a set of Phases or R_Dates as vectors, and returns
 #' a bit of oxcal code that can be used to feed it into OxCal.
-#' In this code the Phases and/or R_Dates are encapsuled in an OxCal Phases, one Phase for each string.
+#' In this code the Phases and/or R_Dates are encapsulated in an OxCal Phases, one Phase for each string.
 #' For details concerning the Oxcal simulation please consult the help page of Oxcal.
 #'
 #' @param sequence_elements a vector containing strings of OxCal code, usually consisting of Phase or R_Date commands, but any other code strings might be used that can be interpreted by OxCal within a Sequence
@@ -133,7 +133,7 @@ Sequence <- function(sequence_elements, names='') {
 #'
 #' wrap_in_boundaries takes a set of Phases or R_Dates as vectors, and returns
 #' a bit of oxcal code that can be used to feed it into OxCal.
-#' In this code the Phases and/or R_Dates are interleaved and wraped in OxCal Boundaries, the number of Boundaries is equal to the number of strings + 1.
+#' In this code the Phases and/or R_Dates are interleaved and wrapped in OxCal Boundaries, the number of Boundaries is equal to the number of strings + 1.
 #' The resulting string starts with a boundary, than the OxCal strings from the vector are interleaved with Boundary commands.
 #' For details concerning the Oxcal simulation please consult the help page of Oxcal.
 #'
