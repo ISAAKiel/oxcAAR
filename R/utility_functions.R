@@ -81,7 +81,7 @@ quickSetupOxcal <- function(os = Sys.info()["sysname"], path = tempdir()){
 
   # set path
   test <- tryCatch(setOxcalExecutablePath(exe),
-                   condition=function(e) {
+                   error=function(e) {
                      message("The Oxcal executable path could not be set:")
                      message(e)
                      message("\nIf you received an internet connection error before, please resolve it and try again later")
@@ -101,7 +101,7 @@ downloadOxcal <- function(path = ".") {
   temp <- tempfile()
 
   test <- tryCatch(utils::download.file("https://c14.arch.ox.ac.uk/OxCalDistribution.zip", temp),
-            condition=function(e) {
+            warning=function(e) {
               message("Error Downloading OxCalDistribution.zip:")
               message(e)
               message("\nNo internet connection or data source broken?")
