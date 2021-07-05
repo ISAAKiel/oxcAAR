@@ -80,7 +80,17 @@ quickSetupOxcal <- function(os = Sys.info()["sysname"], path = tempdir()){
   Sys.chmod(exe, mode = "0777")
 
   # set path
-  setOxcalExecutablePath(exe)
+  test <- tryCatch(setOxcalExecutablePath(exe),
+                   condition=function(e) {
+                     message("The Oxcal executable path could not be set:")
+                     message(e)
+                     message("\nIf you received an internet connection error before, please resolve it and try again later")
+                   }
+  )
+  if (!is.null(test) && test==0) {
+    message("Oxcal Setup successful!")
+  }
+
 
   return()
 }
