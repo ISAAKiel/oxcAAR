@@ -33,9 +33,11 @@ Please note that there is a [`roxcal` package](https://github.com/gavinsimpson/r
 
 ## Installation
 
-`oxcAAR` is currently not on [CRAN](https://CRAN.R-project.org), but you can use
-[devtools]( https://CRAN.R-project.org/package=devtools) to
-install the development version. To do so:
+To install the stable version from  [CRAN](https://CRAN.R-project.org):
+
+    install.packages('oxcAAR')
+
+To install the latest development version: 
 
     if(!require('devtools')) install.packages('devtools')
     library(devtools)
@@ -49,6 +51,6 @@ To get started, just run:
 quickSetupOxcal()
 ```
 
-This will download and unzip [Oxcal](https://c14.arch.ox.ac.uk/oxcal.html) into tempdir(). You can change the destination path of Oxcal by setting the `path` parameter. 
+This will download and unzip [Oxcal](https://c14.arch.ox.ac.uk/oxcal.html) into tempdir(). You can change the destination path of Oxcal by setting the `path` parameter. Please make sure that you have a working internet connection when attempting to use this function! 
 
 Afterwards you can start calibrating your dates. Check the [Vignette](vignettes/basic-usage.Rmd) to learn how to do this. 
