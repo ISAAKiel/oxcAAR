@@ -80,7 +80,17 @@ quickSetupOxcal <- function(os = Sys.info()["sysname"], path = tempdir()){
   Sys.chmod(exe, mode = "0777")
 
   # set path
-  setOxcalExecutablePath(exe)
+  test <- tryCatch(setOxcalExecutablePath(exe),
+                   error=function(e) {
+                     message("The Oxcal executable path could not be set:")
+                     message(e)
+                     message("\nIf you received an internet connection error before, please resolve it and try again later")
+                   }
+  )
+  if (!is.null(test) && test==0) {
+    message("Oxcal Setup successful!")
+  }
+
 
   return()
 }
@@ -89,10 +99,19 @@ quickSetupOxcal <- function(os = Sys.info()["sysname"], path = tempdir()){
 ## ---------- private ----------
 downloadOxcal <- function(path = ".") {
   temp <- tempfile()
-  utils::download.file("https://c14.arch.ox.ac.uk/OxCalDistribution.zip", temp)
-  utils::unzip(temp, exdir = path)
-  unlink(temp)
-  message("Oxcal download to ", normalizePath(path), " successful!")
+
+  test <- tryCatch(utils::download.file("https://c14.arch.ox.ac.uk/OxCalDistribution.zip", temp),
+            warning=function(e) {
+              message("Error Downloading OxCalDistribution.zip:")
+              message(e)
+              message("\nNo internet connection or data source broken?")
+            }
+  )
+  if (!is.null(test) && test==0) {
+    utils::unzip(temp, exdir = path)
+    unlink(temp)
+    message("Oxcal stored successful at ", normalizePath(path), "!")
+  }
 }
 
 getOxcalExecutablePath <- function() {
