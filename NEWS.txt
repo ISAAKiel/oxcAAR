@@ -1,3 +1,9 @@
+oxcAAR v1.1.1 Karpo (Release date: 2021-06-06)
+=================
+
+Bug fix:
+* as requested by CRAN, accessing the OxcalDistribution.zip via quickSetupOxcal() 'fail gracefully with an informative message if the resource is not available or has changed (and not give a check warning nor error)'
+
 oxcAAR v1.1 Flora (Release date: 2021-02-01)
 =================
 

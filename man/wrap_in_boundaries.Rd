@@ -17,7 +17,7 @@ a string containing the respective Oxcal code
 \description{
 wrap_in_boundaries takes a set of Phases or R_Dates as vectors, and returns
 a bit of oxcal code that can be used to feed it into OxCal.
-In this code the Phases and/or R_Dates are interleaved and wraped in OxCal Boundaries, the number of Boundaries is equal to the number of strings + 1.
+In this code the Phases and/or R_Dates are interleaved and wrapped in OxCal Boundaries, the number of Boundaries is equal to the number of strings + 1.
 The resulting string starts with a boundary, than the OxCal strings from the vector are interleaved with Boundary commands.
 For details concerning the Oxcal simulation please consult the help page of Oxcal.
 }

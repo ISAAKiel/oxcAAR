@@ -17,6 +17,6 @@ a string containing the respective Oxcal code
 \description{
 Phase takes a set of R_Dates as vectors, and returns
 a bit of oxcal code that can be used to feed it into oxcal.
-In this code the R_Dates are encapsuled in an OxCal Phases, one Phase for each string.
+In this code the R_Dates are encapsulated in an OxCal Phases, one Phase for each string.
 For details concerning the Oxcal simulation please consult the help page of Oxcal.
 }
