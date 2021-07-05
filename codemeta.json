@@ -1,17 +1,20 @@
 {
-  "@context": ["https://doi.org/10.5063/schema/codemeta-2.0", "http://schema.org"],
+  "@context": [
+    "https://doi.org/10.5063/schema/codemeta-2.0",
+    "http://schema.org"
+  ],
   "@type": "SoftwareSourceCode",
   "identifier": "oxcAAR",
   "description": "A set of tools that enables using 'OxCal' from within R. 'OxCal' (<https://c14.arch.ox.ac.uk/oxcal.html>) is a standard archaeological tool intended to provide 14C calibration and analysis of archaeological and environmental chronological information. 'OxcAAR' allows simple calibration with 'Oxcal' and plotting of the results as well as the execution of sophisticated ('OxCal') code and the import of the results of bulk analysis and complex Bayesian sequential calibration.",
   "name": "oxcAAR: Interface to 'OxCal' Radiocarbon Calibration",
   "license": "https://spdx.org/licenses/GPL-2.0",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.0.3 (2020-10-10)",
+  "runtimePlatform": "R version 4.1.0 (2021-05-18)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -162,7 +165,7 @@
   ],
   "codeRepository": "https://github.com/ISAAKiel/oxcAAR",
   "readme": "https://github.com/ISAAKiel/oxcAAR/blob/master/README.md",
-  "fileSize": "660.751KB",
+  "fileSize": "898.201KB",
   "contIntegration": "https://codecov.io/github/ISAAKiel/oxcAAR?branch=master",
   "relatedLink": "https://CRAN.R-project.org/package=oxcAAR"
 }
