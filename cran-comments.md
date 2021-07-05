@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* as requested by CRAN, accessing the OxcalDistribution.zip via quickSetupOxcal() 'fail gracefully with an informative message if the resource is not available or has changed (and not give a check warning nor error)'
+
 ## Test environments
 * GitHub Action (macOS), R 4.0.3
 * GitHub Action (ubuntu 20.04, release and devel), R 4.0.3
