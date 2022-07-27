@@ -1,0 +1,51 @@
+[![R build
+status](https://github.com/ISAAKiel/oxcAAR/workflows/R-CMD-check/badge.svg)](https://github.com/ISAAKiel/oxcAAR/actions)
+[![Coverage
+Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://codecov.io/github/ISAAKiel/oxcAAR?branch=master)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](https://CRAN.R-project.org/package=oxcAAR)
+[![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.R-project.org/Licenses/GPL-2)
+
+<!-- README.md는 README.Rmd에서 생성됩니다. 해당 파일을 편집하세요. -->
+
+[ENG](README.Rmd) / [KOR](README_ko.Rmd)
+
+# oxcAAR
+
+`oxcAAR` (구 `roxcal`)은 R 내에서 [OxCal](https://c14.arch.ox.ac.uk)을
+사용하기 위한 함수들이 내장된 패키지입니다.
+
+Github에 [게빈 심슨](https://github.com/gavinsimpson)이 제작한 [‘roxcal’
+패키지](https://github.com/gavinsimpson/roxcal)가 있습니다. 이를 통해
+OxCal 결과 파일을 가져와 해당 패키지를 사용할 수 있습니다.
+
+## 저작권
+
+`oxcAAR`은 [GNU 일반 공중 사용 허가서,
+ver.2](https://www.R-project.org/Licenses/GPL-2)를 기준으로 배포되고
+있습니다. 의견과 피드백, 코드 기여는 언제나 환영합니다.
+
+## 설치하기
+
+[CRAN](https://CRAN.R-project.org)을 통해 안정된 버전을 설치할 수
+있습니다.
+
+    install.packages('oxcAAR')
+
+최신 버전을 설치 방법은 아래와 같습니다.
+
+    if(!require('devtools')) install.packages('devtools')
+    library(devtools)
+    install_github('ISAAKiel/oxcAAR')
+
+## 시작하기
+
+시작 방법은 아래와 같습니다.
+
+    quickSetupOxcal()
+
+[OxCal](https://c14.arch.ox.ac.uk/oxcal.html)을 설치한 뒤, tempdir()로
+압축을 해제하고 `path` 변수를 설정하여 Oxcal의 경로 변경할 수 있습니다.
+해당 기능을 사용하기 전에는 인터넷 연결을 확인해주세요.
+
+이제 연대보정을 시행할 수 있습니다.
+[Vignette](vignettes/basic-usage_ko.Rmd) 에서 자세한 방법을 확인하세요.

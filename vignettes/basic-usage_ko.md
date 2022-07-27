@@ -1,26 +1,24 @@
 Basic Usage
 ================
-Martin Hinz
-2022-07-28
+Martin Hinz(translation:Chanhyeok-Ju)
 
 [ENG](vignettes/basic-usage.Rmd) / [KOR](vignettes/basic-usage_ko.Rmd)
 
-The package `oxcAAR` is designed to represent an interface between R and
-[Oxcal](https://c14.arch.ox.ac.uk). It offers the possibility to parse
-Oxcal scripts from data within R, execute them and reread the results
-from the Oxcal output files. There are other packages that can also
-calibrate <sup>14</sup>C data, like eg. `Bchron`, which will be
-sufficient and probably also faster than using `oxcAAR`. But this
-package is intended to use especially the algorithms of Oxcal, which is
-a quasi-standard for archaeological research these days.
+`oxcAAR`은 R과 [Oxcal](https://c14.arch.ox.ac.uk) 사이의 인터페이스를
+나타내도록 설계되었습니다. 이를 통해 R 내에서 OxCal 스크립트를 실행하고,
+분석 결과를 불러올 수 있습니다. 물론 Bchron과 같은 다른 패키지들을 통해
+더 빠르게 <sup>14</sup>C 데이터 보정할 수 있습니다. 하지만 OxCal은
+오늘날 고고학 연구의 준표준이며 `oxcAAR`은 이러한 Oxcal을 활용할 수 있는
+패키지입니다.
 
-## Calibration (R_Date)
+## 연대보정 (R_Date)
 
-Lets assume we want to calibrate the date 5000 BP +- 25 years. `oxcAAR`
-has the function `oxcalCalibrate` for doing so. But at first we have to
-load the package and tell it where to find the local path to the [Oxcal
-distribution](https://c14.arch.ox.ac.uk/OxCalDistribution.zip).
-Afterwards you can calibrate the date using bp, std and name.
+5000BP +- 25년인 연대측정치를 보정한다고 가정하겠습니다. 우리는
+`oxcAAR`의 `oxcalCalibrate` 함수를 통해 연대보정을 실행할 수 있습니다.
+그러나 먼저 패키지를 불러오고 [Oxcal
+distribution](https://c14.arch.ox.ac.uk/OxCalDistribution.zip)의 로컬
+주소를 알고있어야 합니다. 이후 BP, Std 및 분석명을 사용하여 연대보정을
+할 수 있습니다.
 
 ``` r
 library(ggplot2)
@@ -35,7 +33,7 @@ quickSetupOxcal()
 
     ## Oxcal doesn't seem to be installed. Downloading it now:
 
-    ## Oxcal stored successful at /private/var/folders/19/n89t4zs54bd39pyyzk1s03l80000gn/T/RtmpayxrWI!
+    ## Oxcal stored successful at /private/var/folders/19/n89t4zs54bd39pyyzk1s03l80000gn/T/Rtmpg4hx9n!
 
     ## Oxcal path set!
 
@@ -81,9 +79,9 @@ plot(my_date)
     ## Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please
     ## use `guide = "none"` instead.
 
-![](basic-usage_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](basic-usage_ko_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
-You can also calibrate multiple dates at once:
+여러 연대측정치를 동시에 보정하는 것이 가능합니다.:
 
 ``` r
 my_uncal_dates <- data.frame(bp=c(5000,4500,4000),
@@ -180,21 +178,20 @@ plot(my_cal_dates)
     ## Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please
     ## use `guide = "none"` instead.
 
-![](basic-usage_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](basic-usage_ko_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
-And you might like to plot them on the calibration curve:
+보정곡선에 그래프를 그리는 것이 가능합니다.:
 
 ``` r
 calcurve_plot(my_cal_dates)
 ```
 
-![](basic-usage_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](basic-usage_ko_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
-The resulting object from the calibration is a list of class
-`oxcAARCalibratedDatesList`, containing elements of class
-`oxcAARCalibratedDate`. Each of these dates is again a list of the
-essential informations of the calibrated date including the raw
-probabilities, which can be extracted for additional analysis:
+보정결과 객체는 `oxcAARCalibratedDatesList` 클래스의 `List`이고,
+`oxcAARCalibratedDate` 클래스의 요소를 포함하고 있습니다. 이러한 각각의
+연대들은 본래의 확률을 포함하기 때문에 필수적이며, 추가 분석을 위해
+추출하여 활용할 수 있습니다.
 
 ``` r
 str(my_cal_dates, max.level = 1)
@@ -289,15 +286,15 @@ plot(
   )
 ```
 
-![](basic-usage_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](basic-usage_ko_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
-## Simulation (R_Simulate)
+## 시뮬레이션 (R_Simulate)
 
-You can also use `oxcAAR` to simulate <sup>14</sup>C dates the same way
-as the OxCal R_Simulate function works. You enter a calibrated year
-(1000 for 1000 AD, -1000 for 1000 BC) and OxCal will simulate a BP value
-using a bit of randomisation. Resulting in the fact that each run will
-have a slightly different BP value.
+`oxcAAR`을 사용하여 OxCal의 R_Simulate 함수와 같은 방법으로
+<sup>14</sup>C 연대 시뮬레이션을 실행할 수 있습니다. 보정된 연대(Ex.
+A.D. 1000 : 1000 / B.C. 1000 : -1000)를 입력하면 OxCal이 무작위로 BP값을
+시뮬레이션합니다. 결과적으로 각각의 시뮬레이션은 약간 다른 값을 갖게
+됩니다.
 
 ``` r
 my_cal_date <- data.frame(bp=c(-3400),
@@ -319,24 +316,23 @@ my_simulated_dates
     ## =============================
     ## 
     ## 
-    ## BP = 4682, std = 25
+    ## BP = 4674, std = 25
     ## 
     ## 
     ## unmodelled:                    posterior:
     ## 
     ## one sigma                      
-    ## 3514 BC - 3492 BC (16.58%)     
-    ## 3460 BC - 3420 BC (29.28%)     
-    ## 3412 BC - 3390 BC (15.42%)     
-    ## 3384 BC - 3374 BC (6.98%)      
+    ## 3510 BC - 3489 BC (17.99%)     
+    ## 3464 BC - 3424 BC (35.26%)     
+    ## 3406 BC - 3396 BC (8.19%)      
+    ## 3382 BC - 3373 BC (6.83%)      
     ## 
     ## two sigma                      
-    ## 3523 BC - 3480 BC (25.03%)     
-    ## 3475 BC - 3370 BC (70.42%)     
+    ## 3518 BC - 3370 BC (95.45%)     
     ## 
     ## three sigma                    
-    ## 3622 BC - 3579 BC (1.61%)      
-    ## 3531 BC - 3364 BC (98.12%)     
+    ## 3617 BC - 3582 BC (0.74%)      
+    ## 3529 BC - 3361 BC (98.99%)     
     ## 
     ## Calibrated with:
     ##   Atmospheric data from Reimer et al (2020)
@@ -348,21 +344,19 @@ plot(my_simulated_dates)
     ## Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please
     ## use `guide = "none"` instead.
 
-![](basic-usage_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](basic-usage_ko_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-## Simulate Sum Calibration
+## 합산 보정연대 시뮬레이션
 
-This package was originally intended to support a series of articles
-dealing with the investigation of sum calibration. This is why a
-function is implemented to simulate sum calibration. You can use it to
-simulate a series of <sup>14</sup>C dates and explore the sum calibrated
-results. You can specify the beginning and end of the time span that
-should be used for the simulation (in calendar years), the number of
-<sup>14</sup>C dates that should be simulated, their standard deviation,
-either as vector of length n or as one number for all dates, and the
-type of distribution that should be used (either equally spaced in time,
-or random uniform). The result is again of class `oxcAARCalibratedDate`
-so you can access the raw probabilities for further analysis.
+본래 이 패키지는 합산 보정연대를 다루는 일련의 논고를 위해
+만들어졌습니다. 합산 보정연대를 시뮬레이션하는 기능이 구현된 이유이기도
+합니다. 이 함수를 활용하여 <sup>14</sup>C 연대를 시뮬레이션하고 보정된
+결과를 살펴볼 수 있습니다. 시뮬레이션에 사용될 시간 범위의 시작연도와
+마지막연도, 시뮬레이션해야하는 <sup>14</sup>C 연대의 수, 표준편차,
+길이가 n인 벡터 혹은 모든 연대에 대한 하나의 값, 사용할 분포 유형(동일
+시간 간격 혹은 무작위한 균일)을 지정하여 시뮬레이션할 수 있습니다.
+시뮬레이션 결과는 `oxcAARCalibratedDate` 클래스로 환원되므로 본래의
+확률과 액세스하여 추가적인 분석을 시행할 수 있습니다.:
 
 ``` r
 my_sum_sim<-oxcalSumSim(
@@ -390,9 +384,9 @@ str(my_sum_sim)
     ##   ..$ one_sigma  : logi NA
     ##   ..$ two_sigma  : logi NA
     ##   ..$ three_sigma: logi NA
-    ##  $ raw_probabilities      :'data.frame': 330 obs. of  2 variables:
-    ##   ..$ dates        : num [1:330] -4330 -4324 -4320 -4314 -4310 ...
-    ##   ..$ probabilities: num [1:330] 0.00 0.00 0.00 1.30e-09 3.91e-09 ...
+    ##  $ raw_probabilities      :'data.frame': 297 obs. of  2 variables:
+    ##   ..$ dates        : num [1:297] -4344 -4340 -4334 -4330 -4324 ...
+    ##   ..$ probabilities: num [1:297] 0.00 0.00 0.00 2.58e-09 1.03e-08 ...
     ##  $ posterior_sigma_ranges :List of 3
     ##   ..$ one_sigma  : logi NA
     ##   ..$ two_sigma  : logi NA
@@ -410,13 +404,13 @@ plot(my_sum_sim)
     ## Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please
     ## use `guide = "none"` instead.
 
-![](basic-usage_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](basic-usage_ko_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
-## Execute custom OxCal code
+## 사용자지정 OxCal 코드 실행
 
-You can also use the package to execute your own OxCal code from within
-R, and import the results back into the workspace. You can use `R_Date`,
-`R_Simulate` and `oxcal_Sum` to produce that OxCal code:
+이 패키지를 통해 R 내에서 사용자가 작성한 OxCal 코드를 실행하고 결과를
+자신의 워크스페이스로 불러올 수 있습니다. `R_Date`, `R_Simulate`,
+`oxcal_Sum`을 사용하여 코드를 구성할 수 있습니다.:
 
 ``` r
 R_Simulate(-4000, 25, "MySimDate")
@@ -442,7 +436,7 @@ cat(my_sum)
     ## R_Date("Lab-54321", 4500, 25); 
     ## };
 
-or use your own script as string variable.
+또한 문자열로 사용자가 스크립트를 작성할 수 있습니다.:
 
 ``` r
 knitr::opts_chunk$set(cache=TRUE)
@@ -468,7 +462,7 @@ my_result_file <- executeOxcalScript(my_oxcal_code)
 my_result_text <- readOxcalOutput(my_result_file)
 ```
 
-You can either parse the result to a ‘standard’ oxcAAR object:
+결과를 oxcAAR 표준 객체로 얻을 수 있습니다.:
 
 ``` r
 my_result_data <- parseOxcalOutput(my_result_text)
@@ -499,7 +493,7 @@ print(my_result_data)
     ## BP = 5000, std = 25
     ...
 
-Or you get the whole output of Oxcal as object:
+또는 전체 출력을 OxCal 객체로 얻을 수도 있습니다.:
 
 ``` r
 my_result_data <- parseFullOxcalOutput(my_result_text)

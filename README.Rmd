@@ -20,6 +20,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+[ENG](README.Rmd) / [KOR](README_ko.Rmd)
+
 # oxcAAR
 
 `oxcAAR` (previously named `roxcal`) is a collection of functions that can be used
