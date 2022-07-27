@@ -7,7 +7,7 @@ Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](htt
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[ENG](README.Rmd) / [KOR](README_ko.md)
+[ENG](README.md) / [KOR](README_ko.md)
 
 # oxcAAR
 

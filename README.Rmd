@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-[ENG](README.Rmd) / [KOR](README_ko.md)
+[ENG](README.md) / [KOR](README_ko.md)
 
 # oxcAAR
 

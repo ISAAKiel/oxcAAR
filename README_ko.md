@@ -7,7 +7,7 @@ Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](htt
 
 <!-- README.md는 README.Rmd에서 생성됩니다. 해당 파일을 편집하세요. -->
 
-[ENG](README.Rmd) / [KOR](README_ko.Rmd)
+[ENG](README.md) / [KOR](README_ko.md)
 
 # oxcAAR
 
