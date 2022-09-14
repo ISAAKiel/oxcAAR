@@ -4,10 +4,14 @@
 \alias{executeOxcalScript}
 \title{Executes an Oxcal Script}
 \usage{
-executeOxcalScript(oxcal_script)
+executeOxcalScript(oxcal_script, file = NULL)
 }
 \arguments{
 \item{oxcal_script}{A string containing the Oxcal commands that should be processed.}
+
+\item{file}{A string naming a file for writing. Elements of the path other
+than the last will be created if needed. If `NULL` (the default),
+a temporary file will be used.}
 }
 \value{
 The path to the js output file
