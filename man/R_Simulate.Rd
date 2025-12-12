@@ -4,12 +4,12 @@
 \alias{R_Simulate}
 \title{Returns the Oxcal code for the simulation of 14C dates}
 \usage{
-R_Simulate(c_dates, stds, names = 1:length(c_dates))
+R_Simulate(c_dates, stds, names = seq_along(c_dates))
 }
 \arguments{
 \item{c_dates}{a vector containing the calendar dates that should be simulated}
 
-\item{stds}{a vector containing the standard deviation that should be simulated}
+\item{stds}{a vector containing the standard deviation that should be simulated (length 1 or same length as c_dates)}
 
 \item{names}{a vector of names for the resulting simulated dates}
 }

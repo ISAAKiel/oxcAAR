@@ -4,8 +4,8 @@
 \alias{oxcAARCalibratedDatesList}
 \title{oxcAAR Calibrated Dates List}
 \value{
-an object of the class 'oxcAARCalibratedDatesList'
+An object of class \code{"oxcAARCalibratedDatesList"} (a list).
 }
 \description{
-A List of \code{\link{oxcAARCalibratedDate}}
+A list of calibrated dates, i.e. objects of class \code{\link{oxcAARCalibratedDate}}.
 }

@@ -4,10 +4,10 @@
 \alias{Boundary}
 \title{Returns the Oxcal code for a Boundary}
 \usage{
-Boundary(names)
+Boundary(names = "")
 }
 \arguments{
-\item{names}{a optional vector of names for the resulting Phases dates. If given, for each name a boundary is returned. If not given, one Boundary without name is returned.}
+\item{names}{a optional vector of names for the resulting boundary. If missing or empty, an unnamed boundary is returned.}
 }
 \value{
 a string containing the respective Oxcal code

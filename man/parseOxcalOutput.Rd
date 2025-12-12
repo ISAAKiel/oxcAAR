@@ -4,7 +4,7 @@
 \alias{parseOxcalOutput}
 \title{Parses an Oxcal Output File into R}
 \usage{
-parseOxcalOutput(result, first = FALSE, only.R_Date = T)
+parseOxcalOutput(result, first = FALSE, only.R_Date = TRUE)
 }
 \arguments{
 \item{result}{The output of Oxcal as vector of strings (one string per line).}

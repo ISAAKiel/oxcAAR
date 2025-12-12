@@ -1,3 +1,15 @@
+oxcAAR v1.1.2 Taylor (Release date: 2025-12-12)
+=================
+
+Maintenance release (CRAN resubmission):
+
+* Replaced deprecated `with_mock()` usage in tests, restoring compatibility with current testthat versions.
+* Updated plotting code to comply with ggplot2 ≥ 4.0.0 (removed deprecated
+  functionality and adjusted aesthetics handling).
+* Resolved `R CMD check` NOTES related to non-standard evaluation in ggplot2
+  by explicitly declaring global variables.
+* Improved robustness and argument validation in `oxcalSumSim()`.
+
 oxcAAR v1.1.1 Karpo (Release date: 2021-06-06)
 =================
 

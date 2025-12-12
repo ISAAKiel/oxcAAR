@@ -4,3 +4,5 @@
 inst/doc
 OxCal
 tests/testthat/*.pdf
+vignettes/*_cache/
+vignettes/*_files/

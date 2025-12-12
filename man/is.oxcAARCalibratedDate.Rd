@@ -7,10 +7,11 @@
 is.oxcAARCalibratedDate(x)
 }
 \arguments{
-\item{x}{a variable}
+\item{x}{An object to test.}
 }
 \value{
-true if x is a oxcAARCalibratedDate, false otherwise
+\code{TRUE} if \code{x} inherits from \code{"oxcAARCalibratedDate"},
+  \code{FALSE} otherwise.
 }
 \description{
 Checks if a variable is of class oxcAARCalibratedDate

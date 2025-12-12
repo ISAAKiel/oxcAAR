@@ -13,35 +13,38 @@
 #'  \item{probabilities}{the probabilities for the simulated sum calibration}
 #'  \item{date_distribution}{the distribution method used for the dates}
 #' @export
-
 oxcalSumSim <- function(timeframe_begin,
                         timeframe_end,
                         n,
                         stds,
                         date_distribution = c("equidist", "uniform")) {
-    if (!(length(stds) %in% c(1, n))) {
-        stop("Please give either one stds for all
+
+  if (!(length(stds) %in% c(1, n))) {
+    stop("Please give either one stds for all
              dates or a vector of stds of n length.")
-    }
+  }
 
-    date_distribution <- match.arg(date_distribution)
+  date_distribution <- match.arg(date_distribution)
 
-    if (date_distribution == "equidist") {
-        cal_dates <- seq(timeframe_begin,
-                         timeframe_end,
-                         by = ( (timeframe_end - timeframe_begin) / n) )
-    } else {
-        date_range <- seq(timeframe_begin, timeframe_end)
-        cal_dates <- sample(date_range, n, replace = T)
-    }
+  if (date_distribution == "equidist") {
+    cal_dates <- seq(
+      timeframe_begin,
+      timeframe_end,
+      by = ((timeframe_end - timeframe_begin) / n)
+    )
+  } else {
+    date_range <- seq(timeframe_begin, timeframe_end)
+    cal_dates <- sample(date_range, n, replace = TRUE)
+  }
 
-    script <- oxcal_Sum(R_Simulate(cal_dates, stds))
-    result_file <- executeOxcalScript(script)
-    result <- readOxcalOutput(result_file)
-    cleanupOxcalFiles(result_file)
-    RVAL <- parseOxcalOutput(result,first=TRUE,only.R_Date=FALSE)[[1]]
-#     RVAL <- list(date_distribution = date_distribution,
-#                  dates = result$dates,
-#                  probabilities = result$probabilities)
-    RVAL
+  script <- oxcal_Sum(R_Simulate(cal_dates, stds))
+  result_file <- executeOxcalScript(script)
+
+  on.exit({
+    try(cleanupOxcalFiles(result_file), silent = TRUE)
+  }, add = TRUE)
+
+  result <- readOxcalOutput(result_file)
+
+  parseOxcalOutput(result, first = TRUE, only.R_Date = FALSE)[[1]]
 }

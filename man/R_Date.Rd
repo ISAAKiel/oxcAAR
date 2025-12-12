@@ -11,7 +11,7 @@ R_Date(names, r_dates, stds)
 
 \item{r_dates}{a vector containing the BP dates that should be calibrated}
 
-\item{stds}{a vector containing the standard deviation that should be calibrated}
+\item{stds}{a vector containing the standard deviation that should be calibrated (length 1 or same length as r_dates)}
 }
 \value{
 a string containing the respective Oxcal code

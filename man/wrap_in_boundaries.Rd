@@ -4,15 +4,17 @@
 \alias{wrap_in_boundaries}
 \title{Wrap OxCal commands in Boundary commands}
 \usage{
-wrap_in_boundaries(phases_strings, boundary_names = NA)
+wrap_in_boundaries(phases_strings, boundary_names = NA, collapse = FALSE)
 }
 \arguments{
 \item{phases_strings}{a vector containing strings of OxCal code, usually consisting of Phase or R_Date commands, but any other code strings might be used that can be interpreted by OxCal inbetween a Boundary}
 
 \item{boundary_names}{a optional vector of names for the resulting Boundaries (length of phases_strings + 1). If not given, the boundaries are named with consecutive numbers.}
+
+\item{collapse}{if TRUE, return a single string; if FALSE (default), return a character vector (backwards compatible)}
 }
 \value{
-a string containing the respective Oxcal code
+OxCal code (character vector or single string depending on collapse)
 }
 \description{
 wrap_in_boundaries takes a set of Phases or R_Dates as vectors, and returns

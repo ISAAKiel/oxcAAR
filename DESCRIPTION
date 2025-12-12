@@ -1,7 +1,7 @@
 Package: oxcAAR
 Type: Package
 Title: Interface to 'OxCal' Radiocarbon Calibration
-Version: 1.1.1
+Version: 1.1.2
 Date: 2021-06-06
 Authors@R: c(
   person("Hinz", "Martin", email = "martin.hinz@iaw.unibe.ch", role = c("aut", "cre")),
@@ -23,5 +23,5 @@ Suggests: knitr,
     ggridges,
     methods
 VignetteBuilder: knitr
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.3
 Encoding: UTF-8

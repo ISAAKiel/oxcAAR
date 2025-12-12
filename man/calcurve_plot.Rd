@@ -2,24 +2,32 @@
 % Please edit documentation in R/additional_plot_functions.R
 \name{calcurve_plot}
 \alias{calcurve_plot}
-\title{Plots calibrated dates on the calibration curve}
+\title{Plot calibrated dates on the calibration curve}
 \usage{
 calcurve_plot(
   x,
-  dates_sigma_ranges = NULL,
+  dates_sigma_ranges = c("two_sigma", "one_sigma", "three_sigma"),
   uncal_range = TRUE,
   cal_range = TRUE
 )
 }
 \arguments{
-\item{x}{an object of class oxcAARCalibratedDate or oxcAARCalibratedDatesList}
+\item{x}{An object of class \code{\link{oxcAARCalibratedDate}} or
+\code{\link{oxcAARCalibratedDatesList}}.}
 
-\item{dates_sigma_ranges}{character. The sigma range used for the error bars ("two_sigma", "one_sigma" or "three_sigma")}
+\item{dates_sigma_ranges}{Character. The sigma range used for the calibrated error bars.
+One of \code{"two_sigma"} (default), \code{"one_sigma"}, \code{"three_sigma"}.}
 
-\item{uncal_range}{logical. If TRUE (default), the plot contains error bars for the the uncalibrated age}
+\item{uncal_range}{Logical. If \code{TRUE} (default), the plot contains vertical error bars
+for the uncalibrated age (BP \eqn{\pm} k * std).}
 
-\item{cal_range}{logical. If TRUE (default), the plot contains error bars for the the calibrated age}
+\item{cal_range}{Logical. If \code{TRUE} (default), the plot contains horizontal error bars
+for the calibrated age (sigma range in calendar years).}
+}
+\value{
+\code{NULL} (called for its side effect: base graphics plot).
 }
 \description{
-Plots calibrated dates on the calibration curve
+Draws the calibration curve (with 1-sigma envelope) and overlays one or more calibrated
+dates as points and/or error bars (uncalibrated and calibrated ranges).
 }

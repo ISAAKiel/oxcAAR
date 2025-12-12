@@ -17,29 +17,31 @@ oxcAARCalibratedDate(
 )
 }
 \arguments{
-\item{name}{a string giving the name of the date (usually the lab number)}
+\item{name}{A string giving the name of the date (usually the lab number).}
 
-\item{type}{a string giving the type of the date in OxCal terminology ("R_Date", "R_Simulate", ...)}
+\item{type}{A string giving the type of the date in OxCal terminology (e.g. "R_Date", "R_Simulate").}
 
-\item{bp}{a integer giving the BP value for the date}
+\item{bp}{An integer/numeric giving the uncalibrated BP value.}
 
-\item{std}{a integer giving the standard deviation for the date}
+\item{std}{An integer/numeric giving the standard deviation.}
 
-\item{cal_curve}{a list containing information about the calibration curve (name, resolution, bp, bc, sigma)}
+\item{cal_curve}{A list with calibration curve information (name, resolution, bp, bc, sigma).}
 
-\item{sigma_ranges}{a list of three elements (one, two, three sigma),
-each a data frame with start, end and probability giving}
+\item{sigma_ranges}{A list of three elements (one, two, three sigma), each a data frame
+with columns \code{start}, \code{end}, \code{probability}.}
 
-\item{raw_probabilities}{a data frame of dates and the related probabilities for each date}
+\item{raw_probabilities}{A data frame with columns \code{dates} and \code{probabilities}.}
 
-\item{posterior_probabilities}{a data frame of dates and the related posterior probabilities for each date}
+\item{posterior_probabilities}{A data frame with columns \code{dates} and \code{probabilities},
+or \code{NA} if not available.}
 
-\item{posterior_sigma_ranges}{a list of three elements (one, two, three sigma),
-each a data frame with start, end and probability giving for the posterior probabilities}
+\item{posterior_sigma_ranges}{A list of three elements (one, two, three sigma), each a data frame
+with columns \code{start}, \code{end}, \code{probability}, or \code{NA} if not available.}
 }
 \value{
-an object of the class \code{'oxcAARCalibratedDate'}
+An object of class \code{"oxcAARCalibratedDate"}.
 }
 \description{
-The function \code{oxcAARCalibratedDate} is used to create an object for a calibrated date.
+The function \code{oxcAARCalibratedDate()} creates an object representing a single
+calibrated radiocarbon date (and optionally its posterior, if a model was run in OxCal).
 }

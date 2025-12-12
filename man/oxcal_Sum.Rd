@@ -4,10 +4,10 @@
 \alias{oxcal_Sum}
 \title{Wraps an Oxcal string into a Oxcal sum function}
 \usage{
-oxcal_Sum(oxcal_string, name = "Sum")
+oxcal_Sum(oxcal_string, name = " Sum ")
 }
 \arguments{
-\item{oxcal_string}{The Oxcal script that should be wrapped}
+\item{oxcal_string}{The Oxcal script that should be wrapped (vector or single string)}
 
 \item{name}{The name attribute for the resulting sum function}
 }

@@ -1,83 +1,138 @@
-#' Plots calibrated dates on the calibration curve
+#' Plot calibrated dates on the calibration curve
 #'
-#' @param x an object of class oxcAARCalibratedDate or oxcAARCalibratedDatesList
-#' @param dates_sigma_ranges character. The sigma range used for the error bars ("two_sigma", "one_sigma" or "three_sigma")
-#' @param uncal_range logical. If TRUE (default), the plot contains error bars for the the uncalibrated age
-#' @param cal_range logical. If TRUE (default), the plot contains error bars for the the calibrated age
+#' Draws the calibration curve (with 1-sigma envelope) and overlays one or more calibrated
+#' dates as points and/or error bars (uncalibrated and calibrated ranges).
 #'
-#' @return NULL
+#' @param x An object of class \code{\link{oxcAARCalibratedDate}} or
+#'   \code{\link{oxcAARCalibratedDatesList}}.
+#' @param dates_sigma_ranges Character. The sigma range used for the calibrated error bars.
+#'   One of \code{"two_sigma"} (default), \code{"one_sigma"}, \code{"three_sigma"}.
+#' @param uncal_range Logical. If \code{TRUE} (default), the plot contains vertical error bars
+#'   for the uncalibrated age (BP \eqn{\pm} k * std).
+#' @param cal_range Logical. If \code{TRUE} (default), the plot contains horizontal error bars
+#'   for the calibrated age (sigma range in calendar years).
+#'
+#' @return \code{NULL} (called for its side effect: base graphics plot).
 #' @importFrom grDevices rgb
 #' @importFrom graphics arrows plot polygon rug points
-#'@export
+#' @export
+calcurve_plot <- function(x,
+                          dates_sigma_ranges = c("two_sigma", "one_sigma", "three_sigma"),
+                          uncal_range = TRUE,
+                          cal_range = TRUE) {
+  dates_sigma_ranges <- match.arg(dates_sigma_ranges)
 
-calcurve_plot <- function(x, dates_sigma_ranges = NULL, uncal_range = TRUE, cal_range = TRUE) {
-  dates_sigma_ranges <- match.arg(dates_sigma_ranges, c("two_sigma", "one_sigma", "three_sigma"))
-
-  if(!(is.oxcAARCalibratedDate(x) | is.oxcAARCalibratedDatesList(x))) {
-    stop("only working for oxcAARCalibratedDate or oxcAARCalibratedDatesList, sorry!")
+  if (!is.oxcAARCalibratedDate(x) && !is.oxcAARCalibratedDatesList(x)) {
+    stop("`x` must be an oxcAARCalibratedDate or oxcAARCalibratedDatesList.", call. = FALSE)
   }
 
-  if(is.oxcAARCalibratedDate(x)) {
-    x <- list(one=x)
-    class(x) <- append(class(x),"oxcAARCalibratedDatesList")
+  # Normalise input: always work with a list
+  if (is.oxcAARCalibratedDate(x)) {
+    x <- list(x)
+    class(x) <- c("oxcAARCalibratedDatesList", class(x))
   }
 
-  calcurve_names <- sapply(get_cal_curve(x), function(x) {x$name})
-  if(!all(calcurve_names == calcurve_names[1])) {
-    stop("calcurve_plot for dates with different calibration curves not implemented yet!")
+  if (length(x) == 0L) {
+    warning("No dates supplied.", call. = FALSE)
+    return(invisible(NULL))
   }
 
-  this_cal_curve <- get_cal_curve(x)[[1]]
-  this_bcs <- unlist(lapply(get_raw_probabilities(x),function(x) x$dates))
-  min_bc <- min(this_bcs)
-  max_bc <- max(this_bcs)
-  this_cal_curve_core <- data.frame(bc = this_cal_curve$bc,
-                                    bp = this_cal_curve$bp,
-                                    sigma = this_cal_curve$sigma)
-  this_cal_curve_core <- subset(this_cal_curve_core, this_cal_curve_core$bc > min_bc & this_cal_curve_core$bc < max_bc)
-  plot(this_cal_curve_core$bc, this_cal_curve_core$bp, type="l", xlab = "bc", ylab = "bp")
-  sigma_poly <- data.frame(x=c(this_cal_curve_core$bc,rev(this_cal_curve_core$bc)),
-                           y = c(this_cal_curve_core$bp+this_cal_curve_core$sigma, rev(this_cal_curve_core$bp-this_cal_curve_core$sigma) ))
-  polygon(sigma_poly$x,sigma_poly$y, col=rgb(0.2, 0.2, 0.2,0.2), border = F )
+  curves <- get_cal_curve(x)
 
-  for (i in 1:length(x)) {
+  # Avoid relying on %||% (unless you define it in-package)
+  curve_names <- vapply(curves, function(cur) {
+    nm <- cur$name
+    if (is.null(nm)) NA_character_ else as.character(nm)
+  }, character(1))
+
+  if (!all(curve_names == curve_names[1], na.rm = TRUE)) {
+    stop("calcurve_plot() for dates with different calibration curves is not implemented.", call. = FALSE)
+  }
+
+  raw_probs <- get_raw_probabilities(x)
+  has_raw <- vapply(raw_probs, function(df) is.data.frame(df) && nrow(df) > 0L, logical(1))
+  if (!any(has_raw)) {
+    stop("No raw probabilities available to determine calibrated date ranges for plotting.", call. = FALSE)
+  }
+
+  bcs <- unlist(lapply(raw_probs[has_raw], function(df) df$dates), use.names = FALSE)
+  min_bc <- min(bcs, na.rm = TRUE)
+  max_bc <- max(bcs, na.rm = TRUE)
+
+  this_curve <- curves[[which(has_raw)[1]]]
+  curve_df <- data.frame(
+    bc = this_curve$bc,
+    bp = this_curve$bp,
+    sigma = this_curve$sigma
+  )
+
+  # IMPORTANT FIX: no `.data` in base subset()
+  curve_df <- curve_df[curve_df$bc >= min_bc & curve_df$bc <= max_bc, , drop = FALSE]
+
+  if (nrow(curve_df) < 2L) {
+    stop("Calibration curve subset is empty/too small for the selected date range.", call. = FALSE)
+  }
+
+  graphics::plot(curve_df$bc, curve_df$bp, type = "l", xlab = "bc", ylab = "bp")
+
+  sigma_poly <- data.frame(
+    x = c(curve_df$bc, rev(curve_df$bc)),
+    y = c(curve_df$bp + curve_df$sigma, rev(curve_df$bp - curve_df$sigma))
+  )
+  graphics::polygon(
+    sigma_poly$x, sigma_poly$y,
+    col = grDevices::rgb(0.2, 0.2, 0.2, 0.2),
+    border = FALSE
+  )
+
+  uncal_k <- switch(
+    dates_sigma_ranges,
+    one_sigma = 1,
+    two_sigma = 2,
+    three_sigma = 3
+  )
+
+  get_full_sigma_range <- function(date_obj) {
+    sr <- date_obj[["sigma_ranges"]][[dates_sigma_ranges]]
+    if (!is.data.frame(sr) || nrow(sr) == 0L) return(c(NA_real_, NA_real_))
+    c(min(sr$start, na.rm = TRUE), max(sr$end, na.rm = TRUE))
+  }
+
+  for (i in seq_along(x)) {
     this_date <- x[[i]]
 
-    # sigma ranges cal age
-    this_sigma_range <- this_date[['sigma_ranges']][[dates_sigma_ranges]]
-    full_sigma_range <- c(min(this_sigma_range$start),max(this_sigma_range$end))
+    full_sigma_range <- get_full_sigma_range(this_date)
+    if (anyNA(full_sigma_range) || !is.finite(this_date$bp) || !is.finite(this_date$std)) next
 
-    # define sigma range factor for the uncal age
-    uncal_age_k <- switch(
-      dates_sigma_ranges,
-      one_sigma = 1,
-      two_sigma = 2,
-      three_sigma = 3
-    )
+    centre_bc <- mean(full_sigma_range)
 
-    # rug plot
-    rug(mean(full_sigma_range))
-    rug(this_date$bp, side = 2)
+    graphics::rug(centre_bc)
+    graphics::rug(this_date$bp, side = 2)
 
-    # plot point if one error bar is unwanted
-    if(any(c(!uncal_range, !cal_range))) {
-      points(mean(full_sigma_range), this_date$bp)
+    if (!isTRUE(uncal_range) || !isTRUE(cal_range)) {
+      graphics::points(centre_bc, this_date$bp)
     }
 
-    # error bars
-    if(uncal_range){
-      arrows(mean(full_sigma_range),
-             this_date$bp - this_date$std * uncal_age_k,
-             mean(full_sigma_range),
-             this_date$bp + this_date$std * uncal_age_k,
-             length=0.05, angle=90, code=3)
+    if (isTRUE(uncal_range)) {
+      graphics::arrows(
+        x0 = centre_bc,
+        y0 = this_date$bp - this_date$std * uncal_k,
+        x1 = centre_bc,
+        y1 = this_date$bp + this_date$std * uncal_k,
+        length = 0.05, angle = 90, code = 3
+      )
     }
-    if(cal_range){
-      arrows(min(full_sigma_range),
-             this_date$bp,
-             max(full_sigma_range),
-             this_date$bp,
-             length=0.05, angle=90, code=3)
+
+    if (isTRUE(cal_range)) {
+      graphics::arrows(
+        x0 = full_sigma_range[1],
+        y0 = this_date$bp,
+        x1 = full_sigma_range[2],
+        y1 = this_date$bp,
+        length = 0.05, angle = 90, code = 3
+      )
     }
   }
+
+  invisible(NULL)
 }
