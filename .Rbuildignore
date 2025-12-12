@@ -14,3 +14,4 @@
 ^CRAN-RELEASE$
 ^vignettes/.*_cache$
 ^vignettes/.*_files$
+^CRAN-SUBMISSION$
