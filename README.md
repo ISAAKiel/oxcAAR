@@ -1,7 +1,7 @@
 [![R build
 status](https://github.com/ISAAKiel/oxcAAR/workflows/R-CMD-check/badge.svg)](https://github.com/ISAAKiel/oxcAAR/actions)
 [![Coverage
-Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://codecov.io/github/ISAAKiel/oxcAAR?branch=master)
+Status](https://img.shields.io/codecov/c/github/ISAAKiel/oxcAAR/master.svg)](https://app.codecov.io/github/ISAAKiel/oxcAAR?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/oxcAAR)](https://CRAN.R-project.org/package=oxcAAR)
 [![license](https://img.shields.io/badge/license-GPL%203-B50B82.svg)](https://www.R-project.org/Licenses/GPL-2)
 
