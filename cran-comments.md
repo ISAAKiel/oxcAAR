@@ -16,6 +16,8 @@ The initial resubmission produced a NOTE due to a permanently redirected URL:
 
 - Updated the Codecov URL in README.md from https://codecov.io/github/ISAAKiel/oxcAAR to https://app.codecov.io/github/ISAAKiel/oxcAAR, resolving the CRAN incoming NOTE related to a 301 redirect.
 
+The Date field in DESCRIPTION has now also been updated accordingly.
+
 ## Test environments
 - GitHub Actions (macOS), R-release
 - GitHub Actions (Ubuntu 22.04, R-release and R-devel)
