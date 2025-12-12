@@ -1,47 +1,23 @@
 ## Resubmission
-This is a resubmission. In this version I have:
+This is a maintenance release.
 
-* as requested by CRAN, accessing the OxcalDistribution.zip via quickSetupOxcal() 'fail gracefully with an informative message if the resource is not available or has changed (and not give a check warning nor error)'
+Changes in this version:
+- Updated the test suite to replace deprecated/defunct `testthat::with_mock()` usage with `testthat::with_mocked_bindings()`, restoring compatibility with recent versions of testthat.
+- Updated ggplot-based plotting code to comply with current ggplot2 (≥ 4.0.0), removing deprecated functionality.
+- Addressed R CMD check NOTES related to non-standard evaluation by explicitly declaring variables used in ggplot2 aesthetics.
+- Minor robustness improvements in argument validation and vignette rebuilding.
+
+No user-facing API changes were introduced.
 
 ## Test environments
-* GitHub Action (macOS), R 4.0.3
-* GitHub Action (ubuntu 20.04, release and devel), R 4.0.3
-* GitHub Action (windows), R 4.0.3
+- GitHub Actions (macOS), R-release
+- GitHub Actions (Ubuntu 22.04, R-release and R-devel)
+- GitHub Actions (Windows), R-release
+- Local: macOS (Apple Silicon), R 4.5.1
+- R-hub: Ubuntu 24.04.3 LTS, R-devel (2025-12-10 r89137) and additional R-hub platforms (Windows R-devel, macOS-arm64 R-devel, linux R-devel variants incl. sanitizers)
 
 ## R CMD check results
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
-## Rhub check failed
-### Windows Build
-oxcAAR 1.1.1: ERROR
-
-Build ID:	oxcAAR_1.1.1.tar.gz-5e9bc81babc548cd87e38a689e2bef32
-Platform:	Windows Server 2008 R2 SP1, R-devel, 32/64 bit
-
-Error: package or namespace load failed for 'oxcAAR' in library.dynam(lib, package, package.lib):
- DLL 'jsonlite' not found: maybe not installed for this architecture?
-Error: loading failed
-likely an local error at Rhub?
-
-### Linux Build
-oxcAAR 1.1.1: OK
-
-Build ID:	oxcAAR_1.1.1.tar.gz-8a10376201e540e2ad55d0d615b8f8ae
-Platform:	Ubuntu Linux 20.04.1 LTS, R-release, GCC
-
-oxcAAR 1.1.1: OK
-
-Build ID:	oxcAAR_1.1.1.tar.gz-1b66cade49114ef19f2ef477f888ad77
-Platform:	Fedora Linux, R-devel, clang, gfortran
-
-## winbuilder note:
-Status: OK
-R version 4.1.0 (2021-05-18)
-
-Status: OK
-R Under development (unstable) (2021-07-03 r80596)
-
-Maintainer: 'Hinz Martin <martin.hinz@iaw.unibe.ch>'
-
-## Downstream dependencies
-I have also run R CMD check on downstream dependencies via revdep. All packages passed.
+## R-hub results
+All checks reported Status: OK on the tested platforms for oxcAAR 1.1.2.
