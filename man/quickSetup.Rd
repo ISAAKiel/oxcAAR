@@ -2,9 +2,19 @@
 % Please edit documentation in R/utility_functions.R
 \name{quickSetupOxcal}
 \alias{quickSetupOxcal}
+\alias{supportedOxcalVersions}
+\alias{downloadOxcal}
 \title{Quick OxCal setup}
 \usage{
-quickSetupOxcal(os = Sys.info()["sysname"], path = tempdir())
+quickSetupOxcal(
+  os = Sys.info()["sysname"],
+  path = tempdir(),
+  version = supportedOxcalVersions()[1]
+)
+
+supportedOxcalVersions()
+
+downloadOxcal(path = ".", version = supportedOxcalVersions()[1])
 }
 \arguments{
 \item{os}{The operating system of the workstation. Default: automatic determination. Options:
@@ -16,6 +26,13 @@ quickSetupOxcal(os = Sys.info()["sysname"], path = tempdir())
 
 \item{path}{The path to the directory where Oxcal is or should be stored. Default: "tempdir()".
 I recommend thought to install it permanently.}
+
+\item{version}{The OxCal version that should be installed.
+\code{supportedOxcalVersions()} returns a character vector of supported versions.
+The latest version can be downloaded with "latest", but that may not be supported
+by oxcAAR.
+See \url{https://c14.arch.ox.ac.uk/oxcal.html} for the list of published,
+downloadable OxCal versions.}
 }
 \description{
 Downloads the latest version of Oxcal and sets the executable path correctly
