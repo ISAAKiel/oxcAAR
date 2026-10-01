@@ -9,7 +9,8 @@
 quickSetupOxcal(
   os = Sys.info()["sysname"],
   path = tempdir(),
-  version = supportedOxcalVersions()[1]
+  version = supportedOxcalVersions()[1],
+  force = FALSE
 )
 
 supportedOxcalVersions()
@@ -33,6 +34,8 @@ The latest version can be downloaded with "latest", but that may not be supporte
 by oxcAAR.
 See \url{https://c14.arch.ox.ac.uk/oxcal.html} for the list of published,
 downloadable OxCal versions.}
+
+\item{force}{Overwrite an existing installation.}
 }
 \description{
 Downloads the latest version of Oxcal and sets the executable path correctly
