@@ -277,39 +277,28 @@ parseFullOxcalOutput <- function(output) {
     }
   })
 
-  out <- ""
-  eval(parse(text = paste0("out<-", namestolist(output_names))))
-
-  ipar <- out
-  initial.param <- utils::as.relistable(ipar)
-  ul <- unlist(initial.param)
-
-  output_names_joined <- vapply(output_names, paste, character(1), collapse = ".")
-
-  for (i in seq_along(output_names_joined)) {
-    actual_name <- output_names_joined[i]
-    if (!(actual_name %in% names(ul))) next
-
+  rel <- list()
+  for (i in seq_along(output_names)) {
     val <- output.values[[i]]
-    if (is.null(val) || length(val) == 0) next
-
-    if (is.list(val)) {
-      val <- unlist(val, recursive = TRUE, use.names = FALSE)
-    }
-
-    if (length(val) == 0) next
-    if (length(val) > 1) val <- val[length(val)]  # keep last value, like your earlier "take last" logic
-
-    ul[actual_name] <- val
+    if (is.null(val)) next
+    rel <- .set_nested_value(rel, output_names[[i]], val)
   }
-
-  rel <- utils::relist(ul, out)
   recursivelyPartialUnlist(rel)
 }
 
 ## ---------- private ----------
 
 # ---- small assertions/helpers ----
+
+.set_nested_value <- function(x, path, value) {
+  key <- path[[1L]]
+  if (length(path) == 1L) {
+    x[[key]] <- value
+  } else {
+    x[[key]] <- .set_nested_value(x[[key]], path[-1L], value)
+  }
+  x
+}
 
 .assert_numeric <- function(x, arg_name) {
   if (!is.numeric(x)) stop(sprintf("'%s' must be a numeric vector", arg_name), call. = FALSE)
