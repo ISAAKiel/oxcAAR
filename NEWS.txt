@@ -1,7 +1,8 @@
-oxcAAR v1.1.3 (development)
+oxcAAR v1.1.2.9000 (development)
 =================
 
 Bug fixes:
+
 * `parseFullOxcalOutput()` now preserves vector-valued OxCal output instead of
   retaining only the final element of each vector.
 
