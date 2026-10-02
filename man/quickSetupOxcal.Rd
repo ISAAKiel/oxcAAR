@@ -4,21 +4,36 @@
 \alias{quickSetupOxcal}
 \title{Quick OxCal setup}
 \usage{
-quickSetupOxcal(os = Sys.info()["sysname"], path = tempdir())
+quickSetupOxcal(
+  os = Sys.info()["sysname"],
+  path = tempdir(),
+  version = "latest",
+  force = FALSE
+)
 }
 \arguments{
-\item{os}{The operating system of the workstation. Default: automatic determination. Options:
+\item{os}{The operating system of the workstation. Default: automatic
+  determination. Options:
 \itemize{
   \item{\bold{Linux}}
   \item{Windows}
   \item{Darwin}
 }}
 
-\item{path}{The path to the directory where Oxcal is or should be stored. Default: "tempdir()".
-I recommend thought to install it permanently.}
+\item{path}{The path to the directory where OxCal is or should be stored.
+Default: \code{tempdir()}. For persistent use, installation in a permanent
+location is recommended.}
+
+\item{version}{The OxCal version to install. Defaults to \code{"latest"}.
+Specific versions can be selected for reproducible installations.
+See \code{testedOxcalVersions()} for fixed releases explicitly tested
+with oxcAAR.}
+
+\item{force}{Force download and setup even if an existing OxCal
+installation is detected.}
 }
 \description{
-Downloads the latest version of Oxcal and sets the executable path correctly
+Downloads OxCal and sets the executable path correctly.
 }
 \examples{
 \dontrun{

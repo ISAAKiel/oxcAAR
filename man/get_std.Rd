@@ -34,13 +34,13 @@ get_std(y)
 
 }
 \seealso{
-Other getter functions: 
-\code{\link{get_bp}()},
-\code{\link{get_cal_curve}()},
-\code{\link{get_name}()},
-\code{\link{get_posterior_probabilities}()},
-\code{\link{get_posterior_sigma_ranges}()},
-\code{\link{get_raw_probabilities}()},
-\code{\link{get_sigma_ranges}()}
+Other getter functions:
+\code{\link[=get_bp]{get_bp()}},
+\code{\link[=get_cal_curve]{get_cal_curve()}},
+\code{\link[=get_name]{get_name()}},
+\code{\link[=get_posterior_probabilities]{get_posterior_probabilities()}},
+\code{\link[=get_posterior_sigma_ranges]{get_posterior_sigma_ranges()}},
+\code{\link[=get_raw_probabilities]{get_raw_probabilities()}},
+\code{\link[=get_sigma_ranges]{get_sigma_ranges()}}
 }
 \concept{getter functions}
