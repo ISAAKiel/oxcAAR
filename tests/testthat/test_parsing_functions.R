@@ -35,8 +35,15 @@ test_that("extractSigmaValuesFromOxcalResult does is job", {
 
 context("parseFullOxcalOutput")
 
-test_that("parseFullOxcalOutput parses oxcal output file correct", {
+test_that("parseFullOxcalOutput parses oxcal output file correctly", {
   result <- readOxcalOutput("ox_output.js")
   RVA <- oxcAAR::parseFullOxcalOutput(result)
+
   expect_equal(length(RVA), 4)
-  })
+
+  # Vector-valued OxCal output must be preserved
+  probs <- RVA[["ocd[2]"]]$likelihood$prob
+  expect_length(probs, 127)
+  expect_equal(probs[1:3], c(0, 0.000001, 0.000001))
+  expect_equal(max(probs), 1)
+})
