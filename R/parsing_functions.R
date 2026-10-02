@@ -487,27 +487,6 @@ extractCalCurveFromOxcalResult <- function(date_text) {
   )
 }
 
-namestolist <- function(x) {
-  if (length(x) == 0) {
-    return("NA")
-  } else {
-    this_level <- stats::na.omit(unique(sapply(x, `[`, 1)))
-    collector <- vector()
-    for (i in seq_along(this_level)) {
-      this_element <- this_level[i]
-      this_branch <- stats::na.omit(
-        sapply(x[sapply(x, `[`, 1) == this_element], `[`, -1)
-      )
-      this_branch <- this_branch[lapply(this_branch, length) > 0]
-      collector <- append(
-        collector,
-        paste0("`", this_element, "` = ", namestolist(this_branch))
-      )
-    }
-    return(paste0("list(", paste(collector, collapse = ","), ")"))
-  }
-}
-
 recursivelyPartialUnlist <- function(l) {
   lapply(l, function(x) {
     if (is.list(x) && length(x) == 1 && !is.list(x[[1]])) {
