@@ -38,6 +38,7 @@ export(R_Date)
 export(R_Simulate)
 export(Sequence)
 export(calcurve_plot)
+export(downloadOxcal)
 export(executeOxcalScript)
 export(get_bp)
 export(get_cal_curve)
@@ -60,14 +61,17 @@ export(parseOxcalOutput)
 export(quickSetupOxcal)
 export(readOxcalOutput)
 export(setOxcalExecutablePath)
+export(testedOxcalVersions)
 export(wrap_in_boundaries)
 importFrom(grDevices,rgb)
-importFrom(graphics,arrows)
-importFrom(graphics,plot)
-importFrom(graphics,points)
-importFrom(graphics,polygon)
-importFrom(graphics,rug)
-importFrom(graphics,text)
+importFrom(graphics,
+  arrows,
+  plot,
+  points,
+  polygon,
+  rug,
+  text
+)
 importFrom(jsonlite,fromJSON)
 importFrom(stats,na.omit)
 importFrom(stringr,str_split)

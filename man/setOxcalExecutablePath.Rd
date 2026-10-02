@@ -2,19 +2,19 @@
 % Please edit documentation in R/utility_functions.R
 \name{setOxcalExecutablePath}
 \alias{setOxcalExecutablePath}
-\title{Setting the Oxcal program path for further use}
+\title{Set the OxCal executable path}
 \usage{
 setOxcalExecutablePath(path)
 }
 \arguments{
-\item{path}{The path to the Oxcal executable}
+\item{path}{The path to the OxCal executable.}
 }
 \description{
-Stores the path to the oxcal executable it in internally for other functions.
+Stores the path to the OxCal executable for use by other oxcAAR functions.
 }
 \examples{
 \dontrun{
-connectOxcal('/home/martin/Documents/scripte/OxCal/bin/OxCalLinux')
+setOxcalExecutablePath("/home/martin/Documents/scripte/OxCal/bin/OxCalLinux")
 }
 
 }
