@@ -331,6 +331,14 @@ parseFullOxcalOutput <- function(output) {
   out[!is.na(out)]
 }
 
+.last_regex_capture <- function(text, identifier, pattern, group = 2) {
+  text <- reduce_to_relevant_lines(text, identifier)
+  values <- .regex_capture_all(text, pattern, group = group)
+
+  if (length(values) == 0) return(NA_character_)
+  values[length(values)]
+}
+
 # ---- extractors ----
 
 extractPosteriorProbsFromOxcalResult <- function(result_text) {
@@ -447,41 +455,55 @@ extractSigmaValuesFromOxcalResult <- function(result_text, regexp) {
 }
 
 extractCalCurveFromOxcalResult <- function(date_text) {
-  identifier <- "calib[0].ref="
-  this_date_text <- reduce_to_relevant_lines(date_text, identifier)
-  regexp_calcurve_name <- "calib\\[0\\].ref=\"(.*)\";"
-  calcurve_name <- .regex_capture_all(this_date_text, regexp_calcurve_name, group = 2)
-  calcurve_name <- if (length(calcurve_name)) calcurve_name[length(calcurve_name)] else NA_character_
+  calcurve_name <- .last_regex_capture(
+    date_text,
+    "calib[0].ref=",
+    'calib\\[0\\].ref="(.*)";'
+  )
 
-  identifier <- "calib[0].resolution="
-  this_date_text <- reduce_to_relevant_lines(date_text, identifier)
-  regexp_calcurve_resolution <- "calib\\[0\\].resolution=(.*);"
-  calcurve_resolution <- .regex_capture_all(this_date_text, regexp_calcurve_resolution, group = 2)
-  calcurve_resolution <- if (length(calcurve_resolution)) as.numeric(calcurve_resolution[length(calcurve_resolution)]) else NA_real_
+  calcurve_resolution <- as.numeric(.last_regex_capture(
+    date_text,
+    "calib[0].resolution=",
+    "calib\\[0\\].resolution=(.*);"
+  ))
 
-  identifier <- "calib[0].start="
-  this_date_text <- reduce_to_relevant_lines(date_text, identifier)
-  regexp_calcurve_start <- "calib\\[0\\].start=(.*);"
-  calcurve_start <- .regex_capture_all(this_date_text, regexp_calcurve_start, group = 2)
-  calcurve_start <- if (length(calcurve_start)) as.numeric(calcurve_start[length(calcurve_start)]) else NA_real_
+  calcurve_start <- as.numeric(.last_regex_capture(
+    date_text,
+    "calib[0].start=",
+    "calib\\[0\\].start=(.*);"
+  ))
 
-  identifier <- "calib[0].bp="
-  this_date_text <- reduce_to_relevant_lines(date_text, identifier)
-  regexp_calcurve_bp <- "calib\\[0\\].bp=\\[(.*)\\];"
-  bp_raw <- .regex_capture_all(this_date_text, regexp_calcurve_bp, group = 2)
-  calcurve_bp <- if (length(bp_raw)) as.numeric(strsplit(bp_raw[length(bp_raw)], ",", fixed = TRUE)[[1]]) else numeric(0)
+  bp_raw <- .last_regex_capture(
+    date_text,
+    "calib[0].bp=",
+    "calib\\[0\\].bp=\\[(.*)\\];"
+  )
+  calcurve_bp <- if (!is.na(bp_raw)) {
+    as.numeric(strsplit(bp_raw, ",", fixed = TRUE)[[1]])
+  } else {
+    numeric(0)
+  }
 
-  identifier <- "calib[0].sigma="
-  this_date_text <- reduce_to_relevant_lines(date_text, identifier)
-  regexp_calcurve_sigma <- "calib\\[0\\].sigma=\\[(.*)\\];"
-  sigma_raw <- .regex_capture_all(this_date_text, regexp_calcurve_sigma, group = 2)
-  calcurve_sigma <- if (length(sigma_raw)) as.numeric(strsplit(sigma_raw[length(sigma_raw)], ",", fixed = TRUE)[[1]]) else numeric(0)
+  sigma_raw <- .last_regex_capture(
+    date_text,
+    "calib[0].sigma=",
+    "calib\\[0\\].sigma=\\[(.*)\\];"
+  )
+  calcurve_sigma <- if (!is.na(sigma_raw)) {
+    as.numeric(strsplit(sigma_raw, ",", fixed = TRUE)[[1]])
+  } else {
+    numeric(0)
+  }
 
   list(
     name       = calcurve_name,
     resolution = calcurve_resolution,
     bp         = calcurve_bp,
-    bc         = seq(from = calcurve_start, by = calcurve_resolution, length.out = length(calcurve_bp)),
+    bc         = seq(
+      from = calcurve_start,
+      by = calcurve_resolution,
+      length.out = length(calcurve_bp)
+    ),
     sigma      = calcurve_sigma
   )
 }
