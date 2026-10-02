@@ -1,3 +1,10 @@
+oxcAAR v1.1.3 (development)
+=================
+
+Bug fixes:
+* `parseFullOxcalOutput()` now preserves vector-valued OxCal output instead of
+  retaining only the final element of each vector.
+
 oxcAAR v1.1.2 Taylor (Release date: 2025-12-12)
 =================
 
