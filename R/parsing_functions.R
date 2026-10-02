@@ -378,19 +378,14 @@ extractProbsFromOxcalResult <- function(result_text) {
 }
 
 extractDoubleFromOxcalResult <- function(result_text, regexp, position) {
-  if (length(result_text) == 0) return(numeric(0))
-
-  m <- stringi::stri_match_all_regex(result_text, regexp)
-  if (length(m) == 0) return(numeric(0))
-
-  m <- do.call(rbind, m)
-  if (is.null(m) || nrow(m) == 0) return(numeric(0))
-
-  raw <- m[, position]
-  raw <- raw[!is.na(raw)]
+  raw <- .regex_capture_all(result_text, regexp, group = position)
   if (length(raw) == 0) return(numeric(0))
 
-  as.double(stats::na.omit(unlist(strsplit(raw, ", ", fixed = TRUE))))
+  as.double(
+    stats::na.omit(
+      unlist(strsplit(raw, ", ", fixed = TRUE))
+    )
+  )
 }
 
 extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
@@ -425,26 +420,23 @@ extractSigmaRangesFromOxcalResult <- function(result_text) {
 }
 
 extractSigmaValuesFromOxcalResult <- function(result_text, regexp) {
-  if (length(result_text) == 0) return(data.frame())
-
-  m <- stringi::stri_match_all_regex(result_text, regexp)
-  if (length(m) == 0) return(data.frame())
-
-  m <- do.call(rbind, m)
-  if (is.null(m) || nrow(m) == 0) return(data.frame())
-
-  raw <- m[, 4]
-  raw <- raw[!is.na(raw)]
+  raw <- .regex_capture_all(result_text, regexp, group = 4)
   if (length(raw) == 0) return(data.frame())
 
-  vals <- suppressWarnings(as.double(stats::na.omit(unlist(strsplit(raw, ", ", fixed = TRUE)))))
+  vals <- suppressWarnings(
+    as.double(
+      stats::na.omit(
+        unlist(strsplit(raw, ", ", fixed = TRUE))
+      )
+    )
+  )
   if (length(vals) == 0) return(data.frame())
 
   mat <- matrix(vals, ncol = 3, byrow = TRUE)
+
   # Keep legacy structure (and column names) consistent with data.frame(matrix(...))
   df <- data.frame(mat)
-  df <- df[rowSums(is.na(df)) < 3, , drop = FALSE]
-  df
+  df[rowSums(is.na(df)) < 3, , drop = FALSE]
 }
 
 extractCalCurveFromOxcalResult <- function(date_text) {
