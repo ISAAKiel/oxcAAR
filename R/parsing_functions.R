@@ -399,24 +399,31 @@ extractSigmaRangesFromOxcalResult <- function(result_text) {
 .extract_sigma_ranges <- function(result_text, prefix = c("likelihood", "posterior")) {
   prefix <- match.arg(prefix)
   identifier <- sprintf("].%s.range", prefix)
-  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
+  date_text <- reduce_to_relevant_lines(result_text, identifier)
 
-  one_sigma <- two_sigma <- three_sigma <- NA
+  ranges <- lapply(1:3, function(k) {
+    regexp <- sprintf(
+      "(ocd\\[\\d+\\].%s.range\\[%d\\]).*?(=\\[)(.*)(\\];)",
+      prefix, k
+    )
 
-  for (k in 1:3) {
-    regexp <- sprintf("(ocd\\[\\d+\\].%s.range\\[%d\\]).*?(=\\[)(.*)(\\];)", prefix, k)
-    sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(this_date_text, regexp))
-    if (is.data.frame(sigma_extract) && nrow(stats::na.omit(sigma_extract)) > 0) {
-      df <- data.frame(start = sigma_extract[, 1],
-                       end = sigma_extract[, 2],
-                       probability = sigma_extract[, 3])
-      if (k == 1) one_sigma <- df
-      if (k == 2) two_sigma <- df
-      if (k == 3) three_sigma <- df
+    values <- suppressWarnings(
+      extractSigmaValuesFromOxcalResult(date_text, regexp)
+    )
+
+    if (!is.data.frame(values) || nrow(stats::na.omit(values)) == 0) {
+      return(NA)
     }
-  }
 
-  list(one_sigma = one_sigma, two_sigma = two_sigma, three_sigma = three_sigma)
+    data.frame(
+      start = values[, 1],
+      end = values[, 2],
+      probability = values[, 3]
+    )
+  })
+
+  names(ranges) <- c("one_sigma", "two_sigma", "three_sigma")
+  ranges
 }
 
 extractSigmaValuesFromOxcalResult <- function(result_text, regexp) {
