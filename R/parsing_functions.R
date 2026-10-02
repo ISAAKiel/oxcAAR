@@ -128,7 +128,6 @@ Sequence <- function(sequence_elements, names = "") {
 #' @param collapse if TRUE, return a single string; if FALSE (default), return a character vector (backwards compatible)
 #'
 #' @return OxCal code (character vector or single string depending on collapse)
-#' @importFrom utils tail
 #' @export
 wrap_in_boundaries <- function(phases_strings, boundary_names = NA, collapse = FALSE) {
   phases_strings <- .as_character(phases_strings, "phases_strings")
@@ -148,7 +147,7 @@ wrap_in_boundaries <- function(phases_strings, boundary_names = NA, collapse = F
     out[2 * i - 1] <- Boundary(boundary_names[i])
     out[2 * i]     <- phases_strings[i]
   }
-  out[length(out)] <- Boundary(utils::tail(boundary_names, n = 1))
+  out[length(out)] <- Boundary(boundary_names[n_phases + 1])
 
   if (isTRUE(collapse)) return(paste(out, collapse = "\n"))
   out
@@ -306,10 +305,10 @@ parseFullOxcalOutput <- function(output) {
 }
 
 .as_character <- function(x, arg_name) {
-  if (is.null(x)) stop(sprintf("'%s' must not be NULL", arg_name), call. = FALSE)
-  if (is.factor(x)) x <- as.character(x)
-  if (!is.character(x)) x <- as.character(x)
-  x
+  if (is.null(x)) {
+    stop(sprintf("'%s' must not be NULL", arg_name), call. = FALSE)
+  }
+  as.character(x)
 }
 
 .recycle_or_fail <- function(x, target_length, arg_name, target_name) {
@@ -331,8 +330,7 @@ parseFullOxcalOutput <- function(output) {
   out[!is.na(out)]
 }
 
-.last_regex_capture <- function(text, identifier, pattern, group = 2) {
-  text <- reduce_to_relevant_lines(text, identifier)
+.last_regex_capture <- function(text, pattern, group = 2) {
   values <- .regex_capture_all(text, pattern, group = group)
 
   if (length(values) == 0) return(NA_character_)
@@ -409,7 +407,7 @@ extractSigmaRangesFromOxcalResult <- function(result_text) {
   identifier <- sprintf("].%s.range", prefix)
   date_text <- reduce_to_relevant_lines(result_text, identifier)
 
-  ranges <- lapply(1:3, function(k) {
+  ranges <- lapply(seq_len(3), function(k) {
     regexp <- sprintf(
       "(ocd\\[\\d+\\].%s.range\\[%d\\]).*?(=\\[)(.*)(\\];)",
       prefix, k
@@ -457,25 +455,21 @@ extractSigmaValuesFromOxcalResult <- function(result_text, regexp) {
 extractCalCurveFromOxcalResult <- function(date_text) {
   calcurve_name <- .last_regex_capture(
     date_text,
-    "calib[0].ref=",
     'calib\\[0\\].ref="(.*)";'
   )
 
   calcurve_resolution <- as.numeric(.last_regex_capture(
     date_text,
-    "calib[0].resolution=",
     "calib\\[0\\].resolution=(.*);"
   ))
 
   calcurve_start <- as.numeric(.last_regex_capture(
     date_text,
-    "calib[0].start=",
     "calib\\[0\\].start=(.*);"
   ))
 
   bp_raw <- .last_regex_capture(
     date_text,
-    "calib[0].bp=",
     "calib\\[0\\].bp=\\[(.*)\\];"
   )
   calcurve_bp <- if (!is.na(bp_raw)) {
@@ -486,7 +480,6 @@ extractCalCurveFromOxcalResult <- function(date_text) {
 
   sigma_raw <- .last_regex_capture(
     date_text,
-    "calib[0].sigma=",
     "calib\\[0\\].sigma=\\[(.*)\\];"
   )
   calcurve_sigma <- if (!is.na(sigma_raw)) {
