@@ -33,6 +33,52 @@ test_that("extractSigmaValuesFromOxcalResult does is job", {
   )
 })
 
+context("parseOxcalOutput")
+
+test_that("parseOxcalOutput parses calibrated dates correctly", {
+  result <- readOxcalOutput("ox_output.js")
+  RVA <- oxcAAR::parseOxcalOutput(result)
+
+  expect_s3_class(RVA, "oxcAARCalibratedDatesList")
+  expect_length(RVA, 1)
+
+  date <- RVA[[1]]
+  expect_s3_class(date, "oxcAARCalibratedDate")
+
+  # Basic date information
+  expect_equal(date$name, "")
+  expect_equal(date$type, "R_Date")
+  expect_equal(date$bp, 767L)
+  expect_equal(date$std, 76L)
+
+  # Calibration curve
+  expect_equal(date$cal_curve$name, "Atmospheric data from Reimer et al (2009);")
+  expect_equal(date$cal_curve$resolution, 5)
+  expect_length(date$cal_curve$bp, 10002)
+  expect_length(date$cal_curve$bc, 10002)
+  expect_length(date$cal_curve$sigma, 10002)
+
+  # Raw probability distribution
+  expect_s3_class(date$raw_probabilities, "data.frame")
+  expect_equal(nrow(date$raw_probabilities), 127)
+  expect_named(date$raw_probabilities, c("dates", "probabilities"))
+
+  # Sigma ranges
+  expect_equal(
+    date$sigma_ranges$one_sigma,
+    data.frame(start = 1177, end = 1292.5, probability = 68.2)
+  )
+  expect_equal(nrow(date$sigma_ranges$two_sigma), 4)
+  expect_equal(
+    date$sigma_ranges$three_sigma,
+    data.frame(start = 1026.5, end = 1406, probability = 99.7)
+  )
+
+  # No posterior distribution in this fixture
+  expect_true(is.na(date$posterior_probabilities))
+  expect_true(all(vapply(date$posterior_sigma_ranges, is.na, logical(1))))
+})
+
 context("parseFullOxcalOutput")
 
 test_that("parseFullOxcalOutput parses oxcal output file correctly", {

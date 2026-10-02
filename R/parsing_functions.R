@@ -128,7 +128,6 @@ Sequence <- function(sequence_elements, names = "") {
 #' @param collapse if TRUE, return a single string; if FALSE (default), return a character vector (backwards compatible)
 #'
 #' @return OxCal code (character vector or single string depending on collapse)
-#' @importFrom utils tail
 #' @export
 wrap_in_boundaries <- function(phases_strings, boundary_names = NA, collapse = FALSE) {
   phases_strings <- .as_character(phases_strings, "phases_strings")
@@ -148,7 +147,7 @@ wrap_in_boundaries <- function(phases_strings, boundary_names = NA, collapse = F
     out[2 * i - 1] <- Boundary(boundary_names[i])
     out[2 * i]     <- phases_strings[i]
   }
-  out[length(out)] <- Boundary(utils::tail(boundary_names, n = 1))
+  out[length(out)] <- Boundary(boundary_names[n_phases + 1])
 
   if (isTRUE(collapse)) return(paste(out, collapse = "\n"))
   out
@@ -306,10 +305,10 @@ parseFullOxcalOutput <- function(output) {
 }
 
 .as_character <- function(x, arg_name) {
-  if (is.null(x)) stop(sprintf("'%s' must not be NULL", arg_name), call. = FALSE)
-  if (is.factor(x)) x <- as.character(x)
-  if (!is.character(x)) x <- as.character(x)
-  x
+  if (is.null(x)) {
+    stop(sprintf("'%s' must not be NULL", arg_name), call. = FALSE)
+  }
+  as.character(x)
 }
 
 .recycle_or_fail <- function(x, target_length, arg_name, target_name) {
@@ -329,6 +328,13 @@ parseFullOxcalOutput <- function(output) {
   if (is.null(m) || nrow(m) == 0) return(character(0))
   out <- m[, group]
   out[!is.na(out)]
+}
+
+.last_regex_capture <- function(text, pattern, group = 2) {
+  values <- .regex_capture_all(text, pattern, group = group)
+
+  if (length(values) == 0) return(NA_character_)
+  values[length(values)]
 }
 
 # ---- extractors ----
@@ -378,19 +384,14 @@ extractProbsFromOxcalResult <- function(result_text) {
 }
 
 extractDoubleFromOxcalResult <- function(result_text, regexp, position) {
-  if (length(result_text) == 0) return(numeric(0))
-
-  m <- stringi::stri_match_all_regex(result_text, regexp)
-  if (length(m) == 0) return(numeric(0))
-
-  m <- do.call(rbind, m)
-  if (is.null(m) || nrow(m) == 0) return(numeric(0))
-
-  raw <- m[, position]
-  raw <- raw[!is.na(raw)]
+  raw <- .regex_capture_all(result_text, regexp, group = position)
   if (length(raw) == 0) return(numeric(0))
 
-  as.double(stats::na.omit(unlist(strsplit(raw, ", ", fixed = TRUE))))
+  as.double(
+    stats::na.omit(
+      unlist(strsplit(raw, ", ", fixed = TRUE))
+    )
+  )
 }
 
 extractPosteriorSigmaRangesFromOxcalResult <- function(result_text) {
@@ -404,108 +405,100 @@ extractSigmaRangesFromOxcalResult <- function(result_text) {
 .extract_sigma_ranges <- function(result_text, prefix = c("likelihood", "posterior")) {
   prefix <- match.arg(prefix)
   identifier <- sprintf("].%s.range", prefix)
-  this_date_text <- reduce_to_relevant_lines(result_text, identifier)
+  date_text <- reduce_to_relevant_lines(result_text, identifier)
 
-  one_sigma <- two_sigma <- three_sigma <- NA
+  ranges <- lapply(seq_len(3), function(k) {
+    regexp <- sprintf(
+      "(ocd\\[\\d+\\].%s.range\\[%d\\]).*?(=\\[)(.*)(\\];)",
+      prefix, k
+    )
 
-  for (k in 1:3) {
-    regexp <- sprintf("(ocd\\[\\d+\\].%s.range\\[%d\\]).*?(=\\[)(.*)(\\];)", prefix, k)
-    sigma_extract <- suppressWarnings(extractSigmaValuesFromOxcalResult(this_date_text, regexp))
-    if (is.data.frame(sigma_extract) && nrow(stats::na.omit(sigma_extract)) > 0) {
-      df <- data.frame(start = sigma_extract[, 1],
-                       end = sigma_extract[, 2],
-                       probability = sigma_extract[, 3])
-      if (k == 1) one_sigma <- df
-      if (k == 2) two_sigma <- df
-      if (k == 3) three_sigma <- df
+    values <- suppressWarnings(
+      extractSigmaValuesFromOxcalResult(date_text, regexp)
+    )
+
+    if (!is.data.frame(values) || nrow(stats::na.omit(values)) == 0) {
+      return(NA)
     }
-  }
 
-  list(one_sigma = one_sigma, two_sigma = two_sigma, three_sigma = three_sigma)
+    data.frame(
+      start = values[, 1],
+      end = values[, 2],
+      probability = values[, 3]
+    )
+  })
+
+  names(ranges) <- c("one_sigma", "two_sigma", "three_sigma")
+  ranges
 }
 
 extractSigmaValuesFromOxcalResult <- function(result_text, regexp) {
-  if (length(result_text) == 0) return(data.frame())
-
-  m <- stringi::stri_match_all_regex(result_text, regexp)
-  if (length(m) == 0) return(data.frame())
-
-  m <- do.call(rbind, m)
-  if (is.null(m) || nrow(m) == 0) return(data.frame())
-
-  raw <- m[, 4]
-  raw <- raw[!is.na(raw)]
+  raw <- .regex_capture_all(result_text, regexp, group = 4)
   if (length(raw) == 0) return(data.frame())
 
-  vals <- suppressWarnings(as.double(stats::na.omit(unlist(strsplit(raw, ", ", fixed = TRUE)))))
+  vals <- suppressWarnings(
+    as.double(
+      stats::na.omit(
+        unlist(strsplit(raw, ", ", fixed = TRUE))
+      )
+    )
+  )
   if (length(vals) == 0) return(data.frame())
 
   mat <- matrix(vals, ncol = 3, byrow = TRUE)
+
   # Keep legacy structure (and column names) consistent with data.frame(matrix(...))
   df <- data.frame(mat)
-  df <- df[rowSums(is.na(df)) < 3, , drop = FALSE]
-  df
+  df[rowSums(is.na(df)) < 3, , drop = FALSE]
 }
 
 extractCalCurveFromOxcalResult <- function(date_text) {
-  identifier <- "calib[0].ref="
-  this_date_text <- reduce_to_relevant_lines(date_text, identifier)
-  regexp_calcurve_name <- "calib\\[0\\].ref=\"(.*)\";"
-  calcurve_name <- .regex_capture_all(this_date_text, regexp_calcurve_name, group = 2)
-  calcurve_name <- if (length(calcurve_name)) calcurve_name[length(calcurve_name)] else NA_character_
+  calcurve_name <- .last_regex_capture(
+    date_text,
+    'calib\\[0\\].ref="(.*)";'
+  )
 
-  identifier <- "calib[0].resolution="
-  this_date_text <- reduce_to_relevant_lines(date_text, identifier)
-  regexp_calcurve_resolution <- "calib\\[0\\].resolution=(.*);"
-  calcurve_resolution <- .regex_capture_all(this_date_text, regexp_calcurve_resolution, group = 2)
-  calcurve_resolution <- if (length(calcurve_resolution)) as.numeric(calcurve_resolution[length(calcurve_resolution)]) else NA_real_
+  calcurve_resolution <- as.numeric(.last_regex_capture(
+    date_text,
+    "calib\\[0\\].resolution=(.*);"
+  ))
 
-  identifier <- "calib[0].start="
-  this_date_text <- reduce_to_relevant_lines(date_text, identifier)
-  regexp_calcurve_start <- "calib\\[0\\].start=(.*);"
-  calcurve_start <- .regex_capture_all(this_date_text, regexp_calcurve_start, group = 2)
-  calcurve_start <- if (length(calcurve_start)) as.numeric(calcurve_start[length(calcurve_start)]) else NA_real_
+  calcurve_start <- as.numeric(.last_regex_capture(
+    date_text,
+    "calib\\[0\\].start=(.*);"
+  ))
 
-  identifier <- "calib[0].bp="
-  this_date_text <- reduce_to_relevant_lines(date_text, identifier)
-  regexp_calcurve_bp <- "calib\\[0\\].bp=\\[(.*)\\];"
-  bp_raw <- .regex_capture_all(this_date_text, regexp_calcurve_bp, group = 2)
-  calcurve_bp <- if (length(bp_raw)) as.numeric(strsplit(bp_raw[length(bp_raw)], ",", fixed = TRUE)[[1]]) else numeric(0)
+  bp_raw <- .last_regex_capture(
+    date_text,
+    "calib\\[0\\].bp=\\[(.*)\\];"
+  )
+  calcurve_bp <- if (!is.na(bp_raw)) {
+    as.numeric(strsplit(bp_raw, ",", fixed = TRUE)[[1]])
+  } else {
+    numeric(0)
+  }
 
-  identifier <- "calib[0].sigma="
-  this_date_text <- reduce_to_relevant_lines(date_text, identifier)
-  regexp_calcurve_sigma <- "calib\\[0\\].sigma=\\[(.*)\\];"
-  sigma_raw <- .regex_capture_all(this_date_text, regexp_calcurve_sigma, group = 2)
-  calcurve_sigma <- if (length(sigma_raw)) as.numeric(strsplit(sigma_raw[length(sigma_raw)], ",", fixed = TRUE)[[1]]) else numeric(0)
+  sigma_raw <- .last_regex_capture(
+    date_text,
+    "calib\\[0\\].sigma=\\[(.*)\\];"
+  )
+  calcurve_sigma <- if (!is.na(sigma_raw)) {
+    as.numeric(strsplit(sigma_raw, ",", fixed = TRUE)[[1]])
+  } else {
+    numeric(0)
+  }
 
   list(
     name       = calcurve_name,
     resolution = calcurve_resolution,
     bp         = calcurve_bp,
-    bc         = seq(from = calcurve_start, by = calcurve_resolution, length.out = length(calcurve_bp)),
+    bc         = seq(
+      from = calcurve_start,
+      by = calcurve_resolution,
+      length.out = length(calcurve_bp)
+    ),
     sigma      = calcurve_sigma
   )
-}
-
-namestolist <- function(x) {
-  if (length(x) == 0) {
-    return("NA")
-  } else {
-    this_level <- stats::na.omit(unique(sapply(x, `[`, 1)))
-    collector <- vector()
-    for (i in seq_along(this_level)) {
-      this_element <- this_level[i]
-      this_branch <- stats::na.omit(
-        sapply(x[sapply(x, `[`, 1) == this_element], `[`, -1)
-      )
-      this_branch <- this_branch[lapply(this_branch, length) > 0]
-      collector <- append(
-        collector,
-        paste0("`", this_element, "` = ", namestolist(this_branch))
-      )
-    }
-    return(paste0("list(", paste(collector, collapse = ","), ")"))
-  }
 }
 
 recursivelyPartialUnlist <- function(l) {
