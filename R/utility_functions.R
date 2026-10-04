@@ -23,9 +23,8 @@ setOxcalExecutablePath <- function(path) {
   message("Oxcal path set!")
 }
 
-#' Quick OxCal setup
-#'
-#' Downloads the latest version of Oxcal and sets the executable path correctly
+#' @title Quick OxCal setup
+#' @description Downloads the latest version of Oxcal and sets the executable path correctly
 #'
 #'@param os The operating system of the workstation. Default: automatic determination. Options:
 #' \itemize{
@@ -35,6 +34,7 @@ setOxcalExecutablePath <- function(path) {
 #' }
 #' @param path The path to the directory where Oxcal is or should be stored. Default: "tempdir()".
 #' I recommend thought to install it permanently.
+#' @param force Overwrite an existing installation.
 #'
 #' @return NULL
 #'
@@ -45,15 +45,22 @@ setOxcalExecutablePath <- function(path) {
 #'   quickSetupOxcal()
 #' }
 #'
+#' @rdname quickSetup
 #' @export
-#'
 
-quickSetupOxcal <- function(os = Sys.info()["sysname"], path = tempdir()){
+quickSetupOxcal <- function(
+    os = Sys.info()["sysname"],
+    path = tempdir(),
+    version = supportedOxcalVersions()[1],
+    force = FALSE
+  ){
 
   # test if Oxcal is already setup correctly
-  if (!("try-error" %in% class(try(suppressWarnings(oxcalCalibrate(5000, 25, "testdate")), silent = TRUE)))) {
-    message("Oxcal is already installed correctly.")
-    return()
+  if (!force) {
+    if (!("try-error" %in% class(try(suppressWarnings(oxcalCalibrate(5000, 25, "testdate")), silent = TRUE)))) {
+      message("A version of Oxcal is already installed.")
+      return()
+    }
   }
 
   # parse path string depending on os
@@ -66,26 +73,30 @@ quickSetupOxcal <- function(os = Sys.info()["sysname"], path = tempdir()){
   exe <- file.path(path, "OxCal/bin", os_exe)
 
   # test if Oxcal folder is already present and only the path has to be set
-  if (file.exists(exe)) {
-    message("Oxcal is installed but Oxcal executable path is wrong. Let's have a look...")
-    setOxcalExecutablePath(exe)
-    return()
+  if (!force) {
+    if (file.exists(exe)) {
+      message("Oxcal is installed but Oxcal executable path is wrong. Let's have a look...")
+      setOxcalExecutablePath(exe)
+      return()
+    }
   }
 
   # download and unzip OxCal folder
-  message("Oxcal doesn't seem to be installed. Downloading it now:")
-  downloadOxcal(path = path)
+  message("Downloading OxCal now:")
+  downloadOxcal(path = path, version = version)
 
   # change permissions to allow execution
   Sys.chmod(exe, mode = "0777")
 
   # set path
-  test <- tryCatch(setOxcalExecutablePath(exe),
-                   error=function(e) {
-                     message("The Oxcal executable path could not be set:")
-                     message(e)
-                     message("\nIf you received an internet connection error before, please resolve it and try again later")
-                   }
+  test <- tryCatch(
+    setOxcalExecutablePath(exe),
+    error = function(e) {
+      message("The Oxcal executable path could not be set:")
+      message(e)
+      message("\nIf you received an internet connection error before, ",
+             "please resolve it and try again later")
+    }
   )
   if (!is.null(test) && test==0) {
     message("Oxcal Setup successful!")
@@ -95,25 +106,52 @@ quickSetupOxcal <- function(os = Sys.info()["sysname"], path = tempdir()){
   return()
 }
 
+#' @rdname quickSetup
+#' @export
+supportedOxcalVersions <- function() {
+  c("4.3.2_orig", "4.3.1", "4.2.4")
+}
 
-## ---------- private ----------
-downloadOxcal <- function(path = ".") {
+#' @param version The OxCal version that should be installed.
+#' \code{supportedOxcalVersions()} returns a character vector of supported versions.
+#' The latest version can be downloaded with "latest", but that may not be supported
+#' by oxcAAR.
+#' See \url{https://c14.arch.ox.ac.uk/oxcal.html} for the list of published,
+#' downloadable OxCal versions.
+#'
+#' @rdname quickSetup
+#' @export
+downloadOxcal <- function(path = ".", version = supportedOxcalVersions()[1]) {
+
+  supportedVersions <- supportedOxcalVersions()
+  if (!(version %in% supportedVersions)) {
+    warning("Selected version ", version, " not tested with oxcAAR. ",
+            "See supportedOxcalVersions() for a list of supported versions.")
+  }
+
+  base_url <- "https://c14.arch.ox.ac.uk/OxCal"
+  url <- if (version == "latest") {
+    paste0(base_url, "Distribution", ".zip")
+  } else {
+    paste0(base_url, "_", stringr::str_replace_all(version, "\\.", "_"), ".zip")
+  }
+
   temp <- tempfile()
-
-  test <- tryCatch(utils::download.file("https://c14.arch.ox.ac.uk/OxCalDistribution.zip", temp),
+  test <- tryCatch(utils::download.file(url, temp),
             warning=function(e) {
               message("Error Downloading OxCalDistribution.zip:")
               message(e)
-              message("\nNo internet connection or data source broken?")
+              message("\nNo internet connection, data source broken, or non-existing version?")
             }
   )
   if (!is.null(test) && test==0) {
     utils::unzip(temp, exdir = path)
     unlink(temp)
-    message("Oxcal stored successful at ", normalizePath(path), "!")
+    message("Oxcal stored successfully at ", normalizePath(path), "!")
   }
 }
 
+## ---------- private ----------
 getOxcalExecutablePath <- function() {
   oxcal_path <- getOption("oxcAAR.oxcal_path")
   if (is.null(oxcal_path) || oxcal_path == "") {
